@@ -136,53 +136,8 @@ class _LogInState extends State<LogIn> {
 
                   SizedBox(height: 10,),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: LightColorPalette.secondary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: SvgPicture.asset(
-                          "assets/icons/Authentication/google_icon.svg",
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-
-                      SizedBox(width: 5),
-
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: LightColorPalette.secondary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: SvgPicture.asset(
-                          "assets/icons/Authentication/facebook_icon.svg",
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-
-                      SizedBox(width: 5),
-
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: LightColorPalette.secondary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: SvgPicture.asset(
-                          "assets/icons/Authentication/finger_icon.svg",
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ],
-                  ),
+                  //Sign In Option
+                  signInOption(),
 
                   SizedBox(height: 30,),
 
@@ -220,6 +175,56 @@ class _LogInState extends State<LogIn> {
           ],
         ),
       ),
+    );
+  }
+
+  signInOption() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: LightColorPalette.secondary,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SvgPicture.asset(
+            "assets/icons/Authentication/google_icon.svg",
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+
+        SizedBox(width: 5),
+
+        Container(
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: LightColorPalette.secondary,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SvgPicture.asset(
+            "assets/icons/Authentication/facebook_icon.svg",
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+
+        SizedBox(width: 5),
+
+        Container(
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: LightColorPalette.secondary,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: SvgPicture.asset(
+            "assets/icons/Authentication/finger_icon.svg",
+            fit: BoxFit.scaleDown,
+          ),
+        ),
+      ],
     );
   }
 }
