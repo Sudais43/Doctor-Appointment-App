@@ -24,7 +24,7 @@ class _LogInState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "New Account"),
+      appBar: CustomAppBar(title: "New Account", onPressed: () {  },),
       backgroundColor: LightColorPalette.white,
       body: SafeArea(
         child: Column(

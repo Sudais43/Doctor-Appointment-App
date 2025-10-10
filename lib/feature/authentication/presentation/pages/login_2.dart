@@ -24,7 +24,7 @@ class _LogInState extends State<LogIn2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Hello!"),
+      appBar: CustomAppBar(title: "Hello!", onPressed: () {  },),
       backgroundColor: LightColorPalette.white,
       body: SafeArea(
         child: Column(

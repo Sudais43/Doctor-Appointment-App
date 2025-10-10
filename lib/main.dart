@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
-import 'package:skin_firts/feature/authentication/presentation/pages/login_2.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/set_password.dart';
-import 'package:skin_firts/feature/authentication/presentation/pages/sign_up.dart';
-import 'package:skin_firts/feature/onboarding/presentation/pages/Registeration.dart';
-import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
+import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
+
+import 'feature/doctor_pages/presentation/pages/doctors.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: SetPassword(),
+      home: DoctorListPage(),
     );
   }
 }

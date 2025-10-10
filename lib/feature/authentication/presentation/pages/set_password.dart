@@ -24,7 +24,7 @@ class _LogInState extends State<SetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Set Password"),
+      appBar: CustomAppBar(title: "Set Password", onPressed: () {  },),
       backgroundColor: LightColorPalette.white,
       body: SafeArea(
         child: Center(
