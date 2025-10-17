@@ -11,6 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showSearch;
   final bool showSort;
   final bool showBackButton;
+  final double leadingWidth;
 
   const CustomAppBar({
     super.key,
@@ -21,24 +22,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showSort = false,
     this.onSearch,
     this.onSort,
+    this.leadingWidth = 40,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 30),
-      child: Row(
+    return AppBar(
+      automaticallyImplyLeading: showBackButton,
+      leadingWidth: !showBackButton ? 0 : leadingWidth,
+      backgroundColor: Colors.transparent,
+      foregroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      titleSpacing: 0,
+      iconTheme: IconThemeData(color: Colors.black),
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (showBackButton)
-            GestureDetector(
-              onTap: onPressed,
-                child: BackButton(color: LightColorPalette.primary)
-            )
-          else
-            SizedBox(width: 48),
-
           // SizedBox(width: 120),
           Text(
             title,
@@ -78,7 +79,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: CircleAvatar(
                           backgroundColor: LightColorPalette.white,
                           child: SvgPicture.asset(
-                            "assets/icons/Doctors/sorting_icon.svg", color: LightColorPalette.primary,
+                            "assets/icons/Doctors/sorting_icon.svg",
+                            color: LightColorPalette.primary,
                           ),
                         ),
                       ),
