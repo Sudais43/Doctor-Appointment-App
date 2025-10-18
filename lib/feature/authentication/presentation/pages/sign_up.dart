@@ -36,32 +36,7 @@ class _LogInState extends State<SignUp> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  // SizedBox(
-                  //   width: 322,
-                  //   child: Text(
-                  //     "Welcome",
-                  //     style: TextStyle(
-                  //       fontSize: 24,
-                  //       fontFamily: "LeagueSpartan",
-                  //       fontWeight: FontWeight.w600,
-                  //       color: LightColorPalette.primary,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(height: 10),
-                  // SizedBox(
-                  //   width: 322,
-                  //   child: Text(
-                  //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. ",
-                  //     style: TextStyle(
-                  //       fontSize: 14,
-                  //       fontFamily: "LeagueSpartan",
-                  //       fontWeight: FontWeight.w400,
-                  //       color: Colors.black,
-                  //     ),
-                  //   ),
-                  // // ),
-                  // SizedBox(height: 50),
+
                   SizedBox(
                     width: 300,
                     child: Text(
@@ -169,6 +144,7 @@ class _LogInState extends State<SignUp> {
                       "By continuing, you agree to",
                       style: TextStyle(
                         fontSize: 12,
+                        height: 0.5,
                         fontFamily: "LeagueSpartan",
                         fontWeight: FontWeight.w300,
                       ),
@@ -186,6 +162,7 @@ class _LogInState extends State<SignUp> {
                           "Term of use",
                           style: TextStyle(
                             fontSize: 14,
+                            height: 1,
                             fontFamily: "LeagueSpartan",
                             fontWeight: FontWeight.w500,
                             color: LightColorPalette.primary,
@@ -196,6 +173,7 @@ class _LogInState extends State<SignUp> {
                         "and",
                         style: TextStyle(
                           fontSize: 12,
+                          height: 1,
                           fontFamily: "LeagueSpartan",
                           fontWeight: FontWeight.w300,
                         ),
@@ -208,6 +186,7 @@ class _LogInState extends State<SignUp> {
                           "Privacy Policy",
                           style: TextStyle(
                             fontSize: 14,
+                            height: 1,
                             fontFamily: "LeagueSpartan",
                             fontWeight: FontWeight.w500,
                             color: LightColorPalette.primary,
@@ -267,7 +246,7 @@ class _LogInState extends State<SignUp> {
                     ],
                   ),
 
-                  SizedBox(height: 30,),
+                  SizedBox(height: 10,),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

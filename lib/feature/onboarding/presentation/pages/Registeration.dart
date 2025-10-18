@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/core/widget/CustomButton.dart';
+import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
+import 'package:skin_firts/feature/authentication/presentation/pages/sign_up.dart';
 
 class Registration extends StatelessWidget {
   const Registration({super.key});
@@ -42,7 +44,10 @@ class Registration extends StatelessWidget {
                   height: 30,
                 ),
 
-                CustomButton(text: "Log In", onPressed: (){}),
+                CustomButton(text: "Log In",
+                    onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LogIn()));
+                    }),
 
                 SizedBox( height: 10,),
 
@@ -51,7 +56,9 @@ class Registration extends StatelessWidget {
                     textStyle: TextStyle(
                       color: LightColorPalette.primary,
                     ),
-                    text: "Sign In", onPressed: (){}
+                    text: "Sign In", onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                }
                 )
               ],
             ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/authentication/presentation/pages/sign_up.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
 import '../../../../core/widget/CustomButton.dart';
 import '../widgets/custom_input_field.dart';
 
@@ -119,6 +121,7 @@ class _LogInState extends State<LogIn> {
                     text: "Log In",
                     BackgroundColor: LightColorPalette.primary,
                     onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
                     },
                   ),
 
@@ -155,7 +158,7 @@ class _LogInState extends State<LogIn> {
                       ),
                       TextButton(
                         onPressed: () {
-
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                         },
                         child: Text(
                           "Sign Up",

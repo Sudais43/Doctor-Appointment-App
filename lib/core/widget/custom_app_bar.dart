@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showSort = false,
     this.onSearch,
     this.onSort,
-    this.leadingWidth = 40,
+    this.leadingWidth = 56,
   });
 
   @override

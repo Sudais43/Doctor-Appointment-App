@@ -11,7 +11,13 @@ import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
 
 class DoctorListPage extends StatefulWidget {
-  const DoctorListPage({super.key});
+
+  final String? favoriteSort;
+
+  const DoctorListPage({
+    super.key,
+    this.favoriteSort,
+  });
 
   @override
   State<DoctorListPage> createState() => _DoctorListPageState();
@@ -38,6 +44,12 @@ class _DoctorListPageState extends State<DoctorListPage> {
     super.initState();
     allDoctors = List.from(doctors);
     doctor = List.from(allDoctors);
+
+    if(widget.favoriteSort != null) {
+      _selectedSort = widget.favoriteSort!;
+    }
+
+    _sortDoctors(_selectedSort);
   }
 
   void _sortDoctors(String sortId) {
@@ -133,7 +145,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
                   ),
                 ),
               ),
-
               // 👇 Then spread your sort option buttons
               ..._sortOptions.map((sort) {
                 final bool isSelected = _selectedSort == sort["id"];

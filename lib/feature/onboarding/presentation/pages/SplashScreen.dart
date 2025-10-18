@@ -1,9 +1,30 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
+import 'package:skin_firts/feature/onboarding/presentation/pages/Registeration.dart';
 
-class Splashscreen extends StatelessWidget {
+class Splashscreen extends StatefulWidget {
   const Splashscreen({super.key});
+
+  @override
+  State<Splashscreen> createState() => _SplashscreenState();
+}
+
+
+class _SplashscreenState extends State<Splashscreen> {
+
+  @override
+  void initState() {
+
+    Timer(Duration(seconds: 3), (){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Registration()));
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
