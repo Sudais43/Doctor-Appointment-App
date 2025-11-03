@@ -56,7 +56,7 @@ class Registration extends StatelessWidget {
                     textStyle: TextStyle(
                       color: LightColorPalette.primary,
                     ),
-                    text: "Sign In", onPressed: (){
+                    text: "Sign Up", onPressed: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
                 }
                 )

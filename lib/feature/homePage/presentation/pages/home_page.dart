@@ -6,6 +6,7 @@ import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart'
 import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
 
 import '../../data/home_page_data.dart';
 
@@ -207,16 +208,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Container(
-                      height: 27,
-                      width: 27,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: LightColorPalette.secondary,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/HomeScreen/ssetting_icon.svg",
-                        fit: BoxFit.scaleDown,
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                      },
+                      child: Container(
+                        height: 27,
+                        width: 27,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: LightColorPalette.secondary,
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons/HomeScreen/ssetting_icon.svg",
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ),
                   ],

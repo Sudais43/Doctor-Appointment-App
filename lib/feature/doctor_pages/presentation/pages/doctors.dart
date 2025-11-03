@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_rating_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
@@ -197,9 +198,10 @@ class _DoctorListPageState extends State<DoctorListPage> {
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
                 final doc = doctor[index];
+                Widget tile;
                 switch(_selectedSort){
                   case "rating":
-                    return DoctorRatingTile(
+                    tile = DoctorRatingTile(
                         doctorName: doc.name,
                         speciality: doc.Department,
                         image: doc.images,
@@ -207,7 +209,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                     );
 
                   case "favorite":
-                    return FavoriteDoctorTile(
+                    tile = FavoriteDoctorTile(
                         doctorName: doc.name,
                         speciality: doc.Department,
                         image: doc.images,
@@ -215,13 +217,19 @@ class _DoctorListPageState extends State<DoctorListPage> {
                     );
 
                   default:
-                    return DoctorTile(
+                    tile = DoctorTile(
                         doctorName: doc.name,
                         speciality: doc.Department,
                         image: doc.images,
                         isFavorite: doc.isFavorite
                     );
                 }
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetail()));
+                  },
+                  child: tile,
+                );
                 //   Container(
                 //   padding: const EdgeInsets.all(12),
                 //   decoration: BoxDecoration(

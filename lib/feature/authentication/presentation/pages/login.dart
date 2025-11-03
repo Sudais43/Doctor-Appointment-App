@@ -28,140 +28,85 @@ class _LogInState extends State<LogIn> {
     return Scaffold(
       appBar: CustomAppBar(title: "LogIn", onPressed: () {  },),
       backgroundColor: LightColorPalette.white,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  SizedBox(
-                    width: 322,
-                    child: Text(
-                      "Welcome",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontFamily: "LeagueSpartan",
-                        fontWeight: FontWeight.w600,
-                        color: LightColorPalette.primary,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    SizedBox(
+                      width: 322,
+                      child: Text(
+                        "Welcome",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontFamily: "LeagueSpartan",
+                          fontWeight: FontWeight.w600,
+                          color: LightColorPalette.primary,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  SizedBox(
-                    width: 322,
-                    child: Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. ",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontFamily: "LeagueSpartan",
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
+                    SizedBox(height: 10),
+                    SizedBox(
+                      width: 322,
+                      child: Text(
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore. ",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontFamily: "LeagueSpartan",
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 50),
-                  SizedBox(
-                    width: 300,
-                    child: Text(
-                        "Email or Mobile Number",
+                    SizedBox(height: 50),
+                    SizedBox(
+                      width: 300,
+                      child: Text(
+                          "Email or Mobile Number",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: "LeagueSpartan",
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 7),
+                    CustomInputField(
+                      label: "email@email.com",
+                      controller: emailController,
+                    ),
+
+                    SizedBox(height: 10),
+
+                    SizedBox(width: 300, child: Text(
+                        "Password",
                       style: TextStyle(
                         fontSize: 20,
                         fontFamily: "LeagueSpartan",
                         fontWeight: FontWeight.w500,
                       ),
+                    )),
+                    SizedBox(height: 7),
+                    CustomInputField(
+                      obscureText: true,
+                      label: "Password",
+                      controller: passwordController,
+                      suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
                     ),
-                  ),
-                  SizedBox(height: 7),
-                  CustomInputField(
-                    label: "email@email.com",
-                    controller: emailController,
-                  ),
-
-                  SizedBox(height: 10),
-
-                  SizedBox(width: 300, child: Text(
-                      "Password",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontFamily: "LeagueSpartan",
-                      fontWeight: FontWeight.w500,
-                    ),
-                  )),
-                  SizedBox(height: 7),
-                  CustomInputField(
-                    obscureText: true,
-                    label: "Password",
-                    controller: passwordController,
-                    suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
-                  ),
-                  SizedBox(height:10 ,),
-                  SizedBox(
-                    width: 300,
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        "Forget Password?",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "LeagueSpartan",
-                          fontWeight: FontWeight.w500,
-                          color: LightColorPalette.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 40,),
-
-                  CustomButton(
-                    text: "Log In",
-                    BackgroundColor: LightColorPalette.primary,
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
-                    },
-                  ),
-
-                  SizedBox(height: 20,),
-                  SizedBox(
-                    child: Text(
-                      "or sign up with",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontFamily: "LeagueSpartan",
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 10,),
-
-                  //Sign In Option
-                  signInOption(),
-
-                  SizedBox(height: 30,),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontFamily: "LeagueSpartan",
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
-                        },
+                    SizedBox(height:10 ,),
+                    SizedBox(
+                      width: 300,
+                      child: Align(
+                        alignment: Alignment.centerRight,
                         child: Text(
-                          "Sign Up",
+                          "Forget Password?",
                           style: TextStyle(
                             fontSize: 14,
                             fontFamily: "LeagueSpartan",
@@ -170,12 +115,70 @@ class _LogInState extends State<LogIn> {
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+
+                    SizedBox(height: 40,),
+
+                    CustomButton(
+                      text: "Log In",
+                      BackgroundColor: LightColorPalette.primary,
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                      },
+                    ),
+
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      child: Text(
+                        "or sign up with",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: "LeagueSpartan",
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+
+                    SizedBox(height: 10,),
+
+                    //Sign In Option
+                    signInOption(),
+
+                    SizedBox(height: 30,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Don't have an account?",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontFamily: "LeagueSpartan",
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                          },
+                          child: Text(
+                            "Sign Up",
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontFamily: "LeagueSpartan",
+                              fontWeight: FontWeight.w500,
+                              color: LightColorPalette.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

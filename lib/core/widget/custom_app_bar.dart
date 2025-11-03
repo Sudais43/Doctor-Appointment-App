@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 
@@ -27,7 +28,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final SystemUiOverlayStyle systemStyle = SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+
+      systemNavigationBarColor: Colors.amber,
+      systemNavigationBarIconBrightness: Brightness.light,
+    );
+
     return AppBar(
+      systemOverlayStyle: systemStyle,
       automaticallyImplyLeading: showBackButton,
       leadingWidth: !showBackButton ? 0 : leadingWidth,
       backgroundColor: Colors.transparent,
@@ -92,10 +103,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           // SizedBox(width: 30),
         ],
       ),
+
+
     );
   }
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 60);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 20);
 }

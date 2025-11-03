@@ -1,0 +1,158 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/edit_profile.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/help_center.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/setting_page.dart';
+import 'package:skin_firts/feature/settings/presentation/widgets/profile_pic.dart';
+
+import '../../../../core/color/light/LIghtColorPalette.dart';
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Set system UI overlay style for the status bar (icons will be dark on a light background)
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+      statusBarColor: Colors.transparent, // Transparent status bar background
+      statusBarIconBrightness: Brightness.dark, // Dark icons (for light backgrounds)
+    ));
+
+    return Scaffold(
+      backgroundColor: LightColorPalette.white, // Ensure a white background for the screen
+      appBar: CustomAppBar(title: "My Profile", onPressed: (){Navigator.pop(context);}),
+      body: SingleChildScrollView( // Use SingleChildScrollView to prevent overflow if content is too tall
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+
+            // Profile Picture with Edit Icon
+            ProfilePic(),
+            const SizedBox(height: 15),
+
+            // User Name
+            const Text(
+              'John Doe',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: LightColorPalette.textColor,
+              ),
+            ),
+            const SizedBox(height: 30), // Space before the menu items
+
+            // --- Menu Items ---
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/profile_icon.svg",
+              text: 'Profile',
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                // Navigate to Profile screen
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/favorite_icon.svg",
+              text: 'Favorite',
+              onTap: () {
+                print('Favorite tapped');
+                // Navigate to Favorite screen
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/wallet_icon.svg",
+              text: 'Payment Method',
+              onTap: () {
+                print('Payment Method tapped');
+                // Navigate to Payment Method screen
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/privacy_icon.svg",
+              text: 'Privacy Policy',
+              onTap: () {
+                print('Privacy Policy tapped');
+                // Navigate to Privacy Policy screen
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/setting_icon.svg",
+              text: 'Settings',
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SettingPage()));
+                // Navigate to Settings screen
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/help_icon.svg",
+              text: 'Help',
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HelpCenterScreen()));
+              },
+            ),
+            _buildProfileMenuItem(
+              context,
+              icon: "assets/icons/settings/log_out_icon.svg",
+              text: 'Logout',
+              onTap: () {
+                print('Logout tapped');
+                // Implement logout logic
+              },
+              isLogout: true, // Special styling for Logout
+            ),
+            const SizedBox(height: 20), // Bottom padding
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Helper method to build each menu item ListTile
+  Widget _buildProfileMenuItem(
+      BuildContext context, {
+        required String icon,
+        required String text,
+        required VoidCallback onTap,
+        bool isLogout = false, // To apply specific styling for logout
+      }) {
+    return Column(
+      children: [
+        ListTile(
+          leading: CircleAvatar(
+            radius: 22, // Size of the icon background circle
+            backgroundColor: LightColorPalette.primary.withOpacity(0.1), // Light blue background
+            child: SvgPicture.asset(icon),
+          ),
+          title: Text(
+            text,
+            style: TextStyle(
+              fontSize: 18,
+              color:LightColorPalette.black,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          trailing: isLogout ? null : const Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Colors.grey, // Grey arrow for other items
+          ),
+          onTap: onTap,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
+        ),
+        // You can add a Divider here if you want lines between items
+        // if (!isLogout)
+        //   Padding(
+        //     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        //     child: Divider(color: LightColorPalette.dividerColor.withOpacity(0.3), height: 1),
+        //   ),
+      ],
+    );
+  }
+}

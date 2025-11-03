@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
 import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
-import 'feature/doctor_pages/presentation/pages/doctors.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/notification_Setting.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/password_manager.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: DoctorDetail(),
+      home: Splashscreen(),
     );
   }
 }
