@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/authentication/presentation/pages/login_2.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/edit_profile.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/help_center.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/setting_page.dart';
 import 'package:skin_firts/feature/settings/presentation/widgets/profile_pic.dart';
 
 import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/widget/CustomButton.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -76,7 +79,7 @@ class ProfileScreen extends StatelessWidget {
               icon: "assets/icons/settings/privacy_icon.svg",
               text: 'Privacy Policy',
               onTap: () {
-                print('Privacy Policy tapped');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
                 // Navigate to Privacy Policy screen
               },
             ),
@@ -103,6 +106,7 @@ class ProfileScreen extends StatelessWidget {
               text: 'Logout',
               onTap: () {
                 print('Logout tapped');
+                _showLogoutDialog(context);
                 // Implement logout logic
               },
               isLogout: true, // Special styling for Logout
@@ -155,4 +159,86 @@ class ProfileScreen extends StatelessWidget {
       ],
     );
   }
+
+
+
+// --- 7. HELPER FUNCTION FOR THE LOGOUT DIALOG ---
+  void _showLogoutDialog(BuildContext context) {
+    // showModalBottomSheet is the widget that slides up from the bottom
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent, // Make sheet transparent
+      builder: (context) {
+        // Use a Container to create the rounded white box
+        return Container(
+          padding: const EdgeInsets.all(24.0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25.0),
+              topRight: Radius.circular(25.0),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Make column wrap content
+            children: [
+              // --- Dialog Content ---
+              Text(
+                "Logout",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: LightColorPalette.primary,
+                  fontFamily: "LeagueSpartan",
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "are you sure you want to log out?",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                  fontFamily: "LeagueSpartan",
+                ),
+              ),
+              const SizedBox(height: 25),
+
+              // --- Dialog Buttons ---
+              Row(
+                children: [
+                  Expanded(
+                    child: CustomButton(
+                      text: "Cancel",
+                      BackgroundColor: LightColorPalette.secondary,
+                      textStyle: TextStyle(
+                          color: LightColorPalette.primary,
+                          fontWeight: FontWeight.bold),
+                      onPressed: () {
+                        Navigator.pop(context); // Close the dialog
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: CustomButton(
+                      text: "Yes, Logout",
+                      BackgroundColor: LightColorPalette.primary,
+                      textStyle: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LogIn2()),
+                            (Route<dynamic> route) => false,
+                        );// Close the dialog
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }

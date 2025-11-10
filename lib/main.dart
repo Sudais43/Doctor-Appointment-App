@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/notification_Setting.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/password_manager.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Splashscreen(),
+      home: ProfileScreen(),
     );
   }
 }
