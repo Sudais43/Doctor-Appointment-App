@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
-import 'package:skin_firts/core/widget/bottom_navigation_bar.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
-import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';

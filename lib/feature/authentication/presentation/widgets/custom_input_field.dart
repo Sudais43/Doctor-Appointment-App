@@ -10,7 +10,7 @@ class CustomInputField extends StatelessWidget {
   final double? width;
   final Widget? suffixIcon; // ✅ Changed to widget for flexibility
 
-  const CustomInputField({
+   CustomInputField({
     super.key,
     required this.label,
     required this.controller,

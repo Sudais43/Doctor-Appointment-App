@@ -111,7 +111,7 @@ class ProfileScreen extends StatelessWidget {
               },
               isLogout: true, // Special styling for Logout
             ),
-            const SizedBox(height: 20), // Bottom padding
+            const SizedBox(height: 70), // Bottom padding
           ],
         ),
       ),

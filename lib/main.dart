@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/notification_Setting.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/password_manager.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
+import 'package:skin_firts/feature/appointment/presentation/pages/all_appointment.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/add_card.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_summary.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/notification.dart';
+import 'feature/appointment/presentation/pages/add_review.dart';
+import 'feature/appointment/presentation/pages/cancel.dart';
+import 'feature/chats/presentation/pages/chat_screen.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: ProfileScreen(),
+      home: NotificationScreen(),
     );
   }
 }

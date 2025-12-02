@@ -16,7 +16,8 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 48,
+      height: 60,
+      width: 350,
       decoration: BoxDecoration(
         color: LightColorPalette.primary,
         borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -26,22 +27,27 @@ class BottomNavBar extends StatelessWidget {
           onTap: onTap,
           type: BottomNavigationBarType.fixed,
           elevation: 0,
-          backgroundColor: LightColorPalette.primary,
+          backgroundColor: Colors.transparent,
           selectedItemColor: LightColorPalette.iconColor,
           unselectedItemColor: LightColorPalette.white,
-          showUnselectedLabels: true,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
           items: [
             BottomNavigationBarItem(
               icon: SvgPicture.asset("assets/icons/BottomNaveBar/home_icon.svg", fit: BoxFit.scaleDown),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset("assets/icons/BottomNaveBar/message_icon.svg", fit: BoxFit.scaleDown),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset("assets/icons/BottomNaveBar/profile_icon.svg", fit: BoxFit.scaleDown),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: SvgPicture.asset("assets/icons/BottomNaveBar/calender_icon.svg", fit: BoxFit.scaleDown),
+              label: "",
             ),
           ]
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 
 import '../../../../core/color/light/LIghtColorPalette.dart';
 import '../../../homePage/data/home_page_data.dart';
@@ -376,31 +377,36 @@ class _DoctorDetailState extends State<DoctorDetail> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        width: 82,
-                        height: 21,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(18),
-                          color: LightColorPalette.primary,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/icons/Doctors/calender_icon.svg",
-                              color: LightColorPalette.white,
-                            ),
-                            SizedBox(width: 3),
-                            Text(
-                              "Schedule",
-                              style: TextStyle(
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleScreen()));
+                        },
+                        child: Container(
+                          width: 82,
+                          height: 21,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(18),
+                            color: LightColorPalette.primary,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                "assets/icons/Doctors/calender_icon.svg",
                                 color: LightColorPalette.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: "League Spartan",
                               ),
-                            ),
-                          ],
+                              SizedBox(width: 3),
+                              Text(
+                                "Schedule",
+                                style: TextStyle(
+                                  color: LightColorPalette.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: "League Spartan",
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       SizedBox(width: 10),

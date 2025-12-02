@@ -92,43 +92,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
       body: Column(
         children: [
           const SizedBox(height: 8),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children:
-          //   _sortOptions.map((sort) {
-          //     final bool isSelected = _selectedSort == sort["id"];
-          //     return Padding(
-          //       padding: const EdgeInsets.only(right: 7),
-          //       child: GestureDetector(
-          //         onTap: () => _sortDoctors(sort["id"]!),
-          //         child: AnimatedContainer(
-          //           duration: const Duration(milliseconds: 200),
-          //           height: 33,
-          //           padding: const EdgeInsets.all(10),
-          //           decoration: BoxDecoration(
-          //             color: isSelected ? LightColorPalette.primary : LightColorPalette.white,
-          //             borderRadius: BorderRadius.circular(50),
-          //             border: Border.all(color: Colors.blue),
-          //             boxShadow: isSelected
-          //                 ? [
-          //               BoxShadow(
-          //                 color: Colors.blue.withOpacity(0.3),
-          //                 blurRadius: 8,
-          //                 offset: const Offset(0, 3),
-          //               ),
-          //             ]
-          //                 : [],
-          //           ),
-          //           child: SvgPicture.asset(
-          //             sort["icon"]!,
-          //             color: isSelected ? LightColorPalette.white : LightColorPalette.primary,
-          //             // fit: BoxFit.fill,
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   }).toList(),
-          // ),
         Padding(
           padding: const EdgeInsets.only(left: 18.0),
           child: Row(
@@ -230,54 +193,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
                   },
                   child: tile,
                 );
-                //   Container(
-                //   padding: const EdgeInsets.all(12),
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(20),
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.blue.withOpacity(0.1),
-                //         blurRadius: 8,
-                //         offset: const Offset(0, 3),
-                //       ),
-                //     ],
-                //   ),
-                //   child: Row(
-                //     children: [
-                //       CircleAvatar(
-                //         radius: 30,
-                //         backgroundImage: AssetImage("assets/images/doctor_${index + 1}.png"),
-                //       ),
-                //       const SizedBox(width: 12),
-                //       Expanded(
-                //         child: Column(
-                //           crossAxisAlignment: CrossAxisAlignment.start,
-                //           children: [
-                //             Text(
-                //               doc.name,
-                //               style: const TextStyle(
-                //                 fontWeight: FontWeight.bold,
-                //                 fontSize: 16,
-                //               ),
-                //             ),
-                //             Text(
-                //               doc.specialty,
-                //               style: TextStyle(color: Colors.grey[600]),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //       IconButton(
-                //         onPressed: () {},
-                //         icon: Icon(
-                //           doc.isFavorite ? Icons.favorite : Icons.favorite_border,
-                //           color: Colors.redAccent,
-                //         ),
-                //       )
-                //     ],
-                //   ),
-                // );
               },
             ),
           ),
