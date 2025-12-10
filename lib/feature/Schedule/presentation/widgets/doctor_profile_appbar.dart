@@ -31,7 +31,7 @@ class DoctorProfileAppbar extends StatelessWidget implements PreferredSizeWidget
         backgroundColor: Colors.white, // White background for the entire app bar
         elevation: 0, // No shadow
         titleSpacing: 0,
-        leadingWidth: 25, // Adjust leading space for the back button
+        leadingWidth: 35, // Adjust leading space for the back button
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
@@ -41,14 +41,13 @@ class DoctorProfileAppbar extends StatelessWidget implements PreferredSizeWidget
           onPressed: onBackButtonPressed,
         ),
         title: Row(
-          // mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,// Keep the row compact
           children: [
             // Schedule Button (Pill Shape)
             GestureDetector(
               onTap: onSchedulePressed,
               child: Container(
                 height: 21,
+                width: 100,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                   color: LightColorPalette.primary, // Blue pill
@@ -75,9 +74,7 @@ class DoctorProfileAppbar extends StatelessWidget implements PreferredSizeWidget
                   ],
                 ),
               ),
-            ),
-            const SizedBox(width: 8), // Spacing between pill and circular icons
-
+            ), // Spacing between pill and circular icons
             // Call Icon
             CircularIconButton(
               svgAsset: "assets/icons/Doctors/voice_call_icon.svg",

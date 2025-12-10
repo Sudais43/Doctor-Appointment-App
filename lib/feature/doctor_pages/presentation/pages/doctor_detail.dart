@@ -6,6 +6,7 @@ import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.d
 import '../../../../core/color/light/LIghtColorPalette.dart';
 import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
+import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class DoctorDetail extends StatefulWidget {
   const DoctorDetail({super.key});
@@ -66,6 +67,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
         title: "Doctor Info",
         showSearch: true,

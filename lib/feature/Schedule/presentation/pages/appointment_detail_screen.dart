@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
-
-import '../../../doctor_pages/presentation/widgets/doctor_tile.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
   const AppointmentDetailScreen({super.key});
@@ -9,6 +8,7 @@ class AppointmentDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationbar1(),
       body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

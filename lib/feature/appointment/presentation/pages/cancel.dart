@@ -1,18 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
-// Import your color palette if available, otherwise use defaults
-// import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
-// --- Constants for Colors (Replace with your actual palette) ---
-class AppColors {
-  // static const Color primary = Color(0xFF2962FF); // Bright Blue
-  // static const Color white = Colors.white;
-  // static const Color textDark = Color(0xFF263238);
-  // static const Color textGrey = Color(0xFF757575);
-  // static const Color inputBackground = Color(0xFFEFF3FF); // Light blueish/grey bg for input
-  // static const Color unselectedRadio = Color(0xFF8FA1D0);
-}
 
 class CancelAppointmentScreen extends StatefulWidget {
   const CancelAppointmentScreen({super.key});
@@ -33,6 +23,7 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(title: "Cancel Appointment", onPressed: (){}),
       body: SafeArea(
         child: SingleChildScrollView(

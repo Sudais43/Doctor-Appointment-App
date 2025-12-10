@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -10,6 +11,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,

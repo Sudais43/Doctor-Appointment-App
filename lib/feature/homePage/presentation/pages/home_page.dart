@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
+import 'package:skin_firts/feature/settings/presentation/pages/notification.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
 
 import '../../data/home_page_data.dart';
@@ -30,111 +32,115 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationbar1(),
       body: SafeArea(
-        child: Column(
-          children: [
-            homeTopBar(),
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              homeTopBar(),
 
-            SizedBox(height: 10),
-            Container(
-              color: LightColorPalette.secondary,
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ...List.generate(appointments.length, (index) {
-                          final item = appointments[index];
-                          final hasAppointment = appointmentDay.contains(
-                            item["day"],
-                          );
-                          return Container(
-                            height: 64,
-                            width: 42,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              color:
-                                  hasAppointment
-                                      ? LightColorPalette.primary
-                                      : LightColorPalette.white,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  item["day"]!,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        hasAppointment
-                                            ? LightColorPalette.white
-                                            : LightColorPalette.black,
-                                    fontFamily: "League Spartan",
+              SizedBox(height: 10),
+              Container(
+                color: LightColorPalette.secondary,
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          ...List.generate(appointments.length, (index) {
+                            final item = appointments[index];
+                            final hasAppointment = appointmentDay.contains(
+                              item["day"],
+                            );
+                            return Container(
+                              height: 64,
+                              width: 42,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                                color:
+                                    hasAppointment
+                                        ? LightColorPalette.primary
+                                        : LightColorPalette.white,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item["day"]!,
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          hasAppointment
+                                              ? LightColorPalette.white
+                                              : LightColorPalette.black,
+                                      fontFamily: "League Spartan",
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  // "Mon",
-                                  item["label"]!,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
-                                    color:
-                                        hasAppointment
-                                            ? LightColorPalette.white
-                                            : LightColorPalette.black,
-                                    fontFamily: "League Spartan",
+                                  Text(
+                                    // "Mon",
+                                    item["label"]!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300,
+                                      color:
+                                          hasAppointment
+                                              ? LightColorPalette.white
+                                              : LightColorPalette.black,
+                                      fontFamily: "League Spartan",
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                      ],
+                                ],
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 10),
+                    SizedBox(height: 10),
 
-                  Container(
-                    height: 123,
-                    width: 299,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: LightColorPalette.white,
+                    Container(
+                      height: 123,
+                      width: 299,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: LightColorPalette.white,
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 20),
-                ],
+                    SizedBox(height: 20),
+                  ],
+                ),
               ),
-            ),
 
-            SizedBox(height: 10),
-            ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: doctors.length,
-              itemBuilder: (context, index) {
-                final doctor = doctors[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: DoctorTile(
-                    doctorName: doctor.name,
-                    department: doctor.Department,
-                    messages: doctor.messages,
-                    rating: doctor.rating,
-                    isFavorite: doctor.isFavorite,
-                    image: doctor.images,
-                  ),
-                );
-              },
-            ),
-          ],
+              SizedBox(height: 10),
+              ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 32),
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                itemCount: doctors.length,
+                itemBuilder: (context, index) {
+                  final doctor = doctors[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: DoctorTile(
+                      doctorName: doctor.name,
+                      department: doctor.Department,
+                      messages: doctor.messages,
+                      rating: doctor.rating,
+                      isFavorite: doctor.isFavorite,
+                      image: doctor.images,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -193,16 +199,21 @@ class _HomePageState extends State<HomePage> {
               SizedBox(
                 child: Row(
                   children: [
-                    Container(
-                      height: 27,
-                      width: 27,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: LightColorPalette.secondary,
-                      ),
-                      child: SvgPicture.asset(
-                        "assets/icons/HomeScreen/notification_icon.svg",
-                        fit: BoxFit.scaleDown,
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NotificationScreen()));
+                      },
+                      child: Container(
+                        height: 27,
+                        width: 27,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: LightColorPalette.secondary,
+                        ),
+                        child: SvgPicture.asset(
+                          "assets/icons/HomeScreen/notification_icon.svg",
+                          fit: BoxFit.scaleDown,
+                        ),
                       ),
                     ),
                     SizedBox(width: 5),

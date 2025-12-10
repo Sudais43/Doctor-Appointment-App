@@ -7,6 +7,7 @@ import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_rating_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
@@ -82,6 +83,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF3F5FF),
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
           title: "Doctors",
           showSearch: true,

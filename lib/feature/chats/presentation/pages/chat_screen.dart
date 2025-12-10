@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart'; // For permissions
 import 'package:record/record.dart'; // The recording package
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 import 'package:skin_firts/feature/chats/presentation/widgets/chat_app_bar.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 import '../../data/messages.dart';
 import '../../domain/messages_model.dart';
@@ -166,6 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: ChatAppBar(
         title: widget.doctorName,
         onPressed: () => Navigator.pop(context),
@@ -234,11 +236,17 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           GestureDetector(
             onTap: () { print('Attach file'); },
-            child: SvgPicture.asset(
-              "assets/icons/chat/attachment_icon.svg",
-              width: 24,
-              height: 24,
-              colorFilter: const ColorFilter.mode(LightColorPalette.primary, BlendMode.srcIn),
+            child: Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: LightColorPalette.white,
+              ),
+              child: SvgPicture.asset(
+                "assets/icons/chat/attachment_icon.svg",
+                fit: BoxFit.scaleDown,
+              ),
             ),
           ),
           const SizedBox(width: 10),
@@ -263,42 +271,54 @@ class _ChatScreenState extends State<ChatScreen> {
                   borderRadius: BorderRadius.circular(25.0),
                   borderSide: const BorderSide(color: LightColorPalette.primary, width: 1.0),
                 ),
+                suffixIcon: GestureDetector(
+                  onLongPressStart: (details) {
+                    _toggleRecording();
+                  },
+                  onLongPressEnd: (details) {
+                    _toggleRecording();
+                  },
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    // Add a visual indicator (red circle) when recording
+                    padding: _isRecording ? const EdgeInsets.all(8) : EdgeInsets.zero,
+                    decoration: _isRecording
+                        ? const BoxDecoration(color: Colors.red, shape: BoxShape.circle)
+                        : null,
+                    child: SvgPicture.asset(
+                      "assets/icons/chat/mic_icon.svg",
+                      fit: BoxFit.scaleDown,
+                      colorFilter: ColorFilter.mode(
+                        // Icon becomes white when recording, primary otherwise
+                          _isRecording ? Colors.white : LightColorPalette.primary,
+                          BlendMode.srcIn
+                      ),
+                    ),
+                  ),
+                ),
               ),
               style: const TextStyle(fontFamily: "LeagueSpartan"),
               readOnly: _isRecording, // Prevent typing while recording
+
             ),
           ),
           const SizedBox(width: 10),
 
-          // --- MICROPHONE BUTTON ---
-          GestureDetector(
-            onTap: _toggleRecording, // Connect to logic
-            child: Container(
-              // Add a visual indicator (red circle) when recording
-              padding: _isRecording ? const EdgeInsets.all(8) : EdgeInsets.zero,
-              decoration: _isRecording
-                  ? const BoxDecoration(color: Colors.red, shape: BoxShape.circle)
-                  : null,
-              child: SvgPicture.asset(
-                "assets/icons/chat/mic_icon.svg",
-                width: 24,
-                height: 24,
-                colorFilter: ColorFilter.mode(
-                  // Icon becomes white when recording, primary otherwise
-                    _isRecording ? Colors.white : LightColorPalette.primary,
-                    BlendMode.srcIn
-                ),
-              ),
-            ),
-          ),
           const SizedBox(width: 10),
           GestureDetector(
             onTap: _sendMessage,
-            child: SvgPicture.asset(
-              "assets/icons/chat/send_icon.svg",
-              width: 28,
-              height: 28,
-              colorFilter: const ColorFilter.mode(LightColorPalette.primary, BlendMode.srcIn),
+            child: Container(
+              height: 36,
+              width: 36,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: LightColorPalette.primary,
+              ),
+              child: SvgPicture.asset(
+                "assets/icons/chat/send_icon.svg",
+                fit: BoxFit.scaleDown,
+              ),
             ),
           ),
         ],

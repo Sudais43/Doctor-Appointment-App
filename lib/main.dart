@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/doctor_profile.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 import 'package:skin_firts/feature/appointment/presentation/pages/all_appointment.dart';
+import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
+import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/add_card.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_summary.dart';
@@ -25,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: NotificationScreen(),
+      home: ScheduleScreen(),
     );
   }
 }

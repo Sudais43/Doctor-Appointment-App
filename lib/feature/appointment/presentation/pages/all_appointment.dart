@@ -2,19 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
 
 import '../../../../core/widget/custom_app_bar.dart';
+import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 import '../../data/appointment_data.dart';
 import '../../entity/appointment.dart';
 import '../widgets/appointment_card.dart';
-
-// --- 1. CONFIGURATION & COLORS ---
-// class AppColors {
-//   static const Color primary = Color(0xFF2962FF);
-//   static const Color background = Color(0xFFF5F7FF); // Light background for cards
-//   static const Color textDark = Color(0xFF263238);
-//   static const Color textLight = Color(0xFF8FA1D0);
-//   static const Color white = Colors.white;
-// }
-
 
 
 
@@ -42,6 +33,7 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(title: "All Appointments", onPressed: (){}),
       body: Column(
         children: [

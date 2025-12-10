@@ -5,7 +5,7 @@ import '../../../../core/color/light/LIghtColorPalette.dart';
 class DayCapsule extends StatelessWidget {
   final DateTime date;
   final bool isSelected;
-  final bool isAvailable; // Added this parameter
+  final bool isAvailable;
   final VoidCallback onTap;
 
   const DayCapsule({
@@ -18,7 +18,8 @@ class DayCapsule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Determine Background Color
+
+    // Background Color
     Color bgColor;
     if (isSelected) {
       bgColor = LightColorPalette.primary;
@@ -28,7 +29,7 @@ class DayCapsule extends StatelessWidget {
       bgColor = LightColorPalette.white; // Disabled color
     }
 
-    // Determine Text Color
+    // Text Color
     Color textColor;
     if (isSelected) {
       textColor = Colors.white;
