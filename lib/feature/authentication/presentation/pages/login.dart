@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:provider/provider.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/sign_up.dart';
+import 'package:skin_firts/feature/authentication/presentation/view_model/auth_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
 import '../../../../core/widget/CustomButton.dart';
 import '../widgets/custom_input_field.dart';
 
 class LogIn extends StatefulWidget {
-
   const LogIn({super.key});
 
   @override
@@ -16,17 +17,15 @@ class LogIn extends StatefulWidget {
 }
 
 class _LogInState extends State<LogIn> {
-
   final TextEditingController emailController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
 
-
-
   @override
   Widget build(BuildContext context) {
+    final authVM = Provider.of<AuthViewModel>(context);
     return Scaffold(
-      appBar: CustomAppBar(title: "LogIn", onPressed: () {  },),
+      appBar: CustomAppBar(title: "LogIn", onPressed: () {}),
       backgroundColor: LightColorPalette.white,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
@@ -34,9 +33,7 @@ class _LogInState extends State<LogIn> {
           child: Column(
             children: [
               Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
+                decoration: BoxDecoration(color: Colors.white),
                 child: Column(
                   children: [
                     SizedBox(height: 20),
@@ -69,7 +66,7 @@ class _LogInState extends State<LogIn> {
                     SizedBox(
                       width: 300,
                       child: Text(
-                          "Email or Mobile Number",
+                        "Email or Mobile Number",
                         style: TextStyle(
                           fontSize: 20,
                           fontFamily: "LeagueSpartan",
@@ -85,22 +82,28 @@ class _LogInState extends State<LogIn> {
 
                     SizedBox(height: 10),
 
-                    SizedBox(width: 300, child: Text(
+                    SizedBox(
+                      width: 300,
+                      child: Text(
                         "Password",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontFamily: "LeagueSpartan",
-                        fontWeight: FontWeight.w500,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontFamily: "LeagueSpartan",
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    )),
+                    ),
                     SizedBox(height: 7),
                     CustomInputField(
                       obscureText: true,
                       label: "Password",
                       controller: passwordController,
-                      suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
+                      suffixIcon: SvgPicture.asset(
+                        "assets/icons/Authentication/show_pass_icon.svg",
+                        fit: BoxFit.scaleDown,
+                      ),
                     ),
-                    SizedBox(height:10 ,),
+                    SizedBox(height: 10),
                     SizedBox(
                       width: 300,
                       child: Align(
@@ -117,17 +120,21 @@ class _LogInState extends State<LogIn> {
                       ),
                     ),
 
-                    SizedBox(height: 40,),
+                    SizedBox(height: 40),
 
                     CustomButton(
                       text: "Log In",
                       BackgroundColor: LightColorPalette.primary,
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                        authVM.signIn(
+                          emailController.text,
+                          passwordController.text,
+                          context
+                        );
                       },
                     ),
 
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20),
                     SizedBox(
                       child: Text(
                         "or sign up with",
@@ -139,12 +146,12 @@ class _LogInState extends State<LogIn> {
                       ),
                     ),
 
-                    SizedBox(height: 10,),
+                    SizedBox(height: 10),
 
                     //Sign In Option
                     signInOption(),
 
-                    SizedBox(height: 30,),
+                    SizedBox(height: 30),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +167,10 @@ class _LogInState extends State<LogIn> {
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUp()));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignUp()),
+                            );
                           },
                           child: Text(
                             "Sign Up",

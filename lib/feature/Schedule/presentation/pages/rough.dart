@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
 // 1. Reusable Circular Button Widget (Optimized for reuse)
 class CircularAppBarButton extends StatelessWidget {
@@ -33,29 +34,31 @@ class CircularAppBarButton extends StatelessWidget {
 }
 
 // 2. The Custom AppBar Widget
-class CustomDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomDetailAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
   const CustomDetailAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     // Define colors locally or use your theme
-    const Color primaryBlue = Color(0xFF2962FF);
-    const Color lightBlueBg = Color(0xFFE0E7FF); // Light blue for right buttons
+    Color primaryBlue = appColor.Primary;
+    Color lightBlueBg = appColor.secondary; // Light blue for right buttons
 
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: false, // Important: Aligns title row to the left
       titleSpacing: 0, // Reduces gap between back button and title
-
       // --- Leading (Back Button) ---
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new, color: primaryBlue),
+        icon: Icon(Icons.arrow_back_ios_new, color: primaryBlue),
         onPressed: () => Navigator.pop(context),
       ),
 
       // --- Title (Center Actions) ---
-      title: SingleChildScrollView( // Prevents overflow on small screens
+      title: SingleChildScrollView(
+        // Prevents overflow on small screens
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
@@ -69,7 +72,11 @@ class CustomDetailAppBar extends StatelessWidget implements PreferredSizeWidget 
               ),
               child: Row(
                 children: const [
-                  Icon(Icons.calendar_month_outlined, color: Colors.white, size: 18),
+                  Icon(
+                    Icons.calendar_month_outlined,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                   SizedBox(width: 8),
                   Text(
                     "Schedule",
@@ -130,7 +137,7 @@ class CustomDetailAppBar extends StatelessWidget implements PreferredSizeWidget 
             ),
             const SizedBox(width: 16), // End padding
           ],
-        )
+        ),
       ],
     );
   }

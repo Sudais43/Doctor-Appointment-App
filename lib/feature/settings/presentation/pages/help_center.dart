@@ -3,7 +3,7 @@ import 'dart:math' as math; // Used for the trailing icon rotation
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/feature/settings/presentation/widgets/custom_search_bar.dart'; // Corrected import path
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../../../core/widget/CustomButton.dart';
 import '../../data/help_data.dart';
 import '../../domain/entity/help_items.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart'; // Adjust path
+import 'package:skin_firts/core/theme/color_palette.dart'; // Adjust path
 
 class CircularIconButton extends StatelessWidget {
    // For Material Icons

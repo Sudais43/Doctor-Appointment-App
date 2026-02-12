@@ -4,7 +4,7 @@ import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/widgets/custom_input_field.dart';
 import 'package:skin_firts/feature/settings/presentation/widgets/profile_pic.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../../../core/widget/CustomButton.dart';
 
 class EditProfile extends StatefulWidget {

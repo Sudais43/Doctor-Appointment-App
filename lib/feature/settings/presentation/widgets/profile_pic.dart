@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 
 
 class ProfilePic extends StatelessWidget {

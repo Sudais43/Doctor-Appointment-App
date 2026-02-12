@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class NotificationScreen extends StatelessWidget {

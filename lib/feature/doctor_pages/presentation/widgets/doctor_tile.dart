@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
 class DoctorTile extends StatelessWidget {
-
   final String doctorName;
   final String speciality;
   final String image;
@@ -20,12 +18,13 @@ class DoctorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Container(
       height: 131,
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(17),
-        color: LightColorPalette.secondary,
+        color: appColor.secondary,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,9 +34,7 @@ class DoctorTile extends StatelessWidget {
             child: SizedBox(
               height: 107,
               width: 107,
-              child: CircleAvatar(
-                backgroundImage: Image.asset(image).image,
-              ),
+              child: CircleAvatar(backgroundImage: Image.asset(image).image),
             ),
           ),
 
@@ -51,11 +48,11 @@ class DoctorTile extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 0),
                   child: Text(
                     doctorName,
-                      // "Muhammad Sudais",
+                    // "Muhammad Sudais",
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
-                      color: LightColorPalette.primary,
+                      color: appColor.Primary,
                       fontFamily: "League Spartan",
                     ),
                   ),
@@ -64,11 +61,11 @@ class DoctorTile extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(
                     speciality,
-                      // "Heart Surgeon",
+                    // "Heart Surgeon",
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w300,
-                      color: LightColorPalette.black,
+                      color: appColor.fontColor,
                       fontFamily: "League Spartan",
                     ),
                   ),
@@ -81,22 +78,22 @@ class DoctorTile extends StatelessWidget {
                       height: 22,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(18),
-                        color: LightColorPalette.primary,
+                        color: appColor.Primary,
                       ),
                       child: Center(
                         child: Text(
-                            "Info",
+                          "Info",
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
-                            color: LightColorPalette.white,
+                            color: appColor.white,
                             fontFamily: "League Spartan",
                           ),
                         ),
                       ),
                     ),
 
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10),
 
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
@@ -104,44 +101,51 @@ class DoctorTile extends StatelessWidget {
                         height: 21,
                         width: 21,
                         child: CircleAvatar(
-                          backgroundColor: LightColorPalette.white,
-                          child: SvgPicture.asset("assets/icons/Doctors/calender_icon.svg"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: LightColorPalette.white,
-                          child: SvgPicture.asset("assets/icons/Doctors/sign_exclamation_icon.svg"),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: LightColorPalette.white,
-                          child: SvgPicture.asset("assets/icons/Doctors/question_mark_icon.svg", fit: BoxFit.fill,),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: LightColorPalette.white,
+                          backgroundColor: appColor.white,
                           child: SvgPicture.asset(
-                            isFavorite ?
-                             "assets/icons/HomeScreen/favorite_filled_icon.svg" : "assets/icons/Doctors/favorite_outline_icon.svg",
-
+                            "assets/icons/Doctors/calender_icon.svg",
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: CircleAvatar(
+                          backgroundColor: appColor.white,
+                          child: SvgPicture.asset(
+                            "assets/icons/HomeScreen/info_mark.svg",
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: CircleAvatar(
+                          backgroundColor: appColor.white,
+                          child: SvgPicture.asset(
+                            "assets/icons/Doctors/question_mark_icon.svg",
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: SizedBox(
+                        height: 21,
+                        width: 21,
+                        child: CircleAvatar(
+                          backgroundColor: appColor.white,
+                          child: SvgPicture.asset(
+                            isFavorite
+                                ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
+                                : "assets/icons/Doctors/favorite_outline_icon.svg",
                           ),
                         ),
                       ),

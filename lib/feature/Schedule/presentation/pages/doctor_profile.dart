@@ -5,7 +5,7 @@ import 'package:skin_firts/feature/Schedule/presentation/widgets/doctor_profile_
 import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../data/dates_data.dart';
 
 class DoctorProfile extends StatefulWidget {

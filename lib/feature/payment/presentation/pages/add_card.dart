@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/payment/presentation/widgets/credit_card.dart';
+import 'package:skin_firts/feature/stripe_services.dart';
 
 class AddCardScreen extends StatefulWidget {
   const AddCardScreen({super.key});
@@ -122,8 +123,8 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle save logic here
-                    print("Saved: $_cardHolderName");
+                    StripeServices.instance.makePayment();
+                    // print("Saved: $_cardHolderName");
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: LightColorPalette.primary,

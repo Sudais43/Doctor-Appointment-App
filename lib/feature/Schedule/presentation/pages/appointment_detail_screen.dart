@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {

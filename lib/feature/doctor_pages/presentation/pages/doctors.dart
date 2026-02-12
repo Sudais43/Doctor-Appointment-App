@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:provider/provider.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
+import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_rating_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
@@ -13,20 +13,15 @@ import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
 
 class DoctorListPage extends StatefulWidget {
-
   final String? favoriteSort;
 
-  const DoctorListPage({
-    super.key,
-    this.favoriteSort,
-  });
+  const DoctorListPage({super.key, this.favoriteSort});
 
   @override
   State<DoctorListPage> createState() => _DoctorListPageState();
 }
 
 class _DoctorListPageState extends State<DoctorListPage> {
-
   late final List<DoctorInfo> allDoctors;
   String _selectedSort = "az";
   late List<DoctorInfo> doctor;
@@ -35,7 +30,10 @@ class _DoctorListPageState extends State<DoctorListPage> {
   final List<Map<String, String>> _sortOptions = [
     {"id": "az", "icon": "assets/icons/Doctors/sorting_icon.svg"},
     {"id": "rating", "icon": "assets/icons/Doctors/star_icon.svg"},
-    {"id": "favorite", "icon": "assets/icons/Doctors/favorite_outline_icon.svg"},
+    {
+      "id": "favorite",
+      "icon": "assets/icons/Doctors/favorite_outline_icon.svg",
+    },
     {"id": "male", "icon": "assets/icons/Doctors/male_icon.svg"},
     {"id": "female", "icon": "assets/icons/Doctors/female_icon.svg"},
   ];
@@ -47,7 +45,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
     allDoctors = List.from(doctors);
     doctor = List.from(allDoctors);
 
-    if(widget.favoriteSort != null) {
+    if (widget.favoriteSort != null) {
       _selectedSort = widget.favoriteSort!;
     }
 
@@ -81,79 +79,77 @@ class _DoctorListPageState extends State<DoctorListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F5FF),
       bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
-          title: "Doctors",
-          showSearch: true,
-          showSort: true,
-          onPressed: (){},
-          onSearch: (){},
+        title: "Doctors",
+        showSearch: true,
+        showSort: true,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        onSearch: () {},
       ),
       body: Column(
         children: [
           const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.only(left: 18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // 👇 Add your "Sort by" text here
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Text(
-                  "Sort by:",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: LightColorPalette.primary,
-                  ),
-                ),
-              ),
-              // 👇 Then spread your sort option buttons
-              ..._sortOptions.map((sort) {
-                final bool isSelected = _selectedSort == sort["id"];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 7),
-                  child: GestureDetector(
-                    onTap: () => _sortDoctors(sort["id"]!),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      height: 33,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? LightColorPalette.primary
-                            : LightColorPalette.white,
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(color: Colors.blue),
-                        boxShadow: isSelected
-                            ? [
-                          BoxShadow(
-                            color: Colors.blue.withOpacity(0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
-                            : [],
-                      ),
-                      child: SvgPicture.asset(
-                        sort["icon"]!,
-                        color: isSelected
-                            ? LightColorPalette.white
-                            : LightColorPalette.primary,
-                      ),
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // 👇 Add your "Sort by" text here
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Text(
+                    "Sort by:",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: appColor.Primary,
                     ),
                   ),
-                );
-              }).toList(),
-            ],
+                ),
+                // 👇 Then spread your sort option buttons
+                ..._sortOptions.map((sort) {
+                  final bool isSelected = _selectedSort == sort["id"];
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 7),
+                    child: GestureDetector(
+                      onTap: () => _sortDoctors(sort["id"]!),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        height: 33,
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: isSelected ? appColor.Primary : appColor.white,
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(color: Colors.blue),
+                          boxShadow:
+                              isSelected
+                                  ? [
+                                    BoxShadow(
+                                      color: Colors.blue.withOpacity(0.3),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ]
+                                  : [],
+                        ),
+                        child: SvgPicture.asset(
+                          sort["icon"]!,
+                          color: isSelected ? appColor.white : appColor.Primary,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ],
+            ),
           ),
-        ),
 
-
-        const SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           // 🔹 Doctor List
           Expanded(
@@ -164,36 +160,40 @@ class _DoctorListPageState extends State<DoctorListPage> {
               itemBuilder: (context, index) {
                 final doc = doctor[index];
                 Widget tile;
-                switch(_selectedSort){
+                switch (_selectedSort) {
                   case "rating":
                     tile = DoctorRatingTile(
-                        doctorName: doc.name,
-                        speciality: doc.Department,
-                        image: doc.images,
-                        isFavorite: doc.isFavorite
+                      doctorName: doc.name,
+                      speciality: doc.Department,
+                      image: doc.images,
+                      isFavorite: doc.isFavorite,
                     );
 
                   case "favorite":
                     tile = FavoriteDoctorTile(
-                        doctorName: doc.name,
-                        speciality: doc.Department,
-                        image: doc.images,
-                        isFavorite: doc.isFavorite
+                      doctorName: doc.name,
+                      speciality: doc.Department,
+                      image: doc.images,
+                      isFavorite: doc.isFavorite,
                     );
 
                   default:
                     tile = DoctorTile(
-                        doctorName: doc.name,
-                        speciality: doc.Department,
-                        image: doc.images,
-                        isFavorite: doc.isFavorite
+                      doctorName: doc.name,
+                      speciality: doc.Department,
+                      image: doc.images,
+                      isFavorite: doc.isFavorite,
                     );
                 }
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorDetail()));
+                return Consumer<DoctorViewModel>(
+                  builder: (context, viewModel, child) {
+                    return InkWell(
+                      onTap: () {
+                        viewModel.moveToDoctorDetail(context, doc);
+                      },
+                      child: tile,
+                    );
                   },
-                  child: tile,
                 );
               },
             ),

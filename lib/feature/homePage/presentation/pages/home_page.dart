@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:provider/provider.dart';
+import 'package:skin_firts/core/theme/app_color.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
 import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
+import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/notification.dart';
@@ -31,6 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Scaffold(
       bottomNavigationBar: BottomNavigationbar1(),
       body: SafeArea(
@@ -38,11 +43,11 @@ class _HomePageState extends State<HomePage> {
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              homeTopBar(),
+              homeTopBar(appColor),
 
               SizedBox(height: 10),
               Container(
-                color: LightColorPalette.secondary,
+                color: appColor.secondary,
                 child: Column(
                   children: [
                     SizedBox(height: 20),
@@ -63,8 +68,8 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(18),
                                 color:
                                     hasAppointment
-                                        ? LightColorPalette.primary
-                                        : LightColorPalette.white,
+                                        ? appColor.Primary
+                                        : appColor.white,
                               ),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -146,7 +151,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  homeTopBar() {
+  homeTopBar(AppColor appColor) {
     return Column(
       children: [
         Padding(
@@ -177,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w300,
-                            color: LightColorPalette.primary,
+                            color: appColor.Primary,
                             fontFamily: "League Spartan",
                           ),
                         ),
@@ -186,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
-                            color: LightColorPalette.black,
+                            color: appColor.fontColor,
                             fontFamily: "League Spartan",
                           ),
                         ),
@@ -196,99 +201,133 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
 
-              SizedBox(
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> NotificationScreen()));
-                      },
-                      child: Container(
-                        height: 27,
-                        width: 27,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: LightColorPalette.secondary,
+              Consumer<HomePageViewModel>(
+                builder: (context, homePageViewModel, child) {
+                  return SizedBox(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => NotificationScreen(),
+                            //   ),
+                            // );
+                            homePageViewModel.moveToNotificationPage(context);
+                          },
+                          child: Container(
+                            height: 27,
+                            width: 27,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: appColor.secondary,
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/HomeScreen/notification_icon.svg",
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
                         ),
-                        child: SvgPicture.asset(
-                          "assets/icons/HomeScreen/notification_icon.svg",
-                          fit: BoxFit.scaleDown,
+                        SizedBox(width: 5),
+                        GestureDetector(
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ProfileScreen(),
+                            //   ),
+                            // );
+                            homePageViewModel.moveToProfileSetting(context);
+                          },
+                          child: Container(
+                            height: 27,
+                            width: 27,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: appColor.secondary,
+                            ),
+                            child: SvgPicture.asset(
+                              "assets/icons/HomeScreen/ssetting_icon.svg",
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(width: 5),
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
-                      },
-                      child: Container(
-                        height: 27,
-                        width: 27,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: LightColorPalette.secondary,
-                        ),
-                        child: SvgPicture.asset(
-                          "assets/icons/HomeScreen/ssetting_icon.svg",
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
         ),
         SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(width: 5),
-                    LabelButton(
-                      icon: SvgPicture.asset(
-                        "assets/icons/HomeScreen/doctor_icon.svg",
-                      ),
-                      label: "Doctor",
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorListPage()));
-                      },
+        Consumer<HomePageViewModel>(
+          builder: (context, homePageVM, child) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(width: 5),
+                        LabelButton(
+                          icon: SvgPicture.asset(
+                            "assets/icons/HomeScreen/doctor_icon.svg",
+                          ),
+                          label: "Doctor",
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => DoctorListPage(),
+                            //   ),
+                            // );
+                            homePageVM.moveToDoctorPage(context);
+                          },
+                        ),
+                        SizedBox(width: 25),
+                        LabelButton(
+                          icon: SvgPicture.asset(
+                            "assets/icons/HomeScreen/favorite_outline_icon.svg",
+                          ),
+                          label: "Favorite",
+                          onTap: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder:
+                            //         (context) =>
+                            //             DoctorListPage(favoriteSort: "favorite"),
+                            //   ),
+                            // );
+                            homePageVM.moveToFavoritePage(context);
+                          },
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 25),
-                    LabelButton(
-                      icon: SvgPicture.asset(
-                        "assets/icons/HomeScreen/favorite_outline_icon.svg",
-                      ),
-                      label: "Favorite",
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorListPage(favoriteSort: "favorite",)));
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                  ),
 
-              searchBar(),
-            ],
-          ),
+                  searchBar(appColor),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
-  searchBar() {
+  searchBar(AppColor appColor) {
     return Container(
       height: 33,
       width: 190,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(23),
-        color: LightColorPalette.secondary,
+        color: appColor.secondary,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                 height: 26,
                 width: 26,
                 child: CircleAvatar(
-                  backgroundColor: LightColorPalette.white,
+                  backgroundColor: appColor.white,
                   child: SvgPicture.asset(
                     "assets/icons/HomeScreen/filter_icon.svg",
                   ),

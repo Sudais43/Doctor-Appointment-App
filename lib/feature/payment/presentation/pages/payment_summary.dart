@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 
 // --- Constants for Colors (Replace with your LightColorPalette) ---
 class AppColors {

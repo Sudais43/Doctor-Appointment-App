@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart'; // Ensure correct path
+import 'package:skin_firts/core/theme/color_palette.dart'; // Ensure correct path
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

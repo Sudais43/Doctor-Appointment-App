@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onPressed;
@@ -28,25 +28,29 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final SystemUiOverlayStyle systemStyle = (isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark)
+        .copyWith(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
 
-    final SystemUiOverlayStyle systemStyle = SystemUiOverlayStyle.dark.copyWith(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-
-      systemNavigationBarColor: Colors.amber,
-      systemNavigationBarIconBrightness: Brightness.light,
-    );
+          systemNavigationBarColor: Colors.amber,
+          systemNavigationBarIconBrightness: Brightness.light,
+        );
 
     return AppBar(
+      centerTitle: true,
       systemOverlayStyle: systemStyle,
       automaticallyImplyLeading: showBackButton,
       leadingWidth: !showBackButton ? 0 : leadingWidth,
       backgroundColor: Colors.transparent,
-      foregroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       titleSpacing: 0,
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: appColor.fontColor),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,7 +62,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               fontSize: 27,
               fontFamily: "LeagueSpartan",
               fontWeight: FontWeight.w700,
-              color: LightColorPalette.primary,
+              color: appColor.Primary,
             ),
           ),
 
@@ -72,7 +76,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       height: 21,
                       width: 21,
                       child: CircleAvatar(
-                        backgroundColor: LightColorPalette.white,
+                        backgroundColor: appColor.white,
                         child: SvgPicture.asset(
                           "assets/icons/Doctors/search_icon.svg",
                         ),
@@ -88,10 +92,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         height: 21,
                         width: 21,
                         child: CircleAvatar(
-                          backgroundColor: LightColorPalette.white,
+                          backgroundColor: appColor.white,
                           child: SvgPicture.asset(
                             "assets/icons/Doctors/sorting_icon.svg",
-                            color: LightColorPalette.primary,
+                            color: appColor.Primary,
                           ),
                         ),
                       ),
@@ -103,8 +107,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           // SizedBox(width: 30),
         ],
       ),
-
-
     );
   }
 

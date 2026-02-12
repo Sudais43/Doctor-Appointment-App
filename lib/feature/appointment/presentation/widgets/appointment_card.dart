@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../entity/appointment.dart';
 
 class AppointmentCard extends StatelessWidget {

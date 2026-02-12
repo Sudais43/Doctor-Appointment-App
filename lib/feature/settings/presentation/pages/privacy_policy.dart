@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart'; // Assuming this is your custom app bar
 
 class PrivacyPolicyScreen extends StatelessWidget {

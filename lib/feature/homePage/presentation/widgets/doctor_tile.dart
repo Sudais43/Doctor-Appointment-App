@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skin_firts/core/theme/app_color.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 
 class DoctorTile extends StatefulWidget {
-
   final String doctorName;
   final String department;
   final int messages;
@@ -19,7 +20,7 @@ class DoctorTile extends StatefulWidget {
     required this.messages,
     required this.rating,
     required this.image,
-    required this.isFavorite
+    required this.isFavorite,
   });
 
   @override
@@ -29,12 +30,13 @@ class DoctorTile extends StatefulWidget {
 class _DoctorTileState extends State<DoctorTile> {
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Container(
       height: 74,
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(17),
-        color: LightColorPalette.secondary,
+        color: appColor.secondary,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +48,7 @@ class _DoctorTileState extends State<DoctorTile> {
               backgroundImage: Image.asset(widget.image).image,
             ),
           ),
-          SizedBox(width: 10,),
+          SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +58,7 @@ class _DoctorTileState extends State<DoctorTile> {
                 height: 44,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(13),
-                  color: LightColorPalette.white,
+                  color: appColor.white,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 12.0),
@@ -70,14 +72,14 @@ class _DoctorTileState extends State<DoctorTile> {
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
-                          color: LightColorPalette.primary,
+                          color: appColor.Primary,
                           height: 1,
                           fontFamily: "League Spartan",
                         ),
                       ),
                       Text(
                         widget.department,
-                          // "Heart Surgeon",
+                        // "Heart Surgeon",
                         style: TextStyle(
                           fontSize: 12,
                           height: 1,
@@ -90,7 +92,7 @@ class _DoctorTileState extends State<DoctorTile> {
                   ),
                 ),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 5),
               Row(
                 children: [
                   Container(
@@ -98,43 +100,47 @@ class _DoctorTileState extends State<DoctorTile> {
                     height: 18,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
-                      color: LightColorPalette.white,
+                      color: appColor.white,
                     ),
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
-                          child: SvgPicture.asset("assets/icons/HomeScreen/star_filled_icon.svg"),
+                          child: SvgPicture.asset(
+                            "assets/icons/HomeScreen/star_filled_icon.svg",
+                          ),
                         ),
-                        SizedBox(width: 5,),
+                        SizedBox(width: 5),
                         Text(
                           widget.rating.toString(),
                           // "5",
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w300,
-                            color: LightColorPalette.primary,
+                            color: appColor.Primary,
                             fontFamily: "League Spartan",
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(width: 05,),
+                  SizedBox(width: 05),
                   Container(
                     width: 43,
                     height: 18,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
-                      color: LightColorPalette.white,
+                      color: appColor.white,
                     ),
                     child: Row(
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 5.0),
-                          child: SvgPicture.asset("assets/icons/HomeScreen/message_icon.svg"),
+                          child: SvgPicture.asset(
+                            "assets/icons/HomeScreen/message_icon.svg",
+                          ),
                         ),
-                        SizedBox(width: 5,),
+                        SizedBox(width: 5),
                         Text(
                           widget.messages.toString(),
                           // "60",
@@ -149,23 +155,27 @@ class _DoctorTileState extends State<DoctorTile> {
                     ),
                   ),
 
-                  SizedBox(width: 75,),
+                  SizedBox(width: 75),
 
                   SizedBox(
-                    height:19,
+                    height: 19,
                     width: 19,
                     child: CircleAvatar(
-                      backgroundColor: LightColorPalette.white,
-                      child: SvgPicture.asset("assets/icons/HomeScreen/question_mark_icon.svg"),
+                      backgroundColor: appColor.white,
+                      child: SvgPicture.asset(
+                        "assets/icons/HomeScreen/question_mark_icon.svg",
+                      ),
                     ),
                   ),
-                  SizedBox(width: 5,),
+                  SizedBox(width: 5),
                   SizedBox(
-                    height:19,
+                    height: 19,
                     width: 19,
                     child: CircleAvatar(
-                      backgroundColor: LightColorPalette.white,
-                      child: SvgPicture.asset("assets/icons/HomeScreen/favorite_filled_icon.svg"),
+                      backgroundColor: appColor.white,
+                      child: SvgPicture.asset(
+                        "assets/icons/HomeScreen/favorite_filled_icon.svg",
+                      ),
                     ),
                   ),
                 ],

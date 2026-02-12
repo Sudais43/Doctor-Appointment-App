@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
 class FavoriteDoctorTile extends StatelessWidget {
   final String doctorName;
@@ -19,12 +18,13 @@ class FavoriteDoctorTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Container(
       height: 106,
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(17),
-        color: LightColorPalette.secondary,
+        color: appColor.secondary,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +59,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
-                              color: LightColorPalette.primary,
+                              color: appColor.Primary,
                               fontFamily: "League Spartan",
                             ),
                           ),
@@ -76,7 +76,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                   width: 250,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(13),
-                    color: LightColorPalette.white,
+                    color: appColor.white,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +96,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                                     fontSize: 15,
                                     height: 1.1,
                                     fontWeight: FontWeight.w500,
-                                    color: LightColorPalette.primary,
+                                    color: appColor.Primary,
                                     fontFamily: "League Spartan",
                                   ),
                                 ),
@@ -112,7 +112,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                                     fontSize: 13,
                                     height: 1.1,
                                     fontWeight: FontWeight.w300,
-                                    color: LightColorPalette.black,
+                                    color: appColor.fontColor,
                                     fontFamily: "League Spartan",
                                   ),
                                 ),
@@ -143,7 +143,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                   width: 250,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: LightColorPalette.primary,
+                      backgroundColor: appColor.Primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(13),
                       ),
@@ -155,7 +155,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
-                          color: LightColorPalette.white,
+                          color: appColor.white,
                           fontFamily: "League Spartan",
                         ),
                       ),

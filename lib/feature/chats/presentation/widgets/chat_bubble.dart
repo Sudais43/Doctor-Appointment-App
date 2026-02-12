@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart'; // Import your color palette
+import 'package:skin_firts/core/theme/color_palette.dart'; // Import your color palette
 import '../../domain/messages_model.dart'; // Import the message model
 
 class ChatBubble extends StatelessWidget {

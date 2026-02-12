@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
 import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
 import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class DoctorDetail extends StatefulWidget {
-  const DoctorDetail({super.key});
+  final String doctorName;
+  final String image;
+  final String speciality;
+  final bool isFavorite;
+
+  const DoctorDetail({
+    super.key,
+    required this.doctorName,
+    required this.image,
+    required this.speciality,
+    required this.isFavorite,
+  });
 
   @override
   State<DoctorDetail> createState() => _DoctorDetailState();
@@ -66,6 +77,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Scaffold(
       bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
@@ -77,480 +89,495 @@ class _DoctorDetailState extends State<DoctorDetail> {
         onSort: () {},
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 56.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // 👇 Add your "Sort by" text here
-                  Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Text(
-                      "Sort by:",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        color: LightColorPalette.black,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(bottom: 10),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 56.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // 👇 Add your "Sort by" text here
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Text(
+                        "Sort by:",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w300,
+                          color: appColor.fontColor,
+                        ),
                       ),
                     ),
-                  ),
-                  // 👇 Then spread your sort option buttons
-                  ..._sortOptions.map((sort) {
-                    final bool isSelected = _selectedSort == sort["id"];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: GestureDetector(
-                        onTap: () => _sortDoctors(sort["id"]!),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          height: 25,
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color:
-                                isSelected
-                                    ? LightColorPalette.primary
-                                    : LightColorPalette.white,
-                            borderRadius: BorderRadius.circular(50),
-                            border: Border.all(color: Colors.blue),
-                            boxShadow:
-                                isSelected
-                                    ? [
-                                      BoxShadow(
-                                        color: Colors.blue.withOpacity(0.3),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 3),
-                                      ),
-                                    ]
-                                    : [],
-                          ),
-                          child: SvgPicture.asset(
-                            sort["icon"]!,
-                            color:
-                                isSelected
-                                    ? LightColorPalette.white
-                                    : LightColorPalette.primary,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 10,),
-
-            Container(
-              width: 300,
-              height: 283,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(17),
-                color: LightColorPalette.secondary,
-              ),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        height: 140,
-                        width: 140,
-                        child: CircleAvatar(
-                          backgroundImage:
-                              Image.asset(
-                                "assets/icons/Doctors/images/doctor1.png",
-                              ).image,
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        children: [
-                          Container(
-                            height: 27,
-                            width: 108,
+                    // 👇 Then spread your sort option buttons
+                    ..._sortOptions.map((sort) {
+                      final bool isSelected = _selectedSort == sort["id"];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: GestureDetector(
+                          onTap: () => _sortDoctors(sort["id"]!),
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 200),
+                            height: 25,
+                            padding: const EdgeInsets.all(6),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              color: LightColorPalette.primary,
+                              color:
+                                  isSelected
+                                      ? appColor.Primary
+                                      : appColor.white,
+                              borderRadius: BorderRadius.circular(50),
+                              border: Border.all(color: Colors.blue),
+                              boxShadow:
+                                  isSelected
+                                      ? [
+                                        BoxShadow(
+                                          color: Colors.blue.withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ]
+                                      : [],
                             ),
-                            child: Row(
-                              // mainAxisAlignment: MainAxisAlignment.center,
-                              // crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: SizedBox(
-                                    height: 21,
-                                    width: 21,
-                                    child: CircleAvatar(
-                                      backgroundColor:
-                                          LightColorPalette.secondary,
-                                      child: SvgPicture.asset(
-                                        "assets/icons/HomeScreen/badge_icon.svg",
+                            child: SvgPicture.asset(
+                              sort["icon"]!,
+                              color:
+                                  isSelected
+                                      ? appColor.white
+                                      : appColor.Primary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Container(
+                width: 300,
+                height: 283,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(17),
+                  color: appColor.secondary,
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 140,
+                          width: 140,
+                          child: CircleAvatar(
+                            backgroundImage:
+                                Image.asset(
+                                  // "assets/icons/Doctors/images/doctor1.png",
+                                  widget.image,
+                                ).image,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Column(
+                          children: [
+                            Container(
+                              height: 27,
+                              width: 108,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                                color: appColor.Primary,
+                              ),
+                              child: Row(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                // crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 5.0),
+                                    child: SizedBox(
+                                      height: 21,
+                                      width: 21,
+                                      child: CircleAvatar(
+                                        backgroundColor: appColor.secondary,
+                                        child: SvgPicture.asset(
+                                          "assets/icons/HomeScreen/badge_icon.svg",
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                  "15 Years \n experience",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    height: 1,
-                                    fontWeight: FontWeight.w300,
-                                    color: LightColorPalette.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Container(
-                            height: 108,
-                            width: 108,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(18),
-                              color: LightColorPalette.primary,
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0,
-                                ),
-                                child: RichText(
-                                  text: TextSpan(
+                                  SizedBox(width: 3),
+                                  Text(
+                                    "15 Years \n experience",
                                     style: TextStyle(
                                       fontSize: 12,
-                                      height: 1.1,
-                                      fontFamily: "LeagueSpartan",
+                                      height: 1,
+                                      fontWeight: FontWeight.w300,
+                                      color: appColor.white,
                                     ),
-                                    children: [
-                                      TextSpan(
-                                        text: "Focus: ",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Container(
+                              height: 108,
+                              width: 108,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(18),
+                                color: appColor.Primary,
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        height: 1.1,
+                                        fontFamily: "LeagueSpartan",
                                       ),
-                                      TextSpan(
-                                        text:
-                                            "The impact of hormonal imbalances on skin conditions, specializing in acne, hirsutism, and other skin disorders.",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w300,
+                                      children: [
+                                        TextSpan(
+                                          text: "Focus: ",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                        TextSpan(
+                                          text:
+                                              "The impact of hormonal imbalances on skin conditions, specializing in acne, hirsutism, and other skin disorders.",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+                    Container(
+                      height: 39,
+                      width: 257,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(13),
+                        color: appColor.white,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.doctorName,
+                            // "Dr. Alexander Bennett, Ph.D.",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              height: 1,
+                              color: appColor.Primary,
+                              fontFamily: "LeagueSpartan",
+                            ),
+                          ),
+                          Text(
+                            widget.speciality,
+                            // "Dermato-Genetics",
+                            style: TextStyle(
+                              fontSize: 13,
+                              height: 1,
+                              fontWeight: FontWeight.w300,
+                              color: appColor.fontColor,
+                              fontFamily: "LeagueSpartan",
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Container(
-                    height: 39,
-                    width: 257,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(13),
-                      color: LightColorPalette.white,
                     ),
-                    child: Column(
+                    SizedBox(height: 10),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Dr. Alexander Bennett, Ph.D.",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
-                            color: LightColorPalette.primary,
-                            fontFamily: "LeagueSpartan",
-                          ),
-                        ),
-                        Text(
-                          "Dermato-Genetics",
-                          style: TextStyle(
-                            fontSize: 13,
-                            height: 1,
-                            fontWeight: FontWeight.w300,
-                            color: LightColorPalette.black,
-                            fontFamily: "LeagueSpartan",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 43,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          color: LightColorPalette.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: SvgPicture.asset(
-                                "assets/icons/HomeScreen/star_filled_icon.svg",
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "5",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                color: LightColorPalette.primary,
-                                fontFamily: "League Spartan",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 43,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          color: LightColorPalette.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: SvgPicture.asset(
-                                "assets/icons/HomeScreen/message_icon.svg",
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "60",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                color: LightColorPalette.primary,
-                                fontFamily: "League Spartan",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        height: 18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(13),
-                          color: LightColorPalette.white,
-                        ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 5.0),
-                              child: SvgPicture.asset(
-                                "assets/icons/HomeScreen/time_icon.svg",
-                              ),
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Mon-Sat / 9:00AM-5:00PM",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                color: LightColorPalette.primary,
-                                fontFamily: "League Spartan",
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10),
-
-                  // Icons Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleScreen()));
-                        },
-                        child: Container(
-                          width: 82,
-                          height: 21,
+                        Container(
+                          width: 35,
+                          height: 18,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            color: LightColorPalette.primary,
+                            borderRadius: BorderRadius.circular(13),
+                            color: appColor.white,
                           ),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SvgPicture.asset(
-                                "assets/icons/Doctors/calender_icon.svg",
-                                color: LightColorPalette.white,
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: SvgPicture.asset(
+                                  "assets/icons/HomeScreen/star_filled_icon.svg",
+                                ),
                               ),
                               SizedBox(width: 3),
                               Text(
-                                "Schedule",
+                                "5",
                                 style: TextStyle(
-                                  color: LightColorPalette.white,
                                   fontSize: 12,
                                   fontWeight: FontWeight.w300,
+                                  color: appColor.Primary,
                                   fontFamily: "League Spartan",
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: SizedBox(
-                              height: 21,
-                              width: 21,
-                              child: CircleAvatar(
-                                backgroundColor: LightColorPalette.white,
+                        Container(
+                          width: 43,
+                          height: 18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            color: appColor.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
                                 child: SvgPicture.asset(
-                                  "assets/icons/HomeScreen/info_mark.svg",
+                                  "assets/icons/HomeScreen/message_icon.svg",
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "60",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  color: appColor.Primary,
+                                  fontFamily: "League Spartan",
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: 18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(13),
+                            color: appColor.white,
+                          ),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: SvgPicture.asset(
+                                  "assets/icons/HomeScreen/time_icon.svg",
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4),
+                                child: Text(
+                                  "Mon-Sat / 9:00AM-5:00PM",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    color: appColor.Primary,
+                                    fontFamily: "League Spartan",
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 10),
+
+                    // Icons Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ScheduleScreen(),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            width: 82,
+                            height: 21,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(18),
+                              color: appColor.Primary,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/icons/Doctors/calender_icon.svg",
+                                  color: appColor.white,
+                                ),
+                                SizedBox(width: 3),
+                                Text(
+                                  "Schedule",
+                                  style: TextStyle(
+                                    color: appColor.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: "League Spartan",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: SizedBox(
+                                height: 21,
+                                width: 21,
+                                child: CircleAvatar(
+                                  backgroundColor: appColor.white,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/HomeScreen/info_mark.svg",
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: SizedBox(
-                              height: 21,
-                              width: 21,
-                              child: CircleAvatar(
-                                backgroundColor: LightColorPalette.white,
-                                child: SvgPicture.asset(
-                                  "assets/icons/Doctors/question_mark_icon.svg",
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: SizedBox(
+                                height: 21,
+                                width: 21,
+                                child: CircleAvatar(
+                                  backgroundColor: appColor.white,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/Doctors/question_mark_icon.svg",
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: SizedBox(
-                              height: 21,
-                              width: 21,
-                              child: CircleAvatar(
-                                backgroundColor: LightColorPalette.white,
-                                child: SvgPicture.asset(
-                                  "assets/icons/HomeScreen/star_outline_icon.svg",
-                                  fit: BoxFit.fill,
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: SizedBox(
+                                height: 21,
+                                width: 21,
+                                child: CircleAvatar(
+                                  backgroundColor: appColor.white,
+                                  child: SvgPicture.asset(
+                                    "assets/icons/HomeScreen/star_outline_icon.svg",
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 5.0),
-                            child: SizedBox(
-                              height: 21,
-                              width: 21,
-                              child: CircleAvatar(
-                                backgroundColor: LightColorPalette.white,
-                                child: SvgPicture.asset(
-                                  "assets/icons/HomeScreen/favorite_filled_icon.svg",
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: SizedBox(
+                                height: 21,
+                                width: 21,
+                                child: CircleAvatar(
+                                  backgroundColor: appColor.white,
+                                  child: SvgPicture.asset(
+                                    widget.isFavorite
+                                        ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
+                                        : "assets/icons/Doctors/favorite_outline_icon.svg",
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 10),
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Profile",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: appColor.Primary,
                   ),
-                ],
+                ),
               ),
-            ),
 
-            SizedBox(height: 10,),
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Profile",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: LightColorPalette.primary,
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1,
+                    fontWeight: FontWeight.w300,
+                    color: appColor.fontColor,
+                  ),
                 ),
               ),
-            ),
+              SizedBox(height: 10),
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Career Path",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: appColor.Primary,
+                  ),
+                ),
+              ),
 
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1,
-                  fontWeight: FontWeight.w300,
-                  color: LightColorPalette.black,
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1,
+                    fontWeight: FontWeight.w300,
+                    color: appColor.fontColor,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 10,),
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Career Path",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: LightColorPalette.primary,
+              SizedBox(height: 10),
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Highlights",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: appColor.Primary,
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1,
-                  fontWeight: FontWeight.w300,
-                  color: LightColorPalette.black,
+              SizedBox(
+                width: 282,
+                child: Text(
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+                  style: TextStyle(
+                    fontSize: 12,
+                    height: 1,
+                    fontWeight: FontWeight.w300,
+                    color: appColor.fontColor,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 10,),
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Highlights",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: LightColorPalette.primary,
-                ),
-              ),
-            ),
-
-            SizedBox(
-              width: 282,
-              child: Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-                style: TextStyle(
-                  fontSize: 12,
-                  height: 1,
-                  fontWeight: FontWeight.w300,
-                  color: LightColorPalette.black,
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

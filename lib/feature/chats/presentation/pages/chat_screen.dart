@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path_provider/path_provider.dart'; // To get file path
 import 'package:permission_handler/permission_handler.dart'; // For permissions
 import 'package:record/record.dart'; // The recording package
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/feature/chats/presentation/widgets/chat_app_bar.dart';
 import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 

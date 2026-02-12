@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 
 class LabelButton extends StatelessWidget {
 

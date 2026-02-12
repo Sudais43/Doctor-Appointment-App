@@ -1,4 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:skin_firts/core/theme/theme_provider.dart';
+
 import '../domain/entity/notification_setting.dart';
+
 
 final List<NotificationSetting> settings = [
   NotificationSetting(title: 'General Notification', value: true),

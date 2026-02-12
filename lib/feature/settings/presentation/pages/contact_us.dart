@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:skin_firts/feature/settings/presentation/widgets/custom_search_bar.dart';
-import '../../../../core/color/light/LIghtColorPalette.dart';
+import '../../../../core/theme/color_palette.dart';
 import '../../../../core/widget/CustomButton.dart';
 
 class ContactUs extends StatefulWidget {

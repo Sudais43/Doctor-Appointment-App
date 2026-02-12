@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart';
+import 'package:skin_firts/core/theme/color_palette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 
 class CustomInputField extends StatelessWidget {
   final String label;
@@ -10,7 +11,7 @@ class CustomInputField extends StatelessWidget {
   final double? width;
   final Widget? suffixIcon; // ✅ Changed to widget for flexibility
 
-   CustomInputField({
+  CustomInputField({
     super.key,
     required this.label,
     required this.controller,
@@ -23,6 +24,7 @@ class CustomInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return SizedBox(
       height: height,
       width: width,
@@ -33,13 +35,13 @@ class CustomInputField extends StatelessWidget {
         maxLines: 1,
         decoration: InputDecoration(
           filled: true,
-          fillColor: LightColorPalette.secondary,
+          fillColor: appColor.secondary,
           hintText: label,
-          hintStyle: const TextStyle(
+          hintStyle: TextStyle(
             fontFamily: "LeagueSpartan",
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            color: LightColorPalette.textColor,
+            color: appColor.textColor,
           ),
           suffixIcon: suffixIcon, // ✅ only shows if provided
           contentPadding: const EdgeInsets.symmetric(

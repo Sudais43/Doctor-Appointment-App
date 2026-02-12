@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:skin_firts/core/color/light/LIghtColorPalette.dart'; // Import your color palette
+import 'package:skin_firts/core/theme/color_palette.dart'; // Import your color palette
 import 'package:skin_firts/feature/chats/domain/messages_model.dart';
 
 class AudioMessageBubble extends StatefulWidget {
