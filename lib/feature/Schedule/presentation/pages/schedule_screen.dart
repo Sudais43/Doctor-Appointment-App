@@ -7,7 +7,6 @@ import 'package:skin_firts/feature/Schedule/presentation/pages/rough.dart';
 import 'package:skin_firts/feature/Schedule/presentation/widgets/booking_type_selector.dart';
 import 'package:skin_firts/feature/Schedule/presentation/widgets/day_capsule.dart';
 import 'package:skin_firts/feature/authentication/presentation/widgets/custom_input_field.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 import '../../data/time_slots.dart';
 import '../../domain/time_data_model.dart';
@@ -84,7 +83,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final appColor = context.appColors;
     return Scaffold(
       appBar: CustomDetailAppBar(),
-      bottomNavigationBar: BottomNavigationbar1(),
+      // bottomNavigationBar: BottomNavigationbar1(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 
 class ReviewScreen extends StatefulWidget {
@@ -19,7 +18,6 @@ class _ReviewScreenState extends State<ReviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationbar1(),
       backgroundColor: Colors.white,
       appBar: CustomAppBar(title: "Add Review", onPressed: (){}),
       body: SafeArea(

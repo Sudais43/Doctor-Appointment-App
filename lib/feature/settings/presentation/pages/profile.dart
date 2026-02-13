@@ -4,8 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
-import 'package:skin_firts/feature/authentication/presentation/pages/login_2.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/edit_profile.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/help_center.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
@@ -28,7 +26,7 @@ class ProfileScreen extends StatelessWidget {
     final appColor = context.appColors;
     return Scaffold(
       // Ensure a white background for the screen
-      bottomNavigationBar: BottomNavigationbar1(),
+      // bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
         title: "My Profile",
         onPressed: () {

@@ -34,7 +34,10 @@ class DoctorTile extends StatelessWidget {
             child: SizedBox(
               height: 107,
               width: 107,
-              child: CircleAvatar(backgroundImage: Image.asset(image).image),
+              child: Hero(
+                tag: doctorName,
+                child: CircleAvatar(backgroundImage: Image.asset(image).image),
+              ),
             ),
           ),
 

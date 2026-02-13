@@ -11,6 +11,7 @@ import 'package:skin_firts/feature/authentication/presentation/view_model/auth_v
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
+import 'package:skin_firts/main_screen.dart';
 import 'core/API/api_keys.dart';
 
 void main() async {

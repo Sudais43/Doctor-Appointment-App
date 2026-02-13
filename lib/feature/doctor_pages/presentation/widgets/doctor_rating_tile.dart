@@ -34,7 +34,10 @@ class DoctorRatingTile extends StatelessWidget {
             child: SizedBox(
               height: 70,
               width: 70,
-              child: CircleAvatar(backgroundImage: Image.asset(image).image),
+              child: Hero(
+                tag: doctorName,
+                child: CircleAvatar(backgroundImage: Image.asset(image).image),
+              ),
             ),
           ),
 

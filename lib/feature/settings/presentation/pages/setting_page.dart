@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:skin_firts/core/theme/app_color.dart';
+import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
+import 'package:skin_firts/core/theme/theme_provider.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/notification_Setting.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/password_manager.dart';
-
-import '../../../../core/theme/color_palette.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -47,6 +46,24 @@ class SettingPage extends StatelessWidget {
               icon: "assets/icons/settings/profile_icon.svg",
               text: 'Delete Account',
               onTap: () {},
+            ),
+            Consumer<ThemeProvider>(
+              builder: (context, themeProvider, child) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 50, right: 10),
+                  child: SwitchListTile(
+                    title: const Text(
+                      'Dark Mode',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    value: themeProvider.isDark,
+                    onChanged: (_) => themeProvider.toggle(),
+                  ),
+                );
+              },
             ),
           ],
         ),

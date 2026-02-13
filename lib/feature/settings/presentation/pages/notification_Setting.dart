@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
-import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
-import 'package:skin_firts/core/theme/theme_provider.dart';
-import 'package:skin_firts/core/widget/custom_app_bar.dart';
-
 import '../../data/notification_setting_data.dart';
 import '../../domain/entity/notification_setting.dart';
 
@@ -21,7 +16,6 @@ class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
     final appColor = context.appColors;
 
     return Scaffold(
@@ -51,12 +45,6 @@ class _NotificationSettingsScreenState
                 return _buildSettingRow(setting, appColor, context);
               },
             ),
-          ),
-
-          SwitchListTile(
-            title: const Text('Dark Mode'),
-            value: themeProvider.isDark,
-            onChanged: (_) => themeProvider.toggle(),
           ),
         ],
       ),

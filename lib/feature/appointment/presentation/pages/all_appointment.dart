@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 
 import '../../../../core/widget/custom_app_bar.dart';
-import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 import '../../data/appointment_data.dart';
 import '../../entity/appointment.dart';
 import '../widgets/appointment_card.dart';
@@ -33,7 +32,6 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(title: "All Appointments", onPressed: (){}),
       body: Column(
         children: [

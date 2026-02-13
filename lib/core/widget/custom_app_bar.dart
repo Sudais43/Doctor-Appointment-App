@@ -23,7 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showSort = false,
     this.onSearch,
     this.onSort,
-    this.leadingWidth = 56,
+    this.leadingWidth = 50,
   });
 
   @override
@@ -65,48 +65,49 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               color: appColor.Primary,
             ),
           ),
-
-          if (showSearch || showSort)
-            Row(
-              children: [
-                if (showSearch)
-                  GestureDetector(
-                    onTap: onSearch,
+          // SizedBox(width: 30),
+        ],
+      ),
+      actions: [
+        if (showSearch || showSort)
+          Row(
+            children: [
+              if (showSearch)
+                GestureDetector(
+                  onTap: onSearch,
+                  child: SizedBox(
+                    height: 21,
+                    width: 21,
+                    child: CircleAvatar(
+                      backgroundColor: appColor.white,
+                      child: SvgPicture.asset(
+                        "assets/icons/Doctors/search_icon.svg",
+                      ),
+                    ),
+                  ),
+                ),
+              if (showSort)
+                GestureDetector(
+                  onTap: onSort,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
                     child: SizedBox(
                       height: 21,
                       width: 21,
                       child: CircleAvatar(
                         backgroundColor: appColor.white,
                         child: SvgPicture.asset(
-                          "assets/icons/Doctors/search_icon.svg",
+                          "assets/icons/Doctors/sorting_icon.svg",
+                          color: appColor.Primary,
                         ),
                       ),
                     ),
                   ),
-                if (showSort)
-                  GestureDetector(
-                    onTap: onSort,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: appColor.white,
-                          child: SvgPicture.asset(
-                            "assets/icons/Doctors/sorting_icon.svg",
-                            color: appColor.Primary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                SizedBox(width: 30),
-              ],
-            ),
-          // SizedBox(width: 30),
-        ],
-      ),
+                ),
+              SizedBox(width: 30),
+            ],
+          ),
+      ],
     );
   }
 

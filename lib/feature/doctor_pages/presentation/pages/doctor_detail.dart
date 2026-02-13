@@ -6,7 +6,6 @@ import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.d
 
 import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
-import '../../../homePage/presentation/pages/bottom_navigation_bar.dart';
 
 class DoctorDetail extends StatefulWidget {
   final String doctorName;
@@ -79,7 +78,6 @@ class _DoctorDetailState extends State<DoctorDetail> {
   Widget build(BuildContext context) {
     final appColor = context.appColors;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
         title: "Doctor Info",
         showSearch: true,

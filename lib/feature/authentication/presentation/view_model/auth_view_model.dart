@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:skin_firts/core/navigation/slide_transition.dart';
 import 'package:skin_firts/feature/authentication/domain/model/user_entity.dart';
 import 'package:skin_firts/feature/authentication/domain/repositories/auth_repository.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
+import 'package:skin_firts/main_screen.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
@@ -34,9 +35,10 @@ class AuthViewModel extends ChangeNotifier {
     if (!context.mounted) return;
 
     if (isSuccess) {
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        SlideRoute(page: MainScreen()),
+        (route) => false,
       );
     } else {
       ScaffoldMessenger.of(
@@ -75,9 +77,10 @@ class AuthViewModel extends ChangeNotifier {
       await _authRepository.registerUser(newUser);
       debugPrint("Account Registerd ${newUser.userName}");
       if (!context.mounted) return;
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        SlideRoute(page: MainScreen()),
+        (route) => false,
       );
     }
   }

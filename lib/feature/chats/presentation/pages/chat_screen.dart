@@ -6,7 +6,6 @@ import 'package:permission_handler/permission_handler.dart'; // For permissions
 import 'package:record/record.dart'; // The recording package
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/feature/chats/presentation/widgets/chat_app_bar.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 import '../../data/messages.dart';
 import '../../domain/messages_model.dart';
@@ -167,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationbar1(),
+      // bottomNavigationBar: BottomNavigationbar1(),
       appBar: ChatAppBar(
         title: widget.doctorName,
         onPressed: () => Navigator.pop(context),
@@ -235,7 +234,9 @@ class _ChatScreenState extends State<ChatScreen> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () { print('Attach file'); },
+            onTap: () {
+              print('Attach file');
+            },
             child: Container(
               height: 36,
               width: 36,
@@ -258,18 +259,25 @@ class _ChatScreenState extends State<ChatScreen> {
                 hintText: _isRecording ? "Recording audio..." : "Write Here...",
                 hintStyle: TextStyle(
                   color: _isRecording ? Colors.red : Colors.grey.shade500,
-                  fontWeight: _isRecording ? FontWeight.bold : FontWeight.normal,
+                  fontWeight:
+                      _isRecording ? FontWeight.bold : FontWeight.normal,
                 ),
                 fillColor: Colors.white,
                 filled: true,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25.0),
-                  borderSide: const BorderSide(color: LightColorPalette.primary, width: 1.0),
+                  borderSide: const BorderSide(
+                    color: LightColorPalette.primary,
+                    width: 1.0,
+                  ),
                 ),
                 suffixIcon: GestureDetector(
                   onLongPressStart: (details) {
@@ -282,17 +290,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     height: 20,
                     width: 20,
                     // Add a visual indicator (red circle) when recording
-                    padding: _isRecording ? const EdgeInsets.all(8) : EdgeInsets.zero,
-                    decoration: _isRecording
-                        ? const BoxDecoration(color: Colors.red, shape: BoxShape.circle)
-                        : null,
+                    padding:
+                        _isRecording
+                            ? const EdgeInsets.all(8)
+                            : EdgeInsets.zero,
+                    decoration:
+                        _isRecording
+                            ? const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            )
+                            : null,
                     child: SvgPicture.asset(
                       "assets/icons/chat/mic_icon.svg",
                       fit: BoxFit.scaleDown,
                       colorFilter: ColorFilter.mode(
                         // Icon becomes white when recording, primary otherwise
-                          _isRecording ? Colors.white : LightColorPalette.primary,
-                          BlendMode.srcIn
+                        _isRecording ? Colors.white : LightColorPalette.primary,
+                        BlendMode.srcIn,
                       ),
                     ),
                   ),
@@ -300,7 +315,6 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               style: const TextStyle(fontFamily: "LeagueSpartan"),
               readOnly: _isRecording, // Prevent typing while recording
-
             ),
           ),
           const SizedBox(width: 10),

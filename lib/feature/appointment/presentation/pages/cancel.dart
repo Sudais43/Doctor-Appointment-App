@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 
 
 class CancelAppointmentScreen extends StatefulWidget {
@@ -23,7 +22,6 @@ class _CancelAppointmentScreenState extends State<CancelAppointmentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(title: "Cancel Appointment", onPressed: (){}),
       body: SafeArea(
         child: SingleChildScrollView(

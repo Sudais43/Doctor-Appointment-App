@@ -4,13 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/notification.dart';
-import 'package:skin_firts/feature/settings/presentation/pages/profile.dart';
 
 import '../../data/home_page_data.dart';
 
@@ -37,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final appColor = context.appColors;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationbar1(),
+      // bottomNavigationBar: BottomNavigationbar1(),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),

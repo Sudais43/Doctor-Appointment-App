@@ -7,7 +7,7 @@ import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_v
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_rating_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
+import 'package:skin_firts/feature/doctor_pages/presentation/widgets/tile_expansion.dart';
 
 import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
@@ -81,7 +81,6 @@ class _DoctorListPageState extends State<DoctorListPage> {
   Widget build(BuildContext context) {
     final appColor = context.appColors;
     return Scaffold(
-      bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
         title: "Doctors",
         showSearch: true,
@@ -191,7 +190,10 @@ class _DoctorListPageState extends State<DoctorListPage> {
                       onTap: () {
                         viewModel.moveToDoctorDetail(context, doc);
                       },
-                      child: tile,
+                      // onLongPress: () {
+                      //   viewModel.showDoctorPopup(context, doc);
+                      // },
+                      child: TileExpansion(child: tile),
                     );
                   },
                 );

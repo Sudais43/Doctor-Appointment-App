@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:skin_firts/feature/Schedule/presentation/widgets/doctor_profile_appbar.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/bottom_navigation_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../core/theme/color_palette.dart';
@@ -29,7 +28,6 @@ class _ScheduleScreenState extends State<DoctorProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationbar1(),
       appBar: DoctorProfileAppbar(
         onBackButtonPressed: () {},
         onSchedulePressed: () {},
