@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/payment/presentation/widgets/credit_card.dart';
-import 'package:skin_firts/feature/stripe_services.dart';
+import 'package:skin_firts/services/stripe_services.dart';
 
 class AddCardScreen extends StatefulWidget {
   const AddCardScreen({super.key});

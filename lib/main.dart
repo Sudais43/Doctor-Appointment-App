@@ -11,21 +11,28 @@ import 'package:skin_firts/feature/authentication/presentation/view_model/auth_v
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
-import 'package:skin_firts/main_screen.dart';
+import 'package:skin_firts/services/auth_services.dart';
 import 'core/API/api_keys.dart';
 
 void main() async {
   await _setup();
-  final authRepo = AuthRepositoryImpl(localAuthServices: HiveAuthServices());
+  // final authRepo = AuthRepositoryImpl(localAuthServices: HiveAuthServices());
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         ChangeNotifierProvider(create: (context) => HomePageViewModel()),
         ChangeNotifierProvider(create: (context) => DoctorViewModel()),
-        Provider<AuthRepository>.value(value: authRepo),
-        ChangeNotifierProvider(
-          create: (context) => AuthViewModel(context.read<AuthRepository>()),
+        Provider<AuthServices>(create: (_) => AuthServices()),
+        Provider<AuthRepository>(
+          create:
+              (context) => AuthRepositoryImpl(
+                localAuthServices: HiveAuthServices(),
+                apiServices: context.read<AuthServices>(),
+                ),
+        ),
+        ChangeNotifierProvider<AuthViewModel>(
+          create: (context) => AuthViewModel(context.read<AuthServices>()),
         ),
       ],
       child: MyApp(),

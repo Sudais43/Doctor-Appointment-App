@@ -59,7 +59,7 @@ class _TileExpansionState extends State<TileExpansion>
         animation: _heightAnimation,
         child: widget.child,
         builder: (context, child) {
-          return Container(
+          return SizedBox(
             height: _heightAnimation.value,
             width: double.infinity,
             child: child,

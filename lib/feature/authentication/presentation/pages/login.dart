@@ -5,7 +5,6 @@ import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/sign_up.dart';
 import 'package:skin_firts/feature/authentication/presentation/view_model/auth_view_model.dart';
-import 'package:skin_firts/feature/homePage/presentation/pages/home_page.dart';
 import '../../../../core/widget/CustomButton.dart';
 import '../widgets/custom_input_field.dart';
 
