@@ -1,40 +1,48 @@
 import 'dart:convert';
 
 class DoctorInfo {
+  final String id;
   final String name;
-  final String Department;
+  final String speciality;
   final bool isFavorite;
   final double rating;
-  final int messages;
-  String images;
+  final int reviews;
+  String imageUrl;
   final String gender;
+  final List<dynamic> availability;
 
   DoctorInfo({
+    required this.id,
     required this.name,
-    required this.Department,
+    required this.speciality,
     required this.isFavorite,
     required this.rating,
-    required this.messages,
-    required this.images,
+    required this.reviews,
+    required this.imageUrl,
     required this.gender,
+    required this.availability,
   });
 
   DoctorInfo copyWith({
+    String? id,
     String? name,
-    String? Department,
+    String? speciality,
     bool? isFavorite,
     double? rating,
-    int? messages,
+    int? reviews,
     String? images,
     String? gender,
+    List<dynamic>? availability,
   }) => DoctorInfo(
+    id: id ?? this.id,
     name: name ?? this.name,
-    Department: Department ?? this.Department,
+    speciality: speciality ?? this.speciality,
     isFavorite: isFavorite ?? this.isFavorite,
     rating: rating ?? this.rating,
-    messages: messages ?? this.messages,
-    images: images ?? this.images,
+    reviews: reviews ?? this.reviews,
+    imageUrl: imageUrl ?? this.imageUrl,
     gender: gender ?? this.gender,
+    availability: availability ?? this.availability,
   );
 
   factory DoctorInfo.fromJson(String str) => DoctorInfo.fromJson(json.decode(str));
@@ -42,23 +50,27 @@ class DoctorInfo {
   String toJson() => json.encode(toMap());
 
   factory DoctorInfo.fromMap(Map<String, dynamic> json) => DoctorInfo(
+    id: json["id"] ?? '',
     name: json["name"],
-    Department: json["Department"],
+    speciality: json["speciality"],
     isFavorite: json["isFavorite"],
     rating: json["rating"],
-    messages: json["messages"],
-    images: json["images"],
+    reviews: json["reviews"],
+    imageUrl: json["imageUrl"],
     gender: json["gender"],
+    availability: json["availability"] ?? [],
   );
 
   Map<String , dynamic> toMap() => {
+    "id": id,
     "name": name,
-    "Department": Department,
+    "speciality": speciality,
     "isFavorite": isFavorite,
     "rating": rating,
-    "messages": messages,
-    "images" : images,
+    "reviews": reviews,
+    "imageUrl" : imageUrl,
     "gender": gender,
+    "availability": availability,
   };
 
 }

@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
+import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 
-import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
 
 class DoctorDetail extends StatefulWidget {
+  final String doctorId;
   final String doctorName;
   final String image;
   final String speciality;
   final bool isFavorite;
+  final List<dynamic> availability;
 
   const DoctorDetail({
     super.key,
+    required this.doctorId,
     required this.doctorName,
     required this.image,
     required this.speciality,
     required this.isFavorite,
+    required this.availability,
   });
 
   @override
@@ -29,6 +34,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
   late final List<DoctorInfo> allDoctors;
   String _selectedSort = "az";
   late List<DoctorInfo> doctor;
+  late bool _isFavorite;
 
   final List<Map<String, String>> _sortOptions = [
     {"id": "az", "icon": "assets/icons/Doctors/sorting_icon.svg"},
@@ -45,33 +51,17 @@ class _DoctorDetailState extends State<DoctorDetail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    allDoctors = List.from(doctors);
-    doctor = List.from(allDoctors);
+    // allDoctors = List.from(doctors);
+    // doctor = List.from(allDoctors);
+    _isFavorite = widget.isFavorite;
   }
 
-  void _sortDoctors(String sortId) {
+  void _toggleFavorite() {
     setState(() {
-      _selectedSort = sortId;
-      doctor = List.from(allDoctors);
-
-      switch (sortId) {
-        case "az":
-          allDoctors.sort((a, b) => a.name.compareTo(b.name));
-          break;
-        case "rating":
-          allDoctors.sort((a, b) => b.rating.compareTo(a.rating));
-          break;
-        case "favorite":
-          doctor = doctors.where((doc) => doc.isFavorite).toList();
-          break;
-        case "male":
-          doctor = doctors.where((doc) => doc.gender == "male").toList();
-          break;
-        case "female":
-          doctor = doctors.where((doc) => doc.gender == "female").toList();
-          break;
-      }
+      _isFavorite = !_isFavorite;
     });
+
+    context.read<DoctorViewModel>().toggleFavoriteStatus(widget.doctorId);
   }
 
   @override
@@ -114,7 +104,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 5),
                         child: GestureDetector(
-                          onTap: () => _sortDoctors(sort["id"]!),
+                          // onTap: () => _sortDoctors(sort["id"]!),
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 200),
                             height: 25,
@@ -401,7 +391,17 @@ class _DoctorDetailState extends State<DoctorDetail> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => ScheduleScreen(),
+                                builder:
+                                    (context) => ScheduleScreen(
+                                      doctorId: widget.doctorId,
+                                      availability: widget.availability,
+                                      doctorName: widget.doctorName,
+                                      image: widget.image,
+                                      speciality: widget.speciality,
+                                      isFavorite: widget.isFavorite,
+                                      rating: 5,
+                                      review: 5,
+                                    ),
                               ),
                             );
                           },
@@ -481,12 +481,15 @@ class _DoctorDetailState extends State<DoctorDetail> {
                               child: SizedBox(
                                 height: 21,
                                 width: 21,
-                                child: CircleAvatar(
-                                  backgroundColor: appColor.white,
-                                  child: SvgPicture.asset(
-                                    widget.isFavorite
-                                        ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
-                                        : "assets/icons/Doctors/favorite_outline_icon.svg",
+                                child: GestureDetector(
+                                  onTap: _toggleFavorite,
+                                  child: CircleAvatar(
+                                    backgroundColor: appColor.white,
+                                    child: SvgPicture.asset(
+                                      _isFavorite
+                                          ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
+                                          : "assets/icons/Doctors/favorite_outline_icon.svg",
+                                    ),
                                   ),
                                 ),
                               ),

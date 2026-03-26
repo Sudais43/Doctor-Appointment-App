@@ -7,13 +7,14 @@ class DoctorTile extends StatelessWidget {
   final String speciality;
   final String image;
   final bool isFavorite;
+  final VoidCallback onFavoriteTap;
 
   const DoctorTile({
     super.key,
     required this.doctorName,
     required this.speciality,
     required this.image,
-    required this.isFavorite,
+    required this.isFavorite, required this.onFavoriteTap,
   });
 
   @override
@@ -140,15 +141,18 @@ class DoctorTile extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: appColor.white,
-                          child: SvgPicture.asset(
-                            isFavorite
-                                ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
-                                : "assets/icons/Doctors/favorite_outline_icon.svg",
+                      child: GestureDetector(
+                        onTap: onFavoriteTap,
+                        child: SizedBox(
+                          height: 21,
+                          width: 21,
+                          child: CircleAvatar(
+                            backgroundColor: appColor.white,
+                            child: SvgPicture.asset(
+                              isFavorite
+                                  ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
+                                  : "assets/icons/Doctors/favorite_outline_icon.svg",
+                            ),
                           ),
                         ),
                       ),

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:skin_firts/feature/authentication/domain/model/user_entity.dart';
 import 'package:skin_firts/main_screen.dart';
-import 'package:skin_firts/services/auth_services.dart';
+import 'package:skin_firts/feature/authentication/Application/auth_services.dart';
+import 'dart:convert';
 
 class AuthViewModel extends ChangeNotifier {
   // final AuthRepository _authRepository;
@@ -33,6 +34,15 @@ class AuthViewModel extends ChangeNotifier {
 
     try {
       final response = await _authServices.logIn(trimmedEmail, trimmedPassword);
+      Map<String, dynamic> responseData = {};
+      if (response != null && response.data != null) {
+        if (response.data is String) {
+          responseData = json.decode(response.data);
+        }
+        if (response.data is Map) {
+          responseData = Map<String, dynamic>.from(response.data);
+        }
+      }
       if (response != null && response.statusCode == 200) {
         final token = response.data['token'];
         final userData = response.data['user'];
@@ -41,12 +51,14 @@ class AuthViewModel extends ChangeNotifier {
 
         final sessionBox = Hive.box('current_session');
         await sessionBox.put('isLoggedIn', true);
+        await sessionBox.put('userName', userData['fullName']);
+        await sessionBox.put('token', token);
 
         if (!context.mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Welcome Back $userData['fullName']"),
+            content: Text("Welcome Back ${userData['fullName']}"),
             backgroundColor: Colors.green,
           ),
         );
@@ -58,10 +70,12 @@ class AuthViewModel extends ChangeNotifier {
         );
       } else {
         if (!context.mounted) return;
-        String errorMsg =
-            response?.data['message'] ?? "Login failed. Try again.";
+        String errorMsg = responseData['message'] ?? "Login failed. Try again.";
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text("Sudais $errorMsg"),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } catch (e) {
@@ -69,7 +83,7 @@ class AuthViewModel extends ChangeNotifier {
       debugPrint("Connection Error. Try again. $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Connection Error. Try again. $e"),
+          content: Text("Sudais Connection Error. Try again. $e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -112,6 +126,11 @@ class AuthViewModel extends ChangeNotifier {
 
         final sessionBox = Hive.box('current_session');
         await sessionBox.put('isLoggedIn', true);
+        await sessionBox.put('userName', newUser.fullName);
+        
+        if (response.data != null && response.data['token'] != null) {
+           await sessionBox.put('token', response.data['token']);
+        }
 
         if (!context.mounted) return;
 
@@ -126,8 +145,18 @@ class AuthViewModel extends ChangeNotifier {
         );
       } else {
         if (!context.mounted) return;
+
+        Map<String, dynamic> responseData = {};
+        if (response != null && response.data != null) {
+          if (response.data is String) {
+            responseData = json.decode(response.data);
+          } else if (response.data is Map) {
+            responseData = Map<String, dynamic>.from(response.data);
+          }
+        }
+
         String errorMsg =
-            response?.data['message'] ?? "Registration failed. Try again.";
+            responseData['message'] ?? "Registration failed. Try again.";
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
         );

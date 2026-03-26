@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
@@ -256,12 +257,17 @@ class ProfileScreen extends StatelessWidget {
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        // Clear the current session from Hive
+                        final sessionBox = Hive.box('current_session');
+                        await sessionBox.clear();
+
+                        if (!context.mounted) return;
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => LogIn()),
                           (Route<dynamic> route) => false,
-                        ); // Close the dialog
+                        );
                       },
                     ),
                   ),

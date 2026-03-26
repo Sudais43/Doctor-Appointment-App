@@ -5,29 +5,31 @@ import 'package:skin_firts/core/theme/theme_extension.dart';
 
 import '../../../../core/theme/color_palette.dart';
 
-class DoctorTile extends StatefulWidget {
+class DoctorTile1 extends StatefulWidget {
   final String doctorName;
-  final String department;
-  final int messages;
+  final String specialization;
+  final int reviewsCount;
   final double rating;
-  final String image;
+  final String imageUrl;
   final bool isFavorite;
+  final VoidCallback onFavoriteTap;
 
-  const DoctorTile({
+  const DoctorTile1({
     super.key,
     required this.doctorName,
-    required this.department,
-    required this.messages,
+    required this.specialization,
+    required this.reviewsCount,
     required this.rating,
-    required this.image,
+    required this.imageUrl,
     required this.isFavorite,
+    required this.onFavoriteTap,
   });
 
   @override
-  State<DoctorTile> createState() => _DoctorTileState();
+  State<DoctorTile1> createState() => _DoctorTileState();
 }
 
-class _DoctorTileState extends State<DoctorTile> {
+class _DoctorTileState extends State<DoctorTile1> {
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
@@ -45,7 +47,7 @@ class _DoctorTileState extends State<DoctorTile> {
             height: 57.56,
             width: 57.25,
             child: CircleAvatar(
-              backgroundImage: Image.asset(widget.image).image,
+              backgroundImage: Image.asset(widget.imageUrl).image,
             ),
           ),
           SizedBox(width: 10),
@@ -78,7 +80,7 @@ class _DoctorTileState extends State<DoctorTile> {
                         ),
                       ),
                       Text(
-                        widget.department,
+                        widget.specialization,
                         // "Heart Surgeon",
                         style: TextStyle(
                           fontSize: 12,
@@ -142,7 +144,7 @@ class _DoctorTileState extends State<DoctorTile> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          widget.messages.toString(),
+                          widget.reviewsCount.toString(),
                           // "60",
                           style: TextStyle(
                             fontSize: 12,
@@ -168,13 +170,18 @@ class _DoctorTileState extends State<DoctorTile> {
                     ),
                   ),
                   SizedBox(width: 5),
-                  SizedBox(
-                    height: 19,
-                    width: 19,
-                    child: CircleAvatar(
-                      backgroundColor: appColor.white,
-                      child: SvgPicture.asset(
-                        "assets/icons/HomeScreen/favorite_filled_icon.svg",
+                  GestureDetector(
+                    onTap: widget.onFavoriteTap,
+                    child: SizedBox(
+                      height: 19,
+                      width: 19,
+                      child: CircleAvatar(
+                        backgroundColor: appColor.white,
+                        child: SvgPicture.asset(
+                          widget.isFavorite
+                              ? "assets/icons/HomeScreen/favorite_filled_icon.svg"
+                              : "assets/icons/Doctors/favorite_outline_icon.svg",
+                        ),
                       ),
                     ),
                   ),

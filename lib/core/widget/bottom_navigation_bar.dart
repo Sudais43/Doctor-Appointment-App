@@ -15,57 +15,57 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
-    return Container(
-      height: 60,
-      width: 300,
-      decoration: BoxDecoration(
-        color: appColor.Primary,
-        borderRadius: BorderRadius.all(Radius.circular(30)),
-      ),
-      child: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        selectedItemColor: appColor.iconColor,
-        unselectedItemColor: appColor.white,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        items: [
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, bottom: 15),
+      child: Container(
+        height: 60,
+        width: 280,
+        // padding: EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          color: appColor.Primary,
+          borderRadius: BorderRadius.all(Radius.circular(30)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(
+              0,
               "assets/icons/BottomNaveBar/home_icon.svg",
-              fit: BoxFit.scaleDown,
-              color: currentIndex == 0 ? appColor.iconColor : appColor.white,
+              context,
             ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
+            _buildNavItem(
+              1,
               "assets/icons/BottomNaveBar/message_icon.svg",
-              fit: BoxFit.scaleDown,
-              color: currentIndex == 1 ? appColor.iconColor : appColor.white,
+              context,
             ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
+            _buildNavItem(
+              2,
               "assets/icons/BottomNaveBar/profile_icon.svg",
-              fit: BoxFit.scaleDown,
-              color: currentIndex == 2 ? appColor.iconColor : appColor.white,
+              context,
             ),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
+            _buildNavItem(
+              3,
               "assets/icons/BottomNaveBar/calender_icon.svg",
-              fit: BoxFit.scaleDown,
-              color: currentIndex == 3 ? appColor.iconColor : appColor.white,
+              context,
             ),
-            label: "",
-          ),
-        ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(int index, String iconPath, BuildContext context) {
+    final isSelected = currentIndex == index;
+    final appColor = context.appColors;
+    return IconButton(
+      onPressed: () => onTap(index),
+      icon: SvgPicture.asset(
+        iconPath,
+        fit: BoxFit.scaleDown,
+        colorFilter: ColorFilter.mode(
+          isSelected ? appColor.iconColor : appColor.white,
+          BlendMode.srcIn,
+        ),
       ),
     );
   }

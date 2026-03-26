@@ -3,7 +3,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:skin_firts/core/services/hive_auth_services.dart';
 import 'package:skin_firts/feature/authentication/domain/model/user_entity.dart';
 import 'package:skin_firts/feature/authentication/domain/repositories/auth_repository.dart';
-import 'package:skin_firts/services/auth_services.dart';
+import 'package:skin_firts/feature/authentication/Application/auth_services.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final HiveAuthServices localAuthServices;

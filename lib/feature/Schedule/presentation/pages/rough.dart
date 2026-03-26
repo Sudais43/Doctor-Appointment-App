@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 
-// 1. Reusable Circular Button Widget (Optimized for reuse)
+// 1. Reusable Circular Button Widget
 class CircularAppBarButton extends StatelessWidget {
   final IconData icon;
   final Color backgroundColor;
@@ -21,13 +21,13 @@ class CircularAppBarButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 20,
-        height: 20,
+        width: 30, // Shrunk slightly to ensure fit on all screens
+        height: 30,
         decoration: BoxDecoration(
           color: backgroundColor,
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: iconColor, size: 20),
+        child: Icon(icon, color: iconColor, size: 16),
       ),
     );
   }
@@ -36,107 +36,94 @@ class CircularAppBarButton extends StatelessWidget {
 // 2. The Custom AppBar Widget
 class CustomDetailAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const CustomDetailAppBar({super.key});
+  final String doctorName;
+  const CustomDetailAppBar({super.key, required this.doctorName});
 
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
-    // Define colors locally or use your theme
     Color primaryBlue = appColor.Primary;
-    Color lightBlueBg = appColor.secondary; // Light blue for right buttons
+    Color lightBlueBg = appColor.Primary.withOpacity(0.2);
 
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: appColor.white,
       elevation: 0,
-      centerTitle: false, // Important: Aligns title row to the left
-      titleSpacing: 0, // Reduces gap between back button and title
+      centerTitle: false,
+      titleSpacing: 0, // Keeps the name close to the back button
       // --- Leading (Back Button) ---
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios_new, color: primaryBlue),
         onPressed: () => Navigator.pop(context),
       ),
 
-      // --- Title (Center Actions) ---
-      title: SingleChildScrollView(
-        // Prevents overflow on small screens
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            // 1. Schedule Pill Button
-            Container(
-              height: 40,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                color: primaryBlue,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.calendar_month_outlined,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Schedule",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(width: 10),
-
-            // 2. Communication Buttons (Blue Background)
-            CircularAppBarButton(
-              icon: Icons.call_outlined,
-              backgroundColor: primaryBlue,
-              iconColor: Colors.white,
-              onTap: () {},
-            ),
-            const SizedBox(width: 10),
-            CircularAppBarButton(
-              icon: Icons.videocam_outlined,
-              backgroundColor: primaryBlue,
-              iconColor: Colors.white,
-              onTap: () {},
-            ),
-            const SizedBox(width: 10),
-            CircularAppBarButton(
-              icon: Icons.chat_bubble_outline,
-              backgroundColor: primaryBlue,
-              iconColor: Colors.white,
-              onTap: () {},
-            ),
-          ],
+      // --- Title (Name Pill Only) ---
+      title: Container(
+        height: 32,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: primaryBlue,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          doctorName,
+          maxLines: 1,
+          overflow:
+              TextOverflow.ellipsis, // Prevents overflow if name is very long
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 13, // Slightly smaller to ensure fit
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
-      // --- Actions (Right Side Buttons) ---
+      // --- Actions (All 5 Icons grouped on the right) ---
       actions: [
-        Row(
-          children: [
-            // Light Blue Buttons
-            CircularAppBarButton(
-              icon: Icons.help_outline,
-              backgroundColor: lightBlueBg,
-              iconColor: primaryBlue,
-              onTap: () {},
-            ),
-            const SizedBox(width: 10),
-            CircularAppBarButton(
-              icon: Icons.favorite,
-              backgroundColor: lightBlueBg,
-              iconColor: primaryBlue,
-              onTap: () {},
-            ),
-            const SizedBox(width: 16), // End padding
-          ],
+        Padding(
+          padding: const EdgeInsets.only(left: 6.0, right: 12.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Dark Blue Buttons
+              CircularAppBarButton(
+                icon: Icons.phone_in_talk_outlined,
+                backgroundColor: primaryBlue,
+                iconColor: Colors.white,
+                onTap: () {},
+              ),
+              const SizedBox(width: 4),
+              CircularAppBarButton(
+                icon: Icons.videocam_outlined,
+                backgroundColor: primaryBlue,
+                iconColor: Colors.white,
+                onTap: () {},
+              ),
+              const SizedBox(width: 4),
+              CircularAppBarButton(
+                icon: Icons.chat_bubble_outline,
+                backgroundColor: primaryBlue,
+                iconColor: Colors.white,
+                onTap: () {},
+              ),
+              const SizedBox(width: 4),
+
+              // Light Blue Buttons
+              CircularAppBarButton(
+                icon: Icons.question_mark_rounded,
+                backgroundColor: lightBlueBg,
+                iconColor: primaryBlue,
+                onTap: () {},
+              ),
+              const SizedBox(width: 4),
+              CircularAppBarButton(
+                icon: Icons.favorite,
+                backgroundColor: lightBlueBg,
+                iconColor: primaryBlue,
+                onTap: () {},
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -144,17 +131,4 @@ class CustomDetailAppBar extends StatelessWidget
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-// --- Usage Example ---
-class ExampleScreen extends StatelessWidget {
-  const ExampleScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomDetailAppBar(),
-      body: Center(child: Text("Page Content")),
-    );
-  }
 }

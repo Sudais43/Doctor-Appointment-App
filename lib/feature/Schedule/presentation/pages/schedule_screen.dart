@@ -1,89 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
-import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
-import 'package:skin_firts/feature/Schedule/data/dates_data.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/appointment_detail_screen.dart';
 import 'package:skin_firts/feature/Schedule/presentation/pages/rough.dart';
 import 'package:skin_firts/feature/Schedule/presentation/widgets/booking_type_selector.dart';
 import 'package:skin_firts/feature/Schedule/presentation/widgets/day_capsule.dart';
+import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/authentication/presentation/widgets/custom_input_field.dart';
-
-import '../../data/time_slots.dart';
-import '../../domain/time_data_model.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_successful.dart';
 import '../widgets/gender_selector.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  const ScheduleScreen({super.key});
+  final String doctorId;
+  final String doctorName;
+  final String image;
+  final String speciality;
+  final bool isFavorite;
+  final double rating;
+  final int review;
+  final List<dynamic> availability; // Add this to receive the doctor's schedule
+  const ScheduleScreen({
+    super.key,
+    required this.doctorId,
+    required this.doctorName,
+    required this.availability,
+    required this.image,
+    required this.speciality,
+    required this.isFavorite,
+    required this.rating,
+    required this.review,
+  });
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  DateTime? _selectedDate;
+  // DateTime? _selectedDate;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController _problemController = TextEditingController();
 
   late List<DateTime> _dates;
-  int _selectedIndex = -1;
+  // int _selectedIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    final startDate = DateTime.utc(2025, 11, 1);
+    final startDate = DateTime.now();
     _dates = List.generate(30, (index) => startDate.add(Duration(days: index)));
 
-    // Find the first available date
-    DateTime? firstAvailable;
-    int firstAvailableIndex = -1;
-
-    for (int i = 0; i < _dates.length; i++) {
-      if (_isDateAvailable(_dates[i])) {
-        firstAvailable = _dates[i];
-        firstAvailableIndex = i;
-        break;
-      }
-    }
-
-    if (firstAvailable != null) {
-      _selectedDate = firstAvailable;
-
-      // Auto scroll to the available date after the first frame
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_scrollController.hasClients) {
-          // Assuming each item is roughly 60px wide + 8px padding
-          double offset = firstAvailableIndex * 68.0;
-          _scrollController.animateTo(
-            offset,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-          );
-        }
-      });
-    } else {
-      _selectedDate = _dates.first;
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint("Doctor ID: ${widget.doctorId}");
+      context.read<AppointmentViewModel>().fetchAvailableSlots(
+        widget.doctorId,
+        startDate,
+      );
+    });
   }
 
-  bool _isDateAvailable(DateTime date) {
-    for (var availableDate in availableDates) {
-      if (isSameDay(date, availableDate)) return true;
-    }
-    return false;
-  }
+  bool _checkIfDoctorWorks(DateTime date) {
+    // Convert 1-7 (Mon-Sun) to English Day Name
+    final String dayName =
+        [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ][date.weekday - 1];
 
-  bool isSameDay(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
+    // Check if this day name exists in the doctor's availability list
+    return widget.availability.any((a) => a['day'] == dayName);
   }
 
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
+    final appointmentVM = context.watch<AppointmentViewModel>();
     return Scaffold(
-      appBar: CustomDetailAppBar(),
-      // bottomNavigationBar: BottomNavigationbar1(),
+      appBar: CustomDetailAppBar(doctorName: widget.doctorName),
+      bottomNavigationBar: _SubmitButton(appointmentVM, appColor),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -105,21 +107,42 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                   scrollDirection: Axis.horizontal,
                                   physics: const BouncingScrollPhysics(),
                                   itemCount: _dates.length,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 43.0,
+                                  ),
                                   itemBuilder: (context, index) {
                                     final date = _dates[index];
-                                    final bool isSelected =
-                                        _selectedDate != null &&
-                                        isSameDay(date, _selectedDate!);
+                                    final isSelected = appointmentVM.isSameDay(
+                                      date,
+                                      appointmentVM.selectedDate,
+                                    );
+                                    final bool isDoctorAvailable =
+                                        _checkIfDoctorWorks(date);
                                     return Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: DayCapsule(
                                         date: date,
                                         isSelected: isSelected,
-                                        isAvailable: _isDateAvailable(date),
+                                        isAvailable:
+                                            isDoctorAvailable, // Now dynamically greyed out if not a working day
                                         onTap: () {
-                                          setState(() {
-                                            _selectedDate = date;
-                                          });
+                                          if (!isDoctorAvailable) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                  "Doctor is not available on this day",
+                                                ),
+                                              ),
+                                            );
+                                            return;
+                                          }
+                                          appointmentVM.setSelectedDate(date);
+                                          appointmentVM.fetchAvailableSlots(
+                                            widget.doctorId,
+                                            date,
+                                          );
                                         },
                                       ),
                                     );
@@ -187,34 +210,42 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
                   Padding(
                     padding: const EdgeInsets.all(18.0),
-                    child: GridView.builder(
-                      itemCount: timeSlots.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            childAspectRatio: 2.8,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 10,
-                          ),
-                      itemBuilder: (context, index) {
-                        final slot = timeSlots[index];
-                        final isSelected = _selectedIndex == index;
-                        return _buildTimeChip(
-                          slot,
-                          isSelected,
-                          index,
-                          appColor,
-                        );
-                      },
-                    ),
+                    child:
+                        appointmentVM.isBooking
+                            ? const Center(child: CircularProgressIndicator())
+                            : GridView.builder(
+                              itemCount: appointmentVM.availableSlots.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    childAspectRatio: 2.8,
+                                    crossAxisSpacing: 5,
+                                    mainAxisSpacing: 10,
+                                  ),
+                              itemBuilder: (context, index) {
+                                // final slotData = timeSlots[index];
+                                final slotData =
+                                    appointmentVM.availableSlots[index];
+                                // final isSelected = _selectedIndex == index;
+                                debugPrint(
+                                  "Available Slots ${appointmentVM.availableSlots}",
+                                );
+
+                                return _buildTimeChip(
+                                  slotData,
+                                  appointmentVM,
+                                  appColor,
+                                );
+                              },
+                            ),
                   ),
                 ],
               ),
               Divider(
-                color: LightColorPalette.primary,
-                thickness: 2,
+                color: appColor.Primary,
+                thickness: 1,
                 indent: 20,
                 endIndent: 20,
               ),
@@ -228,14 +259,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     height: 1,
                     fontWeight: FontWeight.w500,
                     fontFamily: "LeagueSpartan",
-                    color: LightColorPalette.primary,
+                    color: appColor.Primary,
                   ),
                 ),
               ),
 
               Padding(
                 padding: const EdgeInsets.only(left: 18.0, top: 10),
-                child: BookingTypeSelector(onSelectionChanged: (value) {}),
+                child: BookingTypeSelector(
+                  onSelectionChanged: (value) {
+                    appointmentVM.setPatientType(value);
+                  },
+                ),
               ),
 
               Padding(
@@ -278,15 +313,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 child: Text(
                   "Gender",
                   style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300,
-                    color: appColor.fontColor,
+                    fontSize: 14,
+                    height: 1,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "LeagueSpartan",
+                    color: appColor.Primary,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 18.0),
-                child: GenderSelector(onSelectionChanged: (value) {}),
+                child: GenderSelector(
+                  onSelectionChanged: (value) {
+                    appointmentVM.setSelectedGender(value);
+                  },
+                ),
               ),
 
               Divider(
@@ -303,10 +344,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w300,
-                    color: LightColorPalette.black,
+                    color: appColor.fontColor,
                   ),
                 ),
               ),
+              SizedBox(height: 10),
               Center(
                 child: Container(
                   height: 110,
@@ -322,7 +364,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                       controller: _problemController,
                       maxLines: null,
                       decoration: InputDecoration(
-                        hintText: "Describe your problem....",
+                        hintText: "Enter your problem here....",
                         border: InputBorder.none,
                         hintStyle: TextStyle(
                           fontFamily: "LeagueSpartan",
@@ -342,17 +384,66 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
+  Widget _SubmitButton(AppointmentViewModel vm, AppColor color) {
+    final String dayName =
+        DateFormat('EEE').format(vm.selectedDate).toUpperCase();
+    final String formattedDate = DateFormat(
+      'MMMM d, yyyy',
+    ).format(vm.selectedDate);
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: color.Primary),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => AppointmentDetailScreen(
+                    bookingFor: vm.patientType,
+                    fullName: nameController.text,
+                    age: ageController.text,
+                    gender: vm.selectedGender,
+                    problem: _problemController.text,
+                    date: formattedDate,
+                    time: "$dayName, ${vm.selectedTimeSlot}",
+                    doctorName: widget.doctorName,
+                    image: widget.image,
+                    speciality: widget.speciality,
+                    isFavorite: widget.isFavorite,
+                    rating: widget.rating,
+                    reviewsCount: widget.review,
+                  ),
+            ),
+          );
+        },
+        child: Text(
+          "proceed",
+          style: TextStyle(
+            color: color.white,
+            fontSize: 16,
+            fontFamily: "LeagueSpartan",
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildTimeChip(
-    TimeSlot slot,
-    bool isSelected,
-    int index,
+    dynamic slot,
+    AppointmentViewModel VM,
     AppColor appColor,
   ) {
+    // Based on your backend, the 'slot' is a Map like {'time': '09:00 AM', 'isBooked': false}
+    final time = slot['time'] ?? 'Unknown';
+    final bool isBooked = slot['isBooked'] ?? false;
+
     // 1. Determine Styles based on State
     Color backgroundColor;
     Color textColor;
+    final bool isSelected = VM.selectedTimeSlot == time;
 
-    if (slot.status == TimeStatus.booked) {
+    if (isBooked) {
       // Disabled Style (Grey/Blue-ish mix from image)
       backgroundColor = appColor.white;
       textColor = appColor.secondary;
@@ -367,15 +458,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     }
 
     return GestureDetector(
-      onTap: () {
-        // Only allow selection if not booked
-        if (slot.status != TimeStatus.booked) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          print("Selected Time: ${slot.time}");
-        }
-      },
+      onTap: () => isBooked ? null : VM.setSelectedTimeSlot(time),
+      // onTap: () {
+      //   // Only allow selection if not booked
+      //   if (slot.status != TimeStatus.booked) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //     });
+      //     print("Selected Time: ${slot.time}");
+      //   }
+      // },
       child: Container(
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -383,7 +475,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         ),
         alignment: Alignment.center,
         child: Text(
-          slot.time,
+          time,
           style: TextStyle(
             color: textColor,
             fontSize: 14,

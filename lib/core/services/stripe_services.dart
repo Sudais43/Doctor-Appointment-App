@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
-import '../core/API/api_keys.dart';
+import '../API/api_keys.dart';
 
 class StripeServices {
   StripeServices._();

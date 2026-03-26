@@ -50,7 +50,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       titleSpacing: 0,
-      iconTheme: IconThemeData(color: appColor.fontColor),
+      iconTheme: IconThemeData(color: appColor.Primary),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,

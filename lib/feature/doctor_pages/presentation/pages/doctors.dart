@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_rating_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/tile_expansion.dart';
 
-import '../../../homePage/data/home_page_data.dart';
 import '../../../homePage/domain/entities/doctor_info.dart';
+
+import '../widgets/doctor_rating_tile.dart';
 
 class DoctorListPage extends StatefulWidget {
   final String? favoriteSort;
@@ -22,10 +22,6 @@ class DoctorListPage extends StatefulWidget {
 }
 
 class _DoctorListPageState extends State<DoctorListPage> {
-  late final List<DoctorInfo> allDoctors;
-  String _selectedSort = "az";
-  late List<DoctorInfo> doctor;
-
   /// 🔹 Sort icons and their meaning
   final List<Map<String, String>> _sortOptions = [
     {"id": "az", "icon": "assets/icons/Doctors/sorting_icon.svg"},
@@ -40,46 +36,30 @@ class _DoctorListPageState extends State<DoctorListPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    allDoctors = List.from(doctors);
-    doctor = List.from(allDoctors);
-
-    if (widget.favoriteSort != null) {
-      _selectedSort = widget.favoriteSort!;
-    }
-
-    _sortDoctors(_selectedSort);
-  }
-
-  void _sortDoctors(String sortId) {
-    setState(() {
-      _selectedSort = sortId;
-      doctor = List.from(allDoctors);
-
-      switch (sortId) {
-        case "az":
-          allDoctors.sort((a, b) => a.name.compareTo(b.name));
-          break;
-        case "rating":
-          allDoctors.sort((a, b) => b.rating.compareTo(a.rating));
-          break;
-        case "favorite":
-          doctor = doctors.where((doc) => doc.isFavorite).toList();
-          break;
-        case "male":
-          doctor = doctors.where((doc) => doc.gender == "male").toList();
-          break;
-        case "female":
-          doctor = doctors.where((doc) => doc.gender == "female").toList();
-          break;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final viewModel = Provider.of<DoctorViewModel>(context, listen: false);
+      if (widget.favoriteSort == 'favorite') {
+        viewModel.setFavoriteOnlyFilter();
+      } else {
+        // When opening the general doctors page, we shouldn't show only favorites.
+        // Other filters set by the user should be preserved.
+        viewModel.setFavoriteFilter(false);
       }
     });
   }
 
   @override
+  void dispose() {
+    // final viewModel = context.read<DoctorViewModel>();
+    // viewModel.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
+    final viewModel = context.watch<DoctorViewModel>();
     return Scaffold(
       appBar: CustomAppBar(
         title: "Doctors",
@@ -112,11 +92,47 @@ class _DoctorListPageState extends State<DoctorListPage> {
                 ),
                 // 👇 Then spread your sort option buttons
                 ..._sortOptions.map((sort) {
-                  final bool isSelected = _selectedSort == sort["id"];
+                  final id = sort["id"]!;
+                  bool isSelected = false;
+                  switch (id) {
+                    case "az":
+                      isSelected = viewModel.activeSort == "name";
+                      break;
+                    case "rating":
+                      isSelected = viewModel.activeSort == "rating";
+                      break;
+                    case "favorite":
+                      isSelected = viewModel.showFavoriteOnly;
+                      break;
+                    case "male":
+                      isSelected = viewModel.activeGenderFilter == "Male";
+                      break;
+                    case "female":
+                      isSelected = viewModel.activeGenderFilter == "Female";
+                      break;
+                  }
                   return Padding(
                     padding: const EdgeInsets.only(right: 7),
                     child: GestureDetector(
-                      onTap: () => _sortDoctors(sort["id"]!),
+                      onTap: () {
+                        switch (id) {
+                          case "az":
+                            viewModel.toggleAlphabeticalSort();
+                            break;
+                          case "rating":
+                            viewModel.toggleRatingSort();
+                            break;
+                          case "favorite":
+                            viewModel.toggleFavoriteFilter();
+                            break;
+                          case "male":
+                            viewModel.setGenderFilter("Male");
+                            break;
+                          case "female":
+                            viewModel.setGenderFilter("Female");
+                            break;
+                        }
+                      },
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 200),
                         height: 33,
@@ -151,57 +167,78 @@ class _DoctorListPageState extends State<DoctorListPage> {
           const SizedBox(height: 10),
 
           // 🔹 Doctor List
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              itemCount: doctor.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final doc = doctor[index];
-                Widget tile;
-                switch (_selectedSort) {
-                  case "rating":
-                    tile = DoctorRatingTile(
-                      doctorName: doc.name,
-                      speciality: doc.Department,
-                      image: doc.images,
-                      isFavorite: doc.isFavorite,
-                    );
-
-                  case "favorite":
-                    tile = FavoriteDoctorTile(
-                      doctorName: doc.name,
-                      speciality: doc.Department,
-                      image: doc.images,
-                      isFavorite: doc.isFavorite,
-                    );
-
-                  default:
-                    tile = DoctorTile(
-                      doctorName: doc.name,
-                      speciality: doc.Department,
-                      image: doc.images,
-                      isFavorite: doc.isFavorite,
-                    );
-                }
-                return Consumer<DoctorViewModel>(
-                  builder: (context, viewModel, child) {
-                    return InkWell(
-                      onTap: () {
-                        viewModel.moveToDoctorDetail(context, doc);
-                      },
-                      // onLongPress: () {
-                      //   viewModel.showDoctorPopup(context, doc);
-                      // },
-                      child: TileExpansion(child: tile),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
+          Expanded(child: _buildDoctorList(viewModel)),
         ],
       ),
+    );
+  }
+
+  Widget _buildDoctorList(DoctorViewModel viewModel) {
+    if (viewModel.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (viewModel.errorMessage.isNotEmpty) {
+      return Center(child: Text(viewModel.errorMessage));
+    }
+
+    if (viewModel.doctors.isEmpty) {
+      return const Center(child: Text("No doctors found."));
+    }
+
+    return ListView.separated(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemCount: viewModel.doctors.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final docData = viewModel.doctors[index];
+        final doc = DoctorInfo(
+          id: docData['_id'] ?? docData['id'] ?? '',
+          name: docData['name'] ?? 'No Name',
+          speciality: docData['specialization'] ?? 'Specialist',
+          rating: (docData['rating'] as num? ?? 0.0).toDouble(),
+          reviews: (docData['reviewsCount'] as num? ?? 0).toInt(),
+          isFavorite: docData['isFavorite'] ?? false,
+          imageUrl: docData['imageUrl'] ?? '',
+          gender: docData['gender'] ?? '',
+          availability: docData['availability'] ?? [],
+        );
+
+        VoidCallback onFavToggle = () {
+          viewModel.toggleFavoriteStatus(doc.id);
+        };
+
+        Widget tile;
+        if (viewModel.activeSort == "rating") {
+          tile = DoctorRatingTile(
+            doctorName: doc.name,
+            speciality: doc.speciality,
+            image: doc.imageUrl,
+            isFavorite: doc.isFavorite,
+            onFavoriteTap: onFavToggle,
+          );
+        } else if (viewModel.showFavoriteOnly) {
+          tile = FavoriteDoctorTile(
+            doctorName: doc.name,
+            speciality: doc.speciality,
+            image: doc.imageUrl,
+            isFavorite: doc.isFavorite,
+            onFavoriteTap: onFavToggle,
+          );
+        } else {
+          tile = DoctorTile(
+            doctorName: doc.name,
+            speciality: doc.speciality,
+            image: doc.imageUrl,
+            isFavorite: doc.isFavorite,
+            onFavoriteTap: onFavToggle,
+          );
+        }
+        return InkWell(
+          onTap: () => viewModel.moveToDoctorDetail(context, doc),
+          child: TileExpansion(child: tile),
+        );
+      },
     );
   }
 }

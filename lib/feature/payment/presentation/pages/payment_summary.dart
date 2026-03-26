@@ -7,7 +7,9 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color textDark = Color(0xFF263238);
   static const Color textLightBlue = Color(0xFF8FA1D0); // The label color
-  static const Color chipBackground = Color(0xFFC5CEE0); // Light purple/blue for chips
+  static const Color chipBackground = Color(
+    0xFFC5CEE0,
+  ); // Light purple/blue for chips
   static const Color divider = Color(0xFFEFF3FF);
 }
 
@@ -56,9 +58,7 @@ class PaymentScreen extends StatelessWidget {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-              ),
+              decoration: const BoxDecoration(color: AppColors.white),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -66,7 +66,10 @@ class PaymentScreen extends StatelessWidget {
                     _buildDoctorProfile(),
 
                     const SizedBox(height: 20),
-                    const Divider(color: LightColorPalette.secondary, thickness: 1.5),
+                    const Divider(
+                      color: LightColorPalette.secondary,
+                      thickness: 1.5,
+                    ),
                     const SizedBox(height: 20),
 
                     // 2. Booking Details
@@ -77,7 +80,10 @@ class PaymentScreen extends StatelessWidget {
                     _buildDetailRow("Booking for", "Another Person"),
 
                     const SizedBox(height: 20),
-                    const Divider(color: LightColorPalette.secondary, thickness: 1.5),
+                    const Divider(
+                      color: LightColorPalette.secondary,
+                      thickness: 1.5,
+                    ),
                     const SizedBox(height: 20),
 
                     // 3. Cost Breakdown
@@ -111,7 +117,10 @@ class PaymentScreen extends StatelessWidget {
                     ),
 
                     const SizedBox(height: 20),
-                    const Divider(color: LightColorPalette.secondary, thickness: 1.5),
+                    const Divider(
+                      color: LightColorPalette.secondary,
+                      thickness: 1.5,
+                    ),
                     const SizedBox(height: 20),
 
                     // 4. Payment Method
@@ -149,7 +158,7 @@ class PaymentScreen extends StatelessWidget {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
                     ),
 
@@ -197,7 +206,9 @@ class PaymentScreen extends StatelessWidget {
         // Avatar
         const CircleAvatar(
           radius: 35,
-          backgroundImage: AssetImage("assets/icons/Doctors/images/doctor1.png"),
+          backgroundImage: AssetImage(
+            "assets/icons/Doctors/images/doctor1.png",
+          ),
           // Use NetworkImage for URL: NetworkImage('https://via.placeholder.com/150')
         ),
         const SizedBox(width: 15),
@@ -222,7 +233,11 @@ class PaymentScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Icon(Icons.verified, color: AppColors.primary, size: 24),
+                  const Icon(
+                    Icons.verified,
+                    color: AppColors.primary,
+                    size: 24,
+                  ),
                 ],
               ),
               const SizedBox(height: 4),
@@ -243,7 +258,7 @@ class PaymentScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   _buildChip(Icons.chat_bubble_outline, "60"),
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     ChatScreen(doctorName: "Sudais"),
     ProfileScreen(),
-    ScheduleScreen(),
+    // ScheduleScreen(),
   ];
 
   @override
