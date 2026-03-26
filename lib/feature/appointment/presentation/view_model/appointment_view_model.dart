@@ -84,52 +84,36 @@ class AppointmentViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> bookAppointment({
+  Future<bool> bookAppointment({
     required String doctorId,
-    required String fullName,
-    required String age,
-    required String problem,
-    required BuildContext context,
+    required DateTime date,
+    required String time,
+    required Map<String, dynamic> patientDetails,
+    // required BuildContext context,
   }) async {
-    if (_selectedTimeSlot.isEmpty ||
-        fullName.isEmpty ||
-        age.isEmpty ||
-        problem.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please fill all the details and select the time."),
-        ),
-      );
-      return;
-    }
     _isBooking = true;
     notifyListeners();
 
     try {
-      final response = await apiServices.bookAppointment(
-        doctorId: doctorId,
-        date: _selectedDate.toIso8601String(),
-        timeSlot: _selectedTimeSlot,
-      );
+      final data = {
+        'doctorId': doctorId,
+        'appointmentDate': date.toIso8601String(),
+        'appointmentTime': time,
+        'patientDetails': patientDetails,
+      };
+      
+      final response = await apiServices.bookAppointment(data);
 
-      if (response != null &&
-          (response.statusCode == 201 || response.statusCode == 200)) {
-        if (!context.mounted) return;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Appointment booked successfully.")),
-        );
-
-        Navigator.pop(context);
-      } else {
-        throw Exception(response?.data['message'] ?? "Booking Failed");
+      if(response != null && (response.statusCode == 200|| response.statusCode == 201)){
+        return true;
+      }else{
+        debugPrint("Error VM2 booking appointment. Status: ${response?.statusCode}. Msg: ${response?.data}");
+        return false;
       }
+
     } catch (e) {
-      debugPrint("Error booking appointment: $e");
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Error booking appointment: $e")));
+      debugPrint("Error VM booking appointment: $e");
+      return false;
     } finally {
       _isBooking = false;
       notifyListeners();

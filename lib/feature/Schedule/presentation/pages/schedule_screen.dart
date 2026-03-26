@@ -411,7 +411,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     speciality: widget.speciality,
                     isFavorite: widget.isFavorite,
                     rating: widget.rating,
-                    reviewsCount: widget.review,
+                    reviewsCount: widget.review, 
+                    doctorId: widget.doctorId,
                   ),
             ),
           );

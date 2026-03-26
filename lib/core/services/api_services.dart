@@ -102,7 +102,7 @@ class ApiServices {
         data: {'doctorId': doctorId},
       );
       return response;
-    }on DioException catch (e) {
+    } on DioException catch (e) {
       debugPrint("Error toggling favorite: ${e.message}");
       return e.response;
     }
@@ -121,19 +121,29 @@ class ApiServices {
     }
   }
 
-  //For appointment booking
-  Future<Response?> bookAppointment({
-    required String doctorId,
-    required String date,
-    required String timeSlot,
-  }) async {
+  //-------------------------------------------------------------------For Appointment Booking---------------------------------------------------------------------------------
+  // Future<Response?> bookAppointment({
+  //   required String doctorId,
+  //   required String date,
+  //   required String timeSlot,
+  // }) async {
+  //   try {
+  //     final response = await _dio.post(
+  //       '/appointments/book',
+  //       data: {'doctorId': doctorId, 'date': date, 'timeSlot': timeSlot},
+  //     );
+  //     return response;
+  //   } on DioException catch (e) {
+  //     return e.response;
+  //   }
+  // }
+
+  Future<Response?> bookAppointment(Map<String, dynamic> bookingData) async {
     try {
-      final response = await _dio.post(
-        '/appointments/book',
-        data: {'doctorId': doctorId, 'date': date, 'timeSlot': timeSlot},
-      );
+      final response = await _dio.post('/appointments', data: bookingData);
       return response;
     } on DioException catch (e) {
+      debugPrint("Error apiServices booking appointment: $e");
       return e.response;
     }
   }

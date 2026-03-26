@@ -16,7 +16,7 @@ class ChatBubble extends StatelessWidget {
 
     final Color textColor = message.sender == MessageSender.me
         ? Colors.white
-        : LightColorPalette.textColor ?? Colors.black87;
+        : LightColorPalette.textColor;
 
     // Align bubble to right for 'me', left for 'other'
     final AlignmentGeometry alignment = message.sender == MessageSender.me

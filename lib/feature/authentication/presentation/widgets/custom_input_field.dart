@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 
 class CustomInputField extends StatelessWidget {

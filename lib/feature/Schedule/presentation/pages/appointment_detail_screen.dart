@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
-import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_summary.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
   //for Doctor Details
+  final String doctorId;
   final String doctorName;
   final String image;
   final String speciality;
@@ -25,6 +24,7 @@ class AppointmentDetailScreen extends StatelessWidget {
 
   const AppointmentDetailScreen({
     super.key,
+    required this.doctorId,
     required this.bookingFor,
     required this.fullName,
     required this.age,
@@ -136,7 +136,24 @@ class AppointmentDetailScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PaymentScreen(),
+                              builder:
+                                  (context) => PaymentScreen(
+                                    doctorId: doctorId,
+                                    doctorName: doctorName,
+                                    speciality: speciality,
+                                    image: image,
+                                    date: date,
+                                    time: time,
+                                    bookingFor: bookingFor,
+                                    amount: '30',
+                                    selectedDate: DateTime.now(),
+                                    timeSlot: time,
+                                    fullName: fullName,
+                                    age: age,
+                                    gender: gender,
+                                    problem: problem,
+                                    duration: '30',
+                                  ),
                             ),
                           );
                         },
