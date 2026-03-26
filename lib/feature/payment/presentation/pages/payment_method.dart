@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
+import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 
 import '../widgets/payment_option_tile.dart';
-
 
 class PaymentMethod extends StatefulWidget {
   const PaymentMethod({super.key});
@@ -13,15 +13,47 @@ class PaymentMethod extends StatefulWidget {
 }
 
 class _PaymentMethodScreenState extends State<PaymentMethod> {
-
   int _selectedPaymentMethod = 0;
-
+  final List<String> _paymentMethodNames = [
+    "Card",
+    "Apple Pay",
+    "Paypal",
+    "Google Pay",
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final appColor = context.appColors;
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: CustomAppBar(title: "Payment Method", onPressed: (){}),
+      backgroundColor: appColor.white,
+      appBar: CustomAppBar(
+        title: "Payment Method",
+        onPressed: () => Navigator.pop(context),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context, _paymentMethodNames[_selectedPaymentMethod]);
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 55),
+            backgroundColor: appColor.Primary,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+          ),
+          child: Text(
+            "Confirm",
+            style: TextStyle(
+              color: appColor.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              fontFamily: "LeagueSpartan",
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -35,14 +67,15 @@ class _PaymentMethodScreenState extends State<PaymentMethod> {
                   fontSize: 20,
                   fontWeight: FontWeight.w400,
                   color: Colors.black,
-                  fontFamily: "LeagueSpartan", // Ensure this font is added in pubspec
+                  fontFamily:
+                      "LeagueSpartan", // Ensure this font is added in pubspec
                 ),
               ),
               const SizedBox(height: 15),
 
               PaymentOptionTile(
                 icon: Icons.credit_card,
-                title: "Add New Card",
+                title: "Card",
                 value: 0,
                 groupValue: _selectedPaymentMethod,
                 primaryColor: LightColorPalette.primary,
@@ -78,7 +111,9 @@ class _PaymentMethodScreenState extends State<PaymentMethod> {
 
               // Paypal
               PaymentOptionTile(
-                icon: Icons.paypal, // Note: Use font_awesome_flutter or SVG for exact logo
+                icon:
+                    Icons
+                        .paypal, // Note: Use font_awesome_flutter or SVG for exact logo
                 title: "Paypal",
                 value: 2,
                 groupValue: _selectedPaymentMethod,
@@ -97,6 +132,8 @@ class _PaymentMethodScreenState extends State<PaymentMethod> {
                 primaryColor: LightColorPalette.primary,
                 onTap: (val) => setState(() => _selectedPaymentMethod = val),
               ),
+
+              const SizedBox(height: 35),
             ],
           ),
         ),
@@ -104,4 +141,3 @@ class _PaymentMethodScreenState extends State<PaymentMethod> {
     );
   }
 }
-

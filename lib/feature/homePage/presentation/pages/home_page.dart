@@ -11,8 +11,7 @@ import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_vi
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/upcoming_appointment_widget.dart';
-
-import '../../data/home_page_data.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,17 +21,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Map<String, String>> appointments = [
-    {"day": "9", "label": "MON"},
-    {"day": "10", "label": "TUE"},
-    {"day": "11", "label": "WED"},
-    {"day": "12", "label": "THU"},
-    {"day": "13", "label": "FRI"},
-    {"day": "14", "label": "SAT"},
-  ];
-
-  final List<String> appointmentDay = ["11", "13", "14"];
-
   @override
   Widget build(BuildContext context) {
     final sessionBox = Hive.box('current_session');
@@ -57,60 +45,100 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            ...List.generate(appointments.length, (index) {
-                              final item = appointments[index];
-                              final hasAppointment = appointmentDay.contains(
-                                item["day"],
-                              );
-                              return Container(
-                                height: 64,
-                                width: 42,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(18),
-                                  color:
-                                      hasAppointment
-                                          ? appColor.Primary
-                                          : appColor.white,
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      item["day"]!,
-                                      style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            hasAppointment
-                                                ? LightColorPalette.white
-                                                : LightColorPalette.black,
-                                        fontFamily: "League Spartan",
-                                      ),
+                      Consumer<AppointmentViewModel>(
+                        builder: (context, appointmentViewModel, child) {
+                          final now = DateTime.now();
+                          final List<Map<String, String>> nextSixDays =
+                              List.generate(6, (index) {
+                                final date = now.add(Duration(days: index));
+                                return {
+                                  "day": date.day.toString(),
+                                  "label":
+                                      DateFormat(
+                                        'E',
+                                      ).format(date).toUpperCase(),
+                                };
+                              });
+
+                          final appointmentDays =
+                              appointmentViewModel.upcomingAppointments
+                                  .map((app) {
+                                    if (app['date'] != null) {
+                                      try {
+                                        final date = DateTime.parse(
+                                          app['date'],
+                                        );
+                                        return date.day.toString();
+                                      } catch (e) {
+                                        print(
+                                          'Error parsing date: ${app['date']}',
+                                        );
+                                        return null;
+                                      }
+                                    }
+                                    return null;
+                                  })
+                                  .where((day) => day != null)
+                                  .toSet()
+                                  .toList();
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 40.0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                ...List.generate(nextSixDays.length, (index) {
+                                  final item = nextSixDays[index];
+                                  final hasAppointment = appointmentDays
+                                      .contains(item["day"]);
+                                  return Container(
+                                    height: 64,
+                                    width: 42,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(18),
+                                      color:
+                                          hasAppointment
+                                              ? appColor.Primary
+                                              : appColor.white,
                                     ),
-                                    Text(
-                                      // "Mon",
-                                      item["label"]!,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300,
-                                        color:
-                                            hasAppointment
-                                                ? LightColorPalette.white
-                                                : LightColorPalette.black,
-                                        fontFamily: "League Spartan",
-                                      ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          item["day"]!,
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                            color:
+                                                hasAppointment
+                                                    ? LightColorPalette.white
+                                                    : LightColorPalette.black,
+                                            fontFamily: "League Spartan",
+                                          ),
+                                        ),
+                                        Text(
+                                          item["label"]!,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300,
+                                            color:
+                                                hasAppointment
+                                                    ? LightColorPalette.white
+                                                    : LightColorPalette.black,
+                                            fontFamily: "League Spartan",
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
+                                  );
+                                }),
+                              ],
+                            ),
+                          );
+                        },
                       ),
 
                       SizedBox(height: 10),
@@ -174,26 +202,6 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                // ListView.builder(
-                //   padding: EdgeInsets.symmetric(horizontal: 32),
-                //   shrinkWrap: true,
-                //   physics: BouncingScrollPhysics(),
-                //   itemCount: doctors.length,
-                //   itemBuilder: (context, index) {
-                //     final doctor = doctors[index];
-                //     return Padding(
-                //       padding: const EdgeInsets.only(bottom: 8.0),
-                //       child: DoctorTile(
-                //         doctorName: doctor.name,
-                //         department: doctor.speciality,
-                //         messages: doctor.reviews,
-                //         rating: doctor.rating,
-                //         isFavorite: doctor.isFavorite,
-                //         image: doctor.imageUrl,
-                //       ),
-                //     );
-                //   },
-                // ),
               ],
             ),
           ),

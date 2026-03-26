@@ -4,6 +4,7 @@ import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_summary.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
   //for Doctor Details
@@ -135,7 +136,7 @@ class AppointmentDetailScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PaymentMethod(),
+                              builder: (context) => PaymentScreen(),
                             ),
                           );
                         },

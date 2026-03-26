@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 
 import '../../../../core/theme/color_palette.dart';

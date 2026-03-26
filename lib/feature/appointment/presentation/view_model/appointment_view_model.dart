@@ -4,10 +4,10 @@ import 'package:skin_firts/core/services/api_services.dart';
 class AppointmentViewModel extends ChangeNotifier {
   final ApiServices apiServices;
 
-  List<dynamic> _upcommingAppointments = [];
+  List<dynamic> _upcomingAppointments = [];
   bool _isLoading = true;
 
-  List<dynamic> get upcommingAppointment => _upcommingAppointments;
+  List<dynamic> get upcomingAppointments => _upcomingAppointments;
   bool get isLoading => _isLoading;
 
   AppointmentViewModel({required this.apiServices}) {
@@ -144,7 +144,7 @@ class AppointmentViewModel extends ChangeNotifier {
       final response = await apiServices.getAppointments('upcoming');
 
       if (response != null && response.statusCode == 200) {
-        _upcommingAppointments = response.data;
+        _upcomingAppointments = response.data;
       }
     } catch (e) {
       debugPrint("Error fetching upcoming appointments: $e");
@@ -155,7 +155,7 @@ class AppointmentViewModel extends ChangeNotifier {
   }
 
   dynamic get nextAppointment {
-    if (_upcommingAppointments.isEmpty) return null;
-    return _upcommingAppointments.first;
+    if (_upcomingAppointments.isEmpty) return null;
+    return _upcomingAppointments.first;
   }
 }

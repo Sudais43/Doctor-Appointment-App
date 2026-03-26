@@ -123,7 +123,7 @@ class _AddCardScreenState extends State<AddCardScreen> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: () {
-                    StripeServices.instance.makePayment();
+                    // StripeServices.instance.makePayment();
                     // print("Saved: $_cardHolderName");
                   },
                   style: ElevatedButton.styleFrom(

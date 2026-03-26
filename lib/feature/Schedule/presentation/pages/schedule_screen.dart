@@ -9,7 +9,6 @@ import 'package:skin_firts/feature/Schedule/presentation/widgets/booking_type_se
 import 'package:skin_firts/feature/Schedule/presentation/widgets/day_capsule.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/authentication/presentation/widgets/custom_input_field.dart';
-import 'package:skin_firts/feature/payment/presentation/pages/payment_successful.dart';
 import '../widgets/gender_selector.dart';
 
 class ScheduleScreen extends StatefulWidget {
