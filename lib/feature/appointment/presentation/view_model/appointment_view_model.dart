@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/services/api_services.dart';
+import 'package:skin_firts/feature/appointment/entity/appointment.dart';
 
 class AppointmentViewModel extends ChangeNotifier {
   final ApiServices apiServices;
 
-  List<dynamic> _upcomingAppointments = [];
+  List<Appointment> _upcomingAppointments = [];
+  List<Appointment> _completedAppointments = [];
+  List<Appointment> _cancelledAppointments = [];
   bool _isLoading = true;
+  bool _isLoadingUpcoming = true;
+  bool _isLoadingCompleted = false;
+  bool _isLoadingCancelled = false;
 
-  List<dynamic> get upcomingAppointments => _upcomingAppointments;
+  List<Appointment> get upcomingAppointments => _upcomingAppointments;
+  List<Appointment> get completedAppointments => _completedAppointments;
+  List<Appointment> get cancelledAppointments => _cancelledAppointments;
+  bool get isLoadingUpcoming => _isLoadingUpcoming;
+  bool get isLoadingCompleted => _isLoadingCompleted;
+  bool get isLoadingCancelled => _isLoadingCancelled;
   bool get isLoading => _isLoading;
 
   AppointmentViewModel({required this.apiServices}) {
@@ -101,16 +112,18 @@ class AppointmentViewModel extends ChangeNotifier {
         'appointmentTime': time,
         'patientDetails': patientDetails,
       };
-      
+
       final response = await apiServices.bookAppointment(data);
 
-      if(response != null && (response.statusCode == 200|| response.statusCode == 201)){
+      if (response != null &&
+          (response.statusCode == 200 || response.statusCode == 201)) {
         return true;
-      }else{
-        debugPrint("Error VM2 booking appointment. Status: ${response?.statusCode}. Msg: ${response?.data}");
+      } else {
+        debugPrint(
+          "Error VM2 booking appointment. Status: ${response?.statusCode}. Msg: ${response?.data}",
+        );
         return false;
       }
-
     } catch (e) {
       debugPrint("Error VM booking appointment: $e");
       return false;
@@ -120,20 +133,57 @@ class AppointmentViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchAppointmentsByStatus(String status) async {
+    _setLoading(status, true);
+    try {
+      final response = await apiServices.getAppointments(status);
+      if (response != null && response.statusCode == 200) {
+        final List<dynamic> responseData = response.data ?? [];
+        final appointments =
+            responseData.map((data) => Appointment.fromJson(data)).toList();
+        _setAppointments(status, appointments);
+      } else {
+        _setAppointments(status, []);
+      }
+    } catch (e) {
+      debugPrint("Error fetching $status appointments: $e");
+      _setAppointments(status, []);
+    } finally {
+      _setLoading(status, false);
+    }
+  }
+
+  void _setLoading(String status, bool isLoading) {
+    if (status == 'upcoming') _isLoadingUpcoming = isLoading;
+    if (status == 'completed') _isLoadingCompleted = isLoading;
+    if (status == 'cancelled') _isLoadingCancelled = isLoading;
+    notifyListeners();
+  }
+
+  void _setAppointments(String status, List<Appointment> appointments) {
+    if (status == 'upcoming') _upcomingAppointments = appointments;
+    if (status == 'completed') _completedAppointments = appointments;
+    if (status == 'cancelled') _cancelledAppointments = appointments;
+  }
+
   Future<void> fetchUpcomingAppointments() async {
     _isLoading = true;
+    _isLoadingUpcoming = true;
     notifyListeners();
 
     try {
       final response = await apiServices.getAppointments('upcoming');
 
       if (response != null && response.statusCode == 200) {
-        _upcomingAppointments = response.data;
+        final List<dynamic> responseData = response.data ?? [];
+        _upcomingAppointments =
+            responseData.map((data) => Appointment.fromJson(data)).toList();
       }
     } catch (e) {
       debugPrint("Error fetching upcoming appointments: $e");
     } finally {
       _isLoading = false;
+      _isLoadingUpcoming = false;
       notifyListeners();
     }
   }

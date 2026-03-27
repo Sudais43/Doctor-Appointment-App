@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/widgets/favorite_doctor_tile.dart';
@@ -204,9 +205,9 @@ class _DoctorListPageState extends State<DoctorListPage> {
           availability: docData['availability'] ?? [],
         );
 
-        VoidCallback onFavToggle = () {
+        void onFavToggle() {
           viewModel.toggleFavoriteStatus(doc.id);
-        };
+        }
 
         Widget tile;
         if (viewModel.activeSort == "rating") {
@@ -216,6 +217,24 @@ class _DoctorListPageState extends State<DoctorListPage> {
             image: doc.imageUrl,
             isFavorite: doc.isFavorite,
             onFavoriteTap: onFavToggle,
+            onBookTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ScheduleScreen(
+                        doctorId: doc.id,
+                        doctorName: doc.name,
+                        availability: doc.availability,
+                        image: doc.imageUrl,
+                        speciality: doc.speciality,
+                        isFavorite: doc.isFavorite,
+                        rating: doc.rating,
+                        review: doc.reviews,
+                      ),
+                ),
+              );
+            },
           );
         } else if (viewModel.showFavoriteOnly) {
           tile = FavoriteDoctorTile(
@@ -224,6 +243,24 @@ class _DoctorListPageState extends State<DoctorListPage> {
             image: doc.imageUrl,
             isFavorite: doc.isFavorite,
             onFavoriteTap: onFavToggle,
+            onBookTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ScheduleScreen(
+                        doctorId: doc.id,
+                        doctorName: doc.name,
+                        availability: doc.availability,
+                        image: doc.imageUrl,
+                        speciality: doc.speciality,
+                        isFavorite: doc.isFavorite,
+                        rating: doc.rating,
+                        review: doc.reviews,
+                      ),
+                ),
+              );
+            },
           );
         } else {
           tile = DoctorTile(
@@ -232,6 +269,24 @@ class _DoctorListPageState extends State<DoctorListPage> {
             image: doc.imageUrl,
             isFavorite: doc.isFavorite,
             onFavoriteTap: onFavToggle,
+            onBookTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => ScheduleScreen(
+                        doctorId: doc.id,
+                        doctorName: doc.name,
+                        availability: doc.availability,
+                        image: doc.imageUrl,
+                        speciality: doc.speciality,
+                        isFavorite: doc.isFavorite,
+                        rating: doc.rating,
+                        review: doc.reviews,
+                      ),
+                ),
+              );
+            },
           );
         }
         return InkWell(

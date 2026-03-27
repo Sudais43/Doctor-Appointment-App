@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
-import 'package:skin_firts/feature/payment/presentation/pages/payment_summary.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_screen.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
   //for Doctor Details

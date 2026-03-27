@@ -8,6 +8,8 @@ class DoctorRatingTile extends StatelessWidget {
   final String image;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
+  final VoidCallback onBookTap;
+
 
   const DoctorRatingTile({
     super.key,
@@ -15,7 +17,7 @@ class DoctorRatingTile extends StatelessWidget {
     required this.speciality,
     required this.image,
     required this.isFavorite,
-    required this.onFavoriteTap,
+    required this.onFavoriteTap, required this.onBookTap,
   });
 
   @override
@@ -178,13 +180,16 @@ class DoctorRatingTile extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          SizedBox(
-                            height: 21,
-                            width: 21,
-                            child: CircleAvatar(
-                              backgroundColor: appColor.white,
-                              child: SvgPicture.asset(
-                                "assets/icons/Doctors/calender_icon.svg",
+                          GestureDetector(
+                            onTap: onBookTap,
+                            child: SizedBox(
+                              height: 21,
+                              width: 21,
+                              child: CircleAvatar(
+                                backgroundColor: appColor.white,
+                                child: SvgPicture.asset(
+                                  "assets/icons/Doctors/calender_icon.svg",
+                                ),
                               ),
                             ),
                           ),

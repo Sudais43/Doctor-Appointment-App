@@ -8,6 +8,8 @@ class FavoriteDoctorTile extends StatelessWidget {
   final String image;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
+  final VoidCallback onBookTap;
+
 
   const FavoriteDoctorTile({
     super.key,
@@ -15,7 +17,7 @@ class FavoriteDoctorTile extends StatelessWidget {
     required this.speciality,
     required this.image,
     required this.isFavorite,
-    required this.onFavoriteTap,
+    required this.onFavoriteTap, required this.onBookTap,
   });
 
   @override
@@ -155,7 +157,7 @@ class FavoriteDoctorTile extends StatelessWidget {
                         borderRadius: BorderRadius.circular(13),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: onBookTap,
                     child: Center(
                       child: Text(
                         "Make Appointment",

@@ -55,7 +55,7 @@ class AppointmentCard extends StatelessWidget {
                     const SizedBox(height: 8),
 
                     // Logic to show Rating (Complete) or nothing (Upcoming/Cancelled)
-                    if (appointment.status == AppointmentStatus.complete)
+                    if (appointment.status == AppointmentStatus.completed)
                       Row(
                         children: [
                           _buildRatingPill(appointment.rating),
@@ -74,7 +74,7 @@ class AppointmentCard extends StatelessWidget {
           // --- DYNAMIC CONTENT BASED ON STATUS ---
           if (appointment.status == AppointmentStatus.upcoming)
             _buildUpcomingContent(),
-          if (appointment.status == AppointmentStatus.complete)
+          if (appointment.status == AppointmentStatus.completed)
             _buildCompleteContent(),
           if (appointment.status == AppointmentStatus.cancelled)
             _buildCancelledContent(),

@@ -6,7 +6,9 @@ import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
+import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
+import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
@@ -63,17 +65,12 @@ class _HomePageState extends State<HomePage> {
                           final appointmentDays =
                               appointmentViewModel.upcomingAppointments
                                   .map((app) {
-                                    if (app['date'] != null) {
-                                      try {
-                                        final date = DateTime.parse(
-                                          app['date'],
-                                        );
-                                        return date.day.toString();
-                                      } catch (e) {
-                                        print(
-                                          'Error parsing date: ${app['date']}',
-                                        );
-                                        return null;
+                                    if (app.date.isNotEmpty) {
+                                      final match = RegExp(
+                                        r'\d+',
+                                      ).firstMatch(app.date);
+                                      if (match != null) {
+                                        return match.group(0);
                                       }
                                     }
                                     return null;
@@ -176,26 +173,38 @@ class _HomePageState extends State<HomePage> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: doctorViewModel.homeDoctors.length,
                       itemBuilder: (context, index) {
-                        final doctor = doctorViewModel.homeDoctors[index];
+                        final docData = doctorViewModel.homeDoctors[index];
+                        final doc = DoctorInfo(
+                          id: docData['_id'] ?? docData['id'] ?? '',
+                          name: docData['name'] ?? 'No Name',
+                          speciality: docData['specialization'] ?? 'Specialist',
+                          rating: (docData['rating'] as num? ?? 0.0).toDouble(),
+                          reviews:
+                              (docData['reviewsCount'] as num? ?? 0).toInt(),
+                          isFavorite: docData['isFavorite'] ?? false,
+                          imageUrl: docData['imageUrl'] ?? '',
+                          gender: docData['gender'] ?? '',
+                          availability: docData['availability'] ?? [],
+                        );
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
-                          child: DoctorTile1(
-                            doctorName: doctor['name'],
-                            specialization:
-                                doctor['specialization'] ?? 'Specialist',
-                            reviewsCount: doctor['reviewsCount'] ?? 0,
-                            rating:
-                                (doctor['rating'] as num? ?? 0.0).toDouble(),
-                            imageUrl:
-                                doctor['imageUrl'] ??
-                                '', // Fixed typo: imagesUrl -> imageUrl
-                            // Provide a fallback just in case 'isFavorite' is missing
-                            isFavorite: doctor['isFavorite'] ?? false,
-                            onFavoriteTap: () {
-                              doctorViewModel.toggleFavoriteStatus(
-                                doctor['_id'] ?? doctor['id'] ?? '',
-                              );
-                            },
+                          child: GestureDetector(
+                            onTap:
+                                () => doctorViewModel.moveToDoctorDetail(
+                                  context,
+                                  doc,
+                                ),
+                            child: DoctorTile1(
+                              doctorName: doc.name,
+                              specialization: doc.speciality,
+                              reviewsCount: doc.reviews,
+                              rating: doc.rating,
+                              imageUrl: doc.imageUrl,
+                              isFavorite: doc.isFavorite,
+                              onFavoriteTap: () {
+                                doctorViewModel.toggleFavoriteStatus(doc.id);
+                              },
+                            ),
                           ),
                         );
                       },

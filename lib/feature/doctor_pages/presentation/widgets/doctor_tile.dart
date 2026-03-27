@@ -8,13 +8,16 @@ class DoctorTile extends StatelessWidget {
   final String image;
   final bool isFavorite;
   final VoidCallback onFavoriteTap;
+  final VoidCallback onBookTap;
 
   const DoctorTile({
     super.key,
     required this.doctorName,
     required this.speciality,
     required this.image,
-    required this.isFavorite, required this.onFavoriteTap,
+    required this.isFavorite,
+    required this.onFavoriteTap,
+    required this.onBookTap,
   });
 
   @override
@@ -101,13 +104,16 @@ class DoctorTile extends StatelessWidget {
 
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
-                      child: SizedBox(
-                        height: 21,
-                        width: 21,
-                        child: CircleAvatar(
-                          backgroundColor: appColor.white,
-                          child: SvgPicture.asset(
-                            "assets/icons/Doctors/calender_icon.svg",
+                      child: GestureDetector(
+                        onTap: onBookTap,
+                        child: SizedBox(
+                          height: 21,
+                          width: 21,
+                          child: CircleAvatar(
+                            backgroundColor: appColor.white,
+                            child: SvgPicture.asset(
+                              "assets/icons/Doctors/calender_icon.svg",
+                            ),
                           ),
                         ),
                       ),

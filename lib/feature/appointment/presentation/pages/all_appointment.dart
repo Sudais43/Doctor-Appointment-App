@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
+import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 
 import '../../../../core/widget/custom_app_bar.dart';
-import '../../data/appointment_data.dart';
 import '../../entity/appointment.dart';
 import '../widgets/appointment_card.dart';
-
-
 
 // --- 3. MAIN SCREEN ---
 class AllAppointmentsScreen extends StatefulWidget {
@@ -20,19 +19,14 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
   // Track selected tab
   AppointmentStatus _selectedStatus = AppointmentStatus.upcoming;
 
-  // Mock Data
-
-
   @override
   Widget build(BuildContext context) {
-    // Filter list based on selection
-    final filteredList = allAppointments
-        .where((element) => element.status == _selectedStatus)
-        .toList();
-
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(title: "All Appointments", onPressed: (){}),
+      appBar: CustomAppBar(
+        title: "All Appointments",
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       body: Column(
         children: [
           const SizedBox(height: 10),
@@ -47,7 +41,7 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTabButton("Complete", AppointmentStatus.complete),
+                  _buildTabButton("Completed", AppointmentStatus.completed),
                   _buildTabButton("Upcoming", AppointmentStatus.upcoming),
                   _buildTabButton("Cancelled", AppointmentStatus.cancelled),
                 ],
@@ -59,14 +53,51 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
 
           // --- LIST VIEW ---
           Expanded(
-            child: filteredList.isEmpty
-                ? const Center(child: Text("No appointments found"))
-                : ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: filteredList.length,
-              itemBuilder: (context, index) {
-                return AppointmentCard(
-                  appointment: filteredList[index],
+            child: Consumer<AppointmentViewModel>(
+              builder: (context, appointmentVM, child) {
+                List<Appointment> currentList;
+                bool isLoading;
+
+                switch (_selectedStatus) {
+                  case AppointmentStatus.upcoming:
+                    currentList = appointmentVM.upcomingAppointments;
+                    isLoading = appointmentVM.isLoadingUpcoming;
+                    break;
+                  case AppointmentStatus.completed:
+                    currentList = appointmentVM.completedAppointments;
+                    isLoading = appointmentVM.isLoadingCompleted;
+                    break;
+                  case AppointmentStatus.cancelled:
+                    currentList = appointmentVM.cancelledAppointments;
+                    isLoading = appointmentVM.isLoadingCancelled;
+                    break;
+                }
+
+                if (isLoading && currentList.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (currentList.isEmpty) {
+                  return const Center(child: Text("No appointments found"));
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    await appointmentVM.fetchAppointmentsByStatus(
+                      _selectedStatus.name,
+                    );
+                  },
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: currentList.length,
+                    itemBuilder: (context, index) {
+                      final item = currentList[index];
+                      return AppointmentCard(
+                        key: ValueKey(item.hashCode),
+                        appointment: item,
+                      );
+                    },
+                  ),
                 );
               },
             ),
@@ -82,23 +113,38 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            _selectedStatus = status;
-          });
+          if (_selectedStatus == status) return;
+
+          setState(() => _selectedStatus = status);
+
+          final vm = context.read<AppointmentViewModel>();
+          if (status == AppointmentStatus.completed &&
+              vm.completedAppointments.isEmpty) {
+            vm.fetchAppointmentsByStatus('completed');
+          } else if (status == AppointmentStatus.cancelled &&
+              vm.cancelledAppointments.isEmpty) {
+            vm.fetchAppointmentsByStatus('cancelled');
+          } else if (status == AppointmentStatus.upcoming &&
+              vm.upcomingAppointments.isEmpty) {
+            vm.fetchAppointmentsByStatus('upcoming');
+          }
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color: isSelected ? LightColorPalette.primary : LightColorPalette.secondary,
+              color:
+                  isSelected
+                      ? LightColorPalette.primary
+                      : LightColorPalette.inputField,
               borderRadius: BorderRadius.circular(30),
             ),
             child: Text(
               text,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isSelected ? Colors.white : LightColorPalette.black,
+                color: isSelected ? Colors.white : LightColorPalette.primary,
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
                 fontFamily: "LeagueSpartan",
@@ -110,4 +156,3 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
     );
   }
 }
-
