@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skin_firts/feature/appointment/presentation/pages/cancel.dart';
 
 import '../../../../core/theme/color_palette.dart';
 import '../../entity/appointment.dart';
@@ -60,7 +61,11 @@ class AppointmentCard extends StatelessWidget {
                         children: [
                           _buildRatingPill(appointment.rating),
                           const SizedBox(width: 10),
-                          const Icon(Icons.favorite, color: LightColorPalette.primary, size: 20),
+                          const Icon(
+                            Icons.favorite,
+                            color: LightColorPalette.primary,
+                            size: 20,
+                          ),
                         ],
                       ),
                   ],
@@ -73,7 +78,7 @@ class AppointmentCard extends StatelessWidget {
 
           // --- DYNAMIC CONTENT BASED ON STATUS ---
           if (appointment.status == AppointmentStatus.upcoming)
-            _buildUpcomingContent(),
+            _buildUpcomingContent(context),
           if (appointment.status == AppointmentStatus.completed)
             _buildCompleteContent(),
           if (appointment.status == AppointmentStatus.cancelled)
@@ -84,7 +89,7 @@ class AppointmentCard extends StatelessWidget {
   }
 
   // Content for "Upcoming" (Date chips + Details button)
-  Widget _buildUpcomingContent() {
+  Widget _buildUpcomingContent(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -97,15 +102,29 @@ class AppointmentCard extends StatelessWidget {
         const SizedBox(height: 15),
         Row(
           children: [
-            Expanded(
-              child: _buildButton("Details", true, () {}),
-            ),
+            Expanded(child: _buildButton("Details", true, () {})),
             const SizedBox(width: 10),
-            _buildCircleButton(Icons.check, LightColorPalette.primary), // Reschedule/Confirm
+            _buildCircleButton(
+              Icons.check,
+              LightColorPalette.primary,
+            ), // Reschedule/Confirm
             const SizedBox(width: 10),
-            _buildCircleButton(Icons.close, LightColorPalette.primary), // Cancel
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => CancelAppointmentScreen(
+                          appointmentId: appointment.id,
+                        ),
+                  ),
+                );
+              },
+              child: _buildCircleButton(Icons.close, LightColorPalette.primary),
+            ), // Cancel
           ],
-        )
+        ),
       ],
     );
   }
@@ -192,12 +211,17 @@ class AppointmentCard extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isFilled ? LightColorPalette.primary : LightColorPalette.white,
-          foregroundColor: isFilled ? LightColorPalette.white : LightColorPalette.primary,
+          backgroundColor:
+              isFilled ? LightColorPalette.primary : LightColorPalette.white,
+          foregroundColor:
+              isFilled ? LightColorPalette.white : LightColorPalette.primary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
-            side: isFilled ? BorderSide.none : const BorderSide(color: LightColorPalette.primary),
+            side:
+                isFilled
+                    ? BorderSide.none
+                    : const BorderSide(color: LightColorPalette.primary),
           ),
         ),
         child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -209,10 +233,7 @@ class AppointmentCard extends StatelessWidget {
     return Container(
       width: 40,
       height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
       child: Icon(icon, color: color, size: 20),
     );
   }

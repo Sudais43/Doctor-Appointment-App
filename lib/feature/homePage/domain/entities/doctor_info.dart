@@ -45,7 +45,8 @@ class DoctorInfo {
     availability: availability ?? this.availability,
   );
 
-  factory DoctorInfo.fromJson(String str) => DoctorInfo.fromJson(json.decode(str));
+  factory DoctorInfo.fromJson(String str) =>
+      DoctorInfo.fromJson(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
@@ -61,16 +62,15 @@ class DoctorInfo {
     availability: json["availability"] ?? [],
   );
 
-  Map<String , dynamic> toMap() => {
+  Map<String, dynamic> toMap() => {
     "id": id,
     "name": name,
     "speciality": speciality,
     "isFavorite": isFavorite,
     "rating": rating,
     "reviews": reviews,
-    "imageUrl" : imageUrl,
+    "imageUrl": imageUrl,
     "gender": gender,
     "availability": availability,
   };
-
 }

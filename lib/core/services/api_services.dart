@@ -153,7 +153,7 @@ class ApiServices {
     String reason,
   ) async {
     try {
-      final response = await _dio.post(
+      final response = await _dio.put(
         '/appointments/$appointmentId/cancel',
         data: {'cancelReason': reason},
       );

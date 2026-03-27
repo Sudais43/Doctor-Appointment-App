@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 enum AppointmentStatus { completed, upcoming, cancelled }
 
 class Appointment {
+  final String id;
   final String doctorId;
   final String name;
   final String specialty;
@@ -13,6 +14,7 @@ class Appointment {
   final String time; // For Upcoming
 
   Appointment({
+    required this.id,
     required this.doctorId,
     required this.name,
     required this.specialty,
@@ -24,6 +26,7 @@ class Appointment {
   });
 
   Appointment copyWith({
+    String? id,
     String? doctorId,
     String? name,
     String? specialty,
@@ -33,6 +36,7 @@ class Appointment {
     String? date,
     String? time,
   }) => Appointment(
+    id: id ?? this.id,
     doctorId: doctorId ?? this.doctorId,
     name: name ?? this.name,
     specialty: specialty ?? this.specialty,
@@ -65,7 +69,8 @@ class Appointment {
       formattedDate = DateFormat('EEEE, d MMMM').format(parsedDate);
     }
     return Appointment(
-      doctorId: json["_id"] ?? '',
+      id: json["_id"] ?? '',
+      doctorId: doctorData["_id"] ?? '',
       name: doctorData["name"] ?? 'unKnown',
       specialty: doctorData["specialization"] as String? ?? '',
       image: doctorData["imageUrl"] as String? ?? '',

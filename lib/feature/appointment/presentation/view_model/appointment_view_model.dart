@@ -192,4 +192,43 @@ class AppointmentViewModel extends ChangeNotifier {
     if (_upcomingAppointments.isEmpty) return null;
     return _upcomingAppointments.first;
   }
+
+  Future<bool> cancelAppointment({
+    required String appointmentId,
+    String reason = "No Reason Provided",
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await apiServices.cancelAppointment(
+        appointmentId,
+        reason,
+      );
+
+      if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
+        final index = _upcomingAppointments.indexWhere(
+          (appt) => appt.id == appointmentId,
+        );
+        if (index != -1) {
+          final appointmentToCancel = _upcomingAppointments.removeAt(index);
+          _cancelledAppointments.insert(
+            0,
+            appointmentToCancel.copyWith(status: AppointmentStatus.cancelled),
+          );
+        }
+        return true;
+      } else {
+        debugPrint(
+          "Failed to cancel appointment on server: ${response?.statusCode}",
+        );
+        return false;
+      }
+    } catch (e) {
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

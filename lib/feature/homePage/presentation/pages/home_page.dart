@@ -6,7 +6,6 @@ import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';

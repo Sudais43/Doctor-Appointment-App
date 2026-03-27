@@ -53,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
-    
+
     return Scaffold(
       backgroundColor: appColor.Primary,
       appBar: AppBar(
@@ -105,14 +105,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 child: Column(
                   children: [
                     // 1. Doctor Profile
-                    _buildDoctorProfile(appColor, widget.image, widget.doctorName, widget.speciality),
+                    _buildDoctorProfile(
+                      appColor,
+                      widget.image,
+                      widget.doctorName,
+                      widget.speciality,
+                    ),
 
                     const SizedBox(height: 20),
                     Divider(color: appColor.secondary, thickness: 1.5),
                     const SizedBox(height: 20),
 
                     // 2. Booking Details
-                    _buildDetailRow("Date / Hour", "${widget.date} / ${widget.timeSlot}", appColor),
+                    _buildDetailRow(
+                      "Date / Hour",
+                      "${widget.date} / ${widget.timeSlot}",
+                      appColor,
+                    ),
                     const SizedBox(height: 15),
                     _buildDetailRow("Duration", widget.duration, appColor),
                     const SizedBox(height: 15),
@@ -132,8 +141,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Total", style: TextStyle(color: appColor.fontColor, fontSize: 16, fontFamily: "LeagueSpartan")),
-                        Text("\$${widget.amount}", style: TextStyle(color: appColor.fontColor, fontSize: 18, fontWeight: FontWeight.bold, fontFamily: "LeagueSpartan")),
+                        Text(
+                          "Total",
+                          style: TextStyle(
+                            color: appColor.fontColor,
+                            fontSize: 16,
+                            fontFamily: "LeagueSpartan",
+                          ),
+                        ),
+                        Text(
+                          "\$${widget.amount}",
+                          style: TextStyle(
+                            color: appColor.fontColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "LeagueSpartan",
+                          ),
+                        ),
                       ],
                     ),
 
@@ -145,22 +169,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Payment Method", style: TextStyle(color: appColor.fontColor, fontSize: 15, fontFamily: "LeagueSpartan")),
+                        Text(
+                          "Payment Method",
+                          style: TextStyle(
+                            color: appColor.fontColor,
+                            fontSize: 15,
+                            fontFamily: "LeagueSpartan",
+                          ),
+                        ),
                         Row(
                           children: [
-                            Text(_paymentMethod, style: TextStyle(color: appColor.fontColor, fontWeight: FontWeight.bold, fontFamily: "LeagueSpartan")),
+                            Text(
+                              _paymentMethod,
+                              style: TextStyle(
+                                color: appColor.fontColor,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "LeagueSpartan",
+                              ),
+                            ),
                             const SizedBox(width: 10),
                             GestureDetector(
                               onTap: () async {
                                 final result = await Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const PaymentMethod()),
+                                  MaterialPageRoute(
+                                    builder: (context) => const PaymentMethod(),
+                                  ),
                                 );
                                 if (result != null && mounted) {
                                   setState(() => _paymentMethod = result);
                                 }
                               },
-                              child: Text("Change", style: TextStyle(color: appColor.Primary, fontSize: 14, fontFamily: "LeagueSpartan")),
+                              child: Text(
+                                "Change",
+                                style: TextStyle(
+                                  color: appColor.Primary,
+                                  fontSize: 14,
+                                  fontFamily: "LeagueSpartan",
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -174,15 +221,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       width: double.infinity,
                       height: 55,
                       child: ElevatedButton(
-                        onPressed: _isProcessing ? null : _processPaymentAndBooking,
+                        onPressed:
+                            _isProcessing ? null : _processPaymentAndBooking,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: appColor.Primary,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
                           elevation: 0,
                         ),
-                        child: _isProcessing
-                            ? CircularProgressIndicator(color: appColor.white)
-                            : Text("Pay Now", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: appColor.white, fontFamily: "LeagueSpartan")),
+                        child:
+                            _isProcessing
+                                ? CircularProgressIndicator(
+                                  color: appColor.white,
+                                )
+                                : Text(
+                                  "Pay Now",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: appColor.white,
+                                    fontFamily: "LeagueSpartan",
+                                  ),
+                                ),
                       ),
                     ),
                   ],
@@ -196,23 +257,97 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   // --- THE CORE LOGIC FOR PAYMENT AND BOOKING ---
+  // Future<void> _processPaymentAndBooking() async {
+  //   if (!mounted) return;
+  //   // 1. Start the loading spinner
+  //   setState(() => _isProcessing = true);
+
+  //   try {
+  //     // 2. Process Stripe Payment (if applicable)
+  //     if (_paymentMethod == "Card") {
+  //       // This is the most likely place where the execution might hang.
+  //       // The `makePayment` method in `StripeServices` must ensure its Future always completes,
+  //       // either with a success or an error. If it hangs, the spinner will be stuck.
+  //       await StripeServices.instance.makePayment();
+  //     }
+
+  //     // If we are here, payment was successful or not required.
+  //     if (!mounted) return;
+
+  //     // 3. Prepare Patient Data for Backend
+  //     final patientDetails = {
+  //       "fullName": widget.fullName,
+  //       "age": widget.age,
+  //       "gender": widget.gender,
+  //       "problem": widget.problem,
+  //       "bookingFor": widget.bookingFor,
+  //     };
+
+  //     // 4. Send Booking to Node.js via ViewModel
+  //     // This is another potential point of failure if the network call hangs.
+  //     bool bookingSuccess = await context
+  //         .read<AppointmentViewModel>()
+  //         .bookAppointment(
+  //           doctorId: widget.doctorId,
+  //           date: widget.selectedDate,
+  //           time: widget.timeSlot,
+  //           patientDetails: patientDetails,
+  //         );
+
+  //     if (!mounted) return;
+
+  //     // 5. Handle Booking Success or Failure
+  //     if (bookingSuccess) {
+  //       _showSuccessDialog(context);
+  //     } else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         const SnackBar(
+  //           content: Text(
+  //             "Booking failed. Please try again or contact support.",
+  //           ),
+  //           backgroundColor: Colors.red,
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     if (!mounted) return;
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Text("An error occurred: $e"),
+  //         backgroundColor: Colors.red,
+  //       ),
+  //     );
+  //   } finally {
+  //     // 6. Stop the spinner safely
+  //     if (mounted) {
+  //       setState(() => _isProcessing = false);
+  //     }
+  //   }
+  // }
+
+  // --- THE CORE LOGIC FOR PAYMENT AND BOOKING ---
   Future<void> _processPaymentAndBooking() async {
-    // 1. Start the loading spinner
+    if (!mounted) return;
+    
     setState(() => _isProcessing = true);
 
     try {
-      // 2. Process Stripe Payment (if applicable)
       bool paymentSuccessful = true; 
+      
+      // 1. Process Stripe Payment
       if (_paymentMethod == "Card") {
-        // Await the stripe payment. Ensure StripeServices throws an error if payment fails.
-        // await StripeServices.instance.makePayment();
-        paymentSuccessful = true;
+        // Convert your string amount to an integer for Stripe (e.g. "100.00" -> 100)
+        int stripeAmount = double.tryParse(widget.amount)?.toInt() ?? 100;
+        
+        // Await the new boolean method. If it fails, it will throw an error to the catch block.
+        paymentSuccessful = await StripeServices.instance.makePayment(stripeAmount, "usd");
       }
 
+      // 2. If payment succeeded, proceed to booking
       if (paymentSuccessful) {
         if (!mounted) return;
 
-        // 3. Prepare Patient Data for Backend
+        // Prepare Patient Data
         final patientDetails = {
           "fullName": widget.fullName,
           "age": widget.age,
@@ -221,32 +356,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
           "bookingFor": widget.bookingFor,
         };
 
-        // 4. Send Booking to Node.js via ViewModel
-        bool bookingSuccess = await context.read<AppointmentViewModel>().bookAppointment(
-          doctorId: widget.doctorId,
-          date: widget.selectedDate,
-          time: widget.timeSlot,
-          patientDetails: patientDetails,
-        );
+        // Send Booking to Node.js
+        bool bookingSuccess = await context
+            .read<AppointmentViewModel>()
+            .bookAppointment(
+              doctorId: widget.doctorId,
+              date: widget.selectedDate,
+              time: widget.timeSlot,
+              patientDetails: patientDetails,
+            );
 
         if (!mounted) return;
 
-        // 5. Handle Success or Failure
         if (bookingSuccess) {
           _showSuccessDialog(context);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Booking failed on our end. Please contact support."), backgroundColor: Colors.red),
-          );
+          throw Exception("Booking failed on our end. Please contact support.");
         }
       }
     } catch (e) {
       if (!mounted) return;
+      // This will now catch Stripe cancelations OR server booking failures
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Payment Error: $e"), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text(e.toString().replaceAll("Exception: ", "")), // Clean up the error message
+          backgroundColor: Colors.red,
+        ),
       );
     } finally {
-      // 6. Stop the spinner safely
+      // 3. Always stop the spinner, no matter what happened
       if (mounted) {
         setState(() => _isProcessing = false);
       }
@@ -258,32 +396,48 @@ class _PaymentScreenState extends State<PaymentScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.check_circle, color: Colors.green, size: 80),
-            const SizedBox(height: 20),
-            const Text("Success!", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
-            const Text("Your appointment has been booked successfully.", textAlign: TextAlign.center),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).popUntil((route) => route.isFirst); // Go to Home
-              },
-              child: const Text("Done"),
-            )
-          ],
-        ),
-      ),
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.check_circle, color: Colors.green, size: 80),
+                const SizedBox(height: 20),
+                const Text(
+                  "Success!",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Your appointment has been booked successfully.",
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.of(
+                      context,
+                    ).popUntil((route) => route.isFirst); // Go to Home
+                  },
+                  child: const Text("Done"),
+                ),
+              ],
+            ),
+          ),
     );
   }
 
   // --- Helper Widgets ---
-  Widget _buildDoctorProfile(AppColor appColor, String image, String name, String speciality) {
+  Widget _buildDoctorProfile(
+    AppColor appColor,
+    String image,
+    String name,
+    String speciality,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -296,12 +450,30 @@ class _PaymentScreenState extends State<PaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(child: Text(name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: appColor.Primary, fontFamily: "LeagueSpartan"), overflow: TextOverflow.ellipsis)),
+                  Flexible(
+                    child: Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: appColor.Primary,
+                        fontFamily: "LeagueSpartan",
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   Icon(Icons.verified, color: appColor.Primary, size: 24),
                 ],
               ),
               const SizedBox(height: 4),
-              Text(speciality, style: const TextStyle(color: Colors.grey, fontSize: 13, fontFamily: "LeagueSpartan")),
+              Text(
+                speciality,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                  fontFamily: "LeagueSpartan",
+                ),
+              ),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -320,12 +492,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _buildChip(IconData icon, String text, AppColor appColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: appColor.secondary.withOpacity(0.5), borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(
+        color: appColor.secondary.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Row(
         children: [
           Icon(icon, size: 14, color: appColor.Primary),
           const SizedBox(width: 4),
-          Text(text, style: TextStyle(color: appColor.Primary, fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(
+            text,
+            style: TextStyle(
+              color: appColor.Primary,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
@@ -336,8 +518,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(color: appColor.fontColor, fontSize: 15, fontFamily: "LeagueSpartan")),
-        Text(value, style: TextStyle(color: appColor.fontColor, fontSize: 13, fontWeight: FontWeight.w500, fontFamily: "LeagueSpartan")),
+        Text(
+          label,
+          style: TextStyle(
+            color: appColor.fontColor,
+            fontSize: 15,
+            fontFamily: "LeagueSpartan",
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            color: appColor.fontColor,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            fontFamily: "LeagueSpartan",
+          ),
+        ),
       ],
     );
   }
