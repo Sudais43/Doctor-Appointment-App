@@ -361,7 +361,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             .read<AppointmentViewModel>()
             .bookAppointment(
               doctorId: widget.doctorId,
-              date: widget.selectedDate,
+              date: widget.date,
               time: widget.timeSlot,
               patientDetails: patientDetails,
             );

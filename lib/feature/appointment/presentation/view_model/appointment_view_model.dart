@@ -97,7 +97,7 @@ class AppointmentViewModel extends ChangeNotifier {
 
   Future<bool> bookAppointment({
     required String doctorId,
-    required DateTime date,
+    required String date,
     required String time,
     required Map<String, dynamic> patientDetails,
     // required BuildContext context,
@@ -108,7 +108,7 @@ class AppointmentViewModel extends ChangeNotifier {
     try {
       final data = {
         'doctorId': doctorId,
-        'appointmentDate': date.toIso8601String(),
+        'appointmentDate': date,
         'appointmentTime': time,
         'patientDetails': patientDetails,
       };

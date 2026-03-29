@@ -49,22 +49,29 @@ class _HomePageState extends State<HomePage> {
                       Consumer<AppointmentViewModel>(
                         builder: (context, appointmentViewModel, child) {
                           final now = DateTime.now();
-                          final List<Map<String, String>> nextSixDays =
-                              List.generate(6, (index) {
-                                final date = now.add(Duration(days: index));
-                                return {
-                                  "day": date.day.toString(),
-                                  "label":
-                                      DateFormat(
-                                        'E',
-                                      ).format(date).toUpperCase(),
-                                };
-                              });
+                          final List<Map<String, String>>
+                          nextSixDays = List.generate(6, (index) {
+                            final date = now.add(Duration(days: index));
+                            return {
+                              "day": date.day.toString(),
+                              "label":
+                                  DateFormat('E').format(date).toUpperCase(),
+                              "fullDate": DateFormat('yyyy-MM-dd').format(date),
+                            };
+                          });
 
                           final appointmentDays =
                               appointmentViewModel.upcomingAppointments
                                   .map((app) {
                                     if (app.date.isNotEmpty) {
+                                      final parsedDate = DateTime.tryParse(
+                                        app.date,
+                                      );
+                                      if (parsedDate != null) {
+                                        return DateFormat(
+                                          'yyyy-MM-dd',
+                                        ).format(parsedDate.toLocal());
+                                      }
                                       final match = RegExp(
                                         r'\d+',
                                       ).firstMatch(app.date);
@@ -87,8 +94,11 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 ...List.generate(nextSixDays.length, (index) {
                                   final item = nextSixDays[index];
-                                  final hasAppointment = appointmentDays
-                                      .contains(item["day"]);
+                                  final hasAppointment =
+                                      appointmentDays.contains(
+                                        item["fullDate"],
+                                      ) ||
+                                      appointmentDays.contains(item["day"]);
                                   return Container(
                                     height: 64,
                                     width: 42,

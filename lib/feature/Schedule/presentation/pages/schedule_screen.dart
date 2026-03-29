@@ -387,7 +387,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final String dayName =
         DateFormat('EEE').format(vm.selectedDate).toUpperCase();
     final String formattedDate = DateFormat(
-      'MMMM d, yyyy',
+      'yyyy-MM-dd',
     ).format(vm.selectedDate);
     return Padding(
       padding: const EdgeInsets.all(18.0),
@@ -411,7 +411,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     speciality: widget.speciality,
                     isFavorite: widget.isFavorite,
                     rating: widget.rating,
-                    reviewsCount: widget.review, 
+                    reviewsCount: widget.review,
                     doctorId: widget.doctorId,
                   ),
             ),

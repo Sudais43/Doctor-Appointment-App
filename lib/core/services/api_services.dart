@@ -122,21 +122,7 @@ class ApiServices {
   }
 
   //-------------------------------------------------------------------For Appointment Booking---------------------------------------------------------------------------------
-  // Future<Response?> bookAppointment({
-  //   required String doctorId,
-  //   required String date,
-  //   required String timeSlot,
-  // }) async {
-  //   try {
-  //     final response = await _dio.post(
-  //       '/appointments/book',
-  //       data: {'doctorId': doctorId, 'date': date, 'timeSlot': timeSlot},
-  //     );
-  //     return response;
-  //   } on DioException catch (e) {
-  //     return e.response;
-  //   }
-  // }
+  
 
   Future<Response?> bookAppointment(Map<String, dynamic> bookingData) async {
     try {
