@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:skin_firts/core/navigation/page_transition.dart';
 import 'package:skin_firts/core/services/api_services.dart';
+import 'package:skin_firts/feature/appointment/entity/review.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
 import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 
@@ -32,6 +33,11 @@ class DoctorViewModel extends ChangeNotifier {
   String get activeGenderFilter => _activeGenderFilter;
   bool get showFavoriteOnly => _showFavoriteOnly;
 
+  List<DoctorReview> _doctorReviews = [];
+  List<DoctorReview> get doctorReviews => _doctorReviews;
+  bool _isReviewsLoading = false;
+  bool get isReviewsLoading => _isReviewsLoading;
+
   DoctorViewModel({required this.apiServices}) {
     _loadLocalFavorites();
     fetchHomeDoctors();
@@ -58,10 +64,11 @@ class DoctorViewModel extends ChangeNotifier {
     try {
       if (Hive.isBoxOpen('current_session')) {
         final sessionBox = Hive.box('current_session');
-        final favList = _localFavoriteStates.entries
-            .where((e) => e.value == true)
-            .map((e) => e.key)
-            .toList();
+        final favList =
+            _localFavoriteStates.entries
+                .where((e) => e.value == true)
+                .map((e) => e.key)
+                .toList();
         sessionBox.put('favorites', favList);
       }
     } catch (e) {
@@ -86,7 +93,7 @@ class DoctorViewModel extends ChangeNotifier {
         for (var i = 0; i < fetchedDoctors.length; i++) {
           final docId =
               fetchedDoctors[i]['_id'] ?? fetchedDoctors[i]['id'] ?? '';
-          
+
           if (fetchedDoctors[i]['isFavorite'] == true) {
             _localFavoriteStates[docId] = true;
           }
@@ -127,7 +134,7 @@ class DoctorViewModel extends ChangeNotifier {
         for (var i = 0; i < fetchedDoctors.length; i++) {
           final docId =
               fetchedDoctors[i]['_id'] ?? fetchedDoctors[i]['id'] ?? '';
-          
+
           if (fetchedDoctors[i]['isFavorite'] == true) {
             _localFavoriteStates[docId] = true;
           }
@@ -154,6 +161,45 @@ class DoctorViewModel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> fetchDoctorReviews(String doctorId) async {
+    _isReviewsLoading = true;
+    notifyListeners();
+    try {
+      final response = await apiServices.getReviews(doctorId);
+      if (response != null && response.statusCode == 200) {
+        final List<dynamic> fetchedReviews = response.data;
+        _doctorReviews =
+            fetchedReviews.map((json) => DoctorReview.fromJson(json)).toList();
+      }
+    } catch (e) {
+      debugPrint("ViewModel Error fetching doctor reviews: $e");
+    } finally {
+      _isReviewsLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> submitReviews(
+    String doctorId,
+    double rating,
+    String comment,
+  ) async {
+    try {
+      final data = {'doctorId': doctorId, 'rating': rating, 'comment': comment};
+
+      final response = await apiServices.submitReview(data);
+      if (response != null &&
+          (response.statusCode == 201 || response.statusCode == 200)) {
+        await fetchDoctorReviews(doctorId);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      debugPrint("ViewModel Error submitting review: $e");
+      return false;
     }
   }
 
@@ -242,6 +288,8 @@ class DoctorViewModel extends ChangeNotifier {
           speciality: doc.speciality,
           isFavorite: doc.isFavorite,
           availability: doc.availability,
+          rating: doc.rating,
+          reviews: doc.reviews,
         ),
       ),
     );
@@ -277,7 +325,8 @@ class DoctorViewModel extends ChangeNotifier {
       final response = await apiServices.toggleFavorite(doctorId);
       if (response == null || response.statusCode != 200) {
         if (index != -1) _doctors[index]['isFavorite'] = currentStatuss;
-        if (homeIndex != -1) _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
+        if (homeIndex != -1)
+          _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
         _localFavoriteStates[doctorId] = currentStatuss;
         _saveLocalFavorites();
         notifyListeners();
@@ -285,7 +334,8 @@ class DoctorViewModel extends ChangeNotifier {
       }
     } catch (e) {
       if (index != -1) _doctors[index]['isFavorite'] = currentStatuss;
-      if (homeIndex != -1) _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
+      if (homeIndex != -1)
+        _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
       _localFavoriteStates[doctorId] = currentStatuss;
       _saveLocalFavorites();
       notifyListeners();

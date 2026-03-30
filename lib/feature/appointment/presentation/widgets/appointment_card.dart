@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:skin_firts/feature/appointment/presentation/pages/add_review.dart';
 import 'package:skin_firts/feature/appointment/presentation/pages/cancel.dart';
 
+import '../../../../feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import '../../../../core/theme/color_palette.dart';
 import '../../entity/appointment.dart';
 
@@ -80,9 +83,9 @@ class AppointmentCard extends StatelessWidget {
           if (appointment.status == AppointmentStatus.upcoming)
             _buildUpcomingContent(context),
           if (appointment.status == AppointmentStatus.completed)
-            _buildCompleteContent(),
+            _buildCompleteContent(context),
           if (appointment.status == AppointmentStatus.cancelled)
-            _buildCancelledContent(),
+            _buildCancelledContent(context),
         ],
       ),
     );
@@ -130,7 +133,7 @@ class AppointmentCard extends StatelessWidget {
   }
 
   // Content for "Complete" (Re-Book + Review)
-  Widget _buildCompleteContent() {
+  Widget _buildCompleteContent(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -138,17 +141,55 @@ class AppointmentCard extends StatelessWidget {
         ),
         const SizedBox(width: 15),
         Expanded(
-          child: _buildButton("Add Review", true, () {}), // Filled
+          child: _buildButton("Add Review", true, () async {
+            final reviewSubmitted = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => ReviewScreen(
+                      doctorId: appointment.doctorId,
+                      doctorName: appointment.name,
+                      doctorSpeciality: appointment.specialty,
+                      image: appointment.image,
+                    ),
+              ),
+            );
+
+            // If a review was submitted, refresh the doctor list
+            if (reviewSubmitted == true && context.mounted) {
+              // Assuming DoctorViewModel is available via Provider
+              context.read<DoctorViewModel>().fetchHomeDoctors();
+            }
+          }), // Filled
         ),
       ],
     );
   }
 
   // Content for "Cancelled" (Add Review)
-  Widget _buildCancelledContent() {
+  Widget _buildCancelledContent(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: _buildButton("Add Review", true, () {}),
+      child: _buildButton("Add Review", true, () async {
+        final reviewSubmitted = await Navigator.push<bool>(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => ReviewScreen(
+                  doctorId: appointment.doctorId,
+                  doctorName: appointment.name,
+                  doctorSpeciality: appointment.specialty,
+                  image: appointment.image,
+                ),
+          ),
+        );
+
+        // If a review was submitted, refresh the doctor list
+        if (reviewSubmitted == true && context.mounted) {
+          // Assuming DoctorViewModel is available via Provider
+          context.read<DoctorViewModel>().fetchHomeDoctors();
+        }
+      }),
     );
   }
 

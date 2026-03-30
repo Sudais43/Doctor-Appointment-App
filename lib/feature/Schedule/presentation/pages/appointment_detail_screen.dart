@@ -68,7 +68,7 @@ class AppointmentDetailScreen extends StatelessWidget {
                   doctorName: doctorName,
                   isFavorite: isFavorite,
                   specialization: speciality,
-                  reviewsCount: reviewsCount,
+                  reviews: reviewsCount,
                   rating: rating,
                   imageUrl: image,
                   onFavoriteTap: () {},
@@ -153,6 +153,8 @@ class AppointmentDetailScreen extends StatelessWidget {
                                     gender: gender,
                                     problem: problem,
                                     duration: '30',
+                                     reviews: reviewsCount, 
+                                     rating: rating,
                                   ),
                             ),
                           );

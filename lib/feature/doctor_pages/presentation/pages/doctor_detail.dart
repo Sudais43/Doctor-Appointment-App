@@ -13,6 +13,8 @@ class DoctorDetail extends StatefulWidget {
   final String doctorName;
   final String image;
   final String speciality;
+  final double rating;
+  final int reviews;
   final bool isFavorite;
   final List<dynamic> availability;
 
@@ -24,6 +26,8 @@ class DoctorDetail extends StatefulWidget {
     required this.speciality,
     required this.isFavorite,
     required this.availability,
+    required this.rating,
+    required this.reviews,
   });
 
   @override
@@ -293,7 +297,7 @@ class _DoctorDetailState extends State<DoctorDetail> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 35,
+                          width: 40,
                           height: 18,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(13),
@@ -309,7 +313,8 @@ class _DoctorDetailState extends State<DoctorDetail> {
                               ),
                               SizedBox(width: 3),
                               Text(
-                                "5",
+                                widget.rating.toString(),
+                                // "5",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w300,
@@ -337,7 +342,8 @@ class _DoctorDetailState extends State<DoctorDetail> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "60",
+                                widget.reviews.toString(),
+                                // "60",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w300,
@@ -399,8 +405,8 @@ class _DoctorDetailState extends State<DoctorDetail> {
                                       image: widget.image,
                                       speciality: widget.speciality,
                                       isFavorite: widget.isFavorite,
-                                      rating: 5,
-                                      review: 5,
+                                      rating: widget.rating,
+                                      review: widget.reviews,
                                     ),
                               ),
                             );

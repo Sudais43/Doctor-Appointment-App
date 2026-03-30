@@ -198,7 +198,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
           name: docData['name'] ?? 'No Name',
           speciality: docData['specialization'] ?? 'Specialist',
           rating: (docData['rating'] as num? ?? 0.0).toDouble(),
-          reviews: (docData['reviewsCount'] as num? ?? 0).toInt(),
+          reviews: (docData['reviews'] as num? ?? 0).toInt(),
           isFavorite: docData['isFavorite'] ?? false,
           imageUrl: docData['imageUrl'] ?? '',
           gender: docData['gender'] ?? '',
@@ -216,6 +216,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
             speciality: doc.speciality,
             image: doc.imageUrl,
             isFavorite: doc.isFavorite,
+            rating: doc.rating,
             onFavoriteTap: onFavToggle,
             onBookTap: () {
               Navigator.push(
@@ -234,7 +235,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                       ),
                 ),
               );
-            },
+            }, 
           );
         } else if (viewModel.showFavoriteOnly) {
           tile = FavoriteDoctorTile(

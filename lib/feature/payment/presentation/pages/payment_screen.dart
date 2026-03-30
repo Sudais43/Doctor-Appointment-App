@@ -5,6 +5,7 @@ import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
+import 'package:skin_firts/core/widget/custom_snackbar.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String doctorId;
@@ -22,6 +23,8 @@ class PaymentScreen extends StatefulWidget {
   final String age;
   final String gender;
   final String problem;
+  final int reviews;
+  final double rating;
 
   const PaymentScreen({
     super.key,
@@ -39,7 +42,7 @@ class PaymentScreen extends StatefulWidget {
     required this.fullName,
     required this.age,
     required this.gender,
-    required this.problem,
+    required this.problem, required this.reviews, required this.rating,
   });
 
   @override
@@ -110,6 +113,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       widget.image,
                       widget.doctorName,
                       widget.speciality,
+                      widget.rating,
+                      widget.reviews,
                     ),
 
                     const SizedBox(height: 20),
@@ -377,11 +382,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
     } catch (e) {
       if (!mounted) return;
       // This will now catch Stripe cancelations OR server booking failures
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceAll("Exception: ", "")), // Clean up the error message
-          backgroundColor: Colors.red,
-        ),
+      CustomSnackBar.show(
+        context,
+        message: e.toString().replaceAll("Exception: ", ""),
+        isError: true,
       );
     } finally {
       // 3. Always stop the spinner, no matter what happened
@@ -437,6 +441,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
     String image,
     String name,
     String speciality,
+    double rating,
+    int reviews,
   ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -477,9 +483,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  _buildChip(Icons.star, "5", appColor),
+                  _buildChip(Icons.star, rating.toString(), appColor),
                   const SizedBox(width: 10),
-                  _buildChip(Icons.chat_bubble_outline, "60", appColor),
+                  _buildChip(Icons.chat_bubble_outline, reviews.toString(), appColor),
                 ],
               ),
             ],

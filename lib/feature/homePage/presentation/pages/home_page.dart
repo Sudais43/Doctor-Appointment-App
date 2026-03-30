@@ -148,15 +148,6 @@ class _HomePageState extends State<HomePage> {
                       ),
 
                       SizedBox(height: 10),
-
-                      // Container(
-                      //   height: 123,
-                      //   width: 315,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(20),
-                      //     color: LightColorPalette.white,
-                      //   ),
-                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
                         child: UpcomingAppointmentWidget(),
@@ -189,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                           speciality: docData['specialization'] ?? 'Specialist',
                           rating: (docData['rating'] as num? ?? 0.0).toDouble(),
                           reviews:
-                              (docData['reviewsCount'] as num? ?? 0).toInt(),
+                              (docData['reviews'] as num? ?? 0).toInt(),
                           isFavorite: docData['isFavorite'] ?? false,
                           imageUrl: docData['imageUrl'] ?? '',
                           gender: docData['gender'] ?? '',
@@ -206,7 +197,7 @@ class _HomePageState extends State<HomePage> {
                             child: DoctorTile1(
                               doctorName: doc.name,
                               specialization: doc.speciality,
-                              reviewsCount: doc.reviews,
+                              reviews: doc.reviews,
                               rating: doc.rating,
                               imageUrl: doc.imageUrl,
                               isFavorite: doc.isFavorite,

@@ -122,7 +122,6 @@ class ApiServices {
   }
 
   //-------------------------------------------------------------------For Appointment Booking---------------------------------------------------------------------------------
-  
 
   Future<Response?> bookAppointment(Map<String, dynamic> bookingData) async {
     try {
@@ -144,6 +143,22 @@ class ApiServices {
         data: {'cancelReason': reason},
       );
       return response;
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> submitReview(Map<String, dynamic> reviewData) async {
+    try {
+      return await _dio.post('/reviews', data: reviewData);
+    } on DioException catch (e) {
+      return e.response;
+    }
+  }
+
+  Future<Response?> getReviews(String doctorId) async {
+    try {
+      return await _dio.get('/reviews/doctor/$doctorId');
     } on DioException catch (e) {
       return e.response;
     }

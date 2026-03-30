@@ -7,9 +7,9 @@ class DoctorRatingTile extends StatelessWidget {
   final String speciality;
   final String image;
   final bool isFavorite;
+  final double rating;
   final VoidCallback onFavoriteTap;
   final VoidCallback onBookTap;
-
 
   const DoctorRatingTile({
     super.key,
@@ -17,7 +17,8 @@ class DoctorRatingTile extends StatelessWidget {
     required this.speciality,
     required this.image,
     required this.isFavorite,
-    required this.onFavoriteTap, required this.onBookTap,
+    required this.onFavoriteTap,
+    required this.onBookTap, required this.rating,
   });
 
   @override
@@ -91,7 +92,8 @@ class DoctorRatingTile extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            "5",
+                            rating.toString(),
+                            // "5",
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w300,

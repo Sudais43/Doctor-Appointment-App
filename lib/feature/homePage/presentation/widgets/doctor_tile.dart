@@ -7,7 +7,7 @@ import '../../../../core/theme/color_palette.dart';
 class DoctorTile1 extends StatefulWidget {
   final String doctorName;
   final String specialization;
-  final int reviewsCount;
+  final int reviews;
   final double rating;
   final String imageUrl;
   final bool isFavorite;
@@ -17,7 +17,7 @@ class DoctorTile1 extends StatefulWidget {
     super.key,
     required this.doctorName,
     required this.specialization,
-    required this.reviewsCount,
+    required this.reviews,
     required this.rating,
     required this.imageUrl,
     required this.isFavorite,
@@ -143,7 +143,7 @@ class _DoctorTileState extends State<DoctorTile1> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          widget.reviewsCount.toString(),
+                          widget.reviews.toString(),
                           // "60",
                           style: TextStyle(
                             fontSize: 12,
