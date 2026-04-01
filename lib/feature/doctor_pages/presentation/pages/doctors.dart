@@ -15,8 +15,10 @@ import '../widgets/doctor_rating_tile.dart';
 
 class DoctorListPage extends StatefulWidget {
   final String? favoriteSort;
+  final String? category;
+  final String? searchQuery;
 
-  const DoctorListPage({super.key, this.favoriteSort});
+  const DoctorListPage({super.key, this.favoriteSort, this.category, this.searchQuery});
 
   @override
   State<DoctorListPage> createState() => _DoctorListPageState();
@@ -40,21 +42,24 @@ class _DoctorListPageState extends State<DoctorListPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final viewModel = Provider.of<DoctorViewModel>(context, listen: false);
-      if (widget.favoriteSort == 'favorite') {
+
+      if (widget.searchQuery != null) {
+        viewModel.setSearchQuery(widget.searchQuery!);
+      } else {
+        viewModel.setSearchQuery('');
+      }
+
+      if (widget.category != null) {
+        viewModel.setSpecializationFilter(widget.category!);
+      } else if (widget.favoriteSort == 'favorite') {
         viewModel.setFavoriteOnlyFilter();
       } else {
         // When opening the general doctors page, we shouldn't show only favorites.
         // Other filters set by the user should be preserved.
         viewModel.setFavoriteFilter(false);
+        viewModel.setSpecializationFilter("");
       }
     });
-  }
-
-  @override
-  void dispose() {
-    // final viewModel = context.read<DoctorViewModel>();
-    // viewModel.dispose();
-    super.dispose();
   }
 
   @override
@@ -235,7 +240,7 @@ class _DoctorListPageState extends State<DoctorListPage> {
                       ),
                 ),
               );
-            }, 
+            },
           );
         } else if (viewModel.showFavoriteOnly) {
           tile = FavoriteDoctorTile(
@@ -296,5 +301,12 @@ class _DoctorListPageState extends State<DoctorListPage> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    final viewModel = context.read<DoctorViewModel>();
+    viewModel.setSearchQuery('');
+    super.dispose();
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
-import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 
 // If you have your palette file, import it.
@@ -18,8 +17,7 @@ class GenderSelector extends StatefulWidget {
 
 class _BookingTypeSelectorState extends State<GenderSelector> {
   // 'Yourself' is selected by default. Change to "" if you want neither selected initially.
-  String _selectedOption = "Yourself";
-
+  String _selectedOption = "";
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +89,7 @@ class _BookingTypeSelectorState extends State<GenderSelector> {
               fontWeight: FontWeight.w300,
               fontFamily: "LeagueSpartan",
               // If selected: White text. If not: Blue text.
-              color: isSelected ? appColor.white : appColor.secondary,
+              color: isSelected ? appColor.white : appColor.textColor,
             ),
           ),
         ),

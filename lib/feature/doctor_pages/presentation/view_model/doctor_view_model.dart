@@ -19,9 +19,22 @@ class DoctorViewModel extends ChangeNotifier {
 
   String _activeSort = "";
   String _activeGenderFilter = "";
+  String _activeSpecializationFilter = "";
   bool _showFavoriteOnly = false;
+  String _searchQuery = "";
 
-  List<dynamic> get doctors => _doctors;
+  List<dynamic> get doctors {
+    if (_searchQuery.isEmpty) {
+      return _doctors;
+    }
+    return _doctors.where((doctor) {
+      final name = (doctor['name'] as String? ?? '').toLowerCase();
+      final specialization =
+          (doctor['specialization'] as String? ?? '').toLowerCase();
+      final query = _searchQuery.toLowerCase();
+      return name.contains(query) || specialization.contains(query);
+    }).toList();
+  }
   bool get isLoading => _isLoading;
 
   String get errorMessage => _errorMessage ?? "";
@@ -32,6 +45,7 @@ class DoctorViewModel extends ChangeNotifier {
   String get activeSort => _activeSort;
   String get activeGenderFilter => _activeGenderFilter;
   bool get showFavoriteOnly => _showFavoriteOnly;
+  String get activeSpecializationFilter => _activeSpecializationFilter;
 
   List<DoctorReview> _doctorReviews = [];
   List<DoctorReview> get doctorReviews => _doctorReviews;
@@ -125,6 +139,9 @@ class DoctorViewModel extends ChangeNotifier {
       final response = await apiServices.getDoctor(
         sort: _activeSort.isNotEmpty ? _activeSort : null,
         gender: _activeGenderFilter.isNotEmpty ? _activeGenderFilter : null,
+        specialization: _activeSpecializationFilter.isNotEmpty
+            ? _activeSpecializationFilter
+            : null,
       );
 
       if (response != null && response.statusCode == 200) {
@@ -232,6 +249,15 @@ class DoctorViewModel extends ChangeNotifier {
     _clearAllFilters();
     if (!wasActive) {
       _activeGenderFilter = gender;
+    }
+    fetchDoctor();
+  }
+
+  void setSpecializationFilter(String specialization) {
+    final wasActive = _activeSpecializationFilter == specialization;
+    _clearAllFilters();
+    if (!wasActive) {
+      _activeSpecializationFilter = specialization;
     }
     fetchDoctor();
   }
@@ -344,5 +370,10 @@ class DoctorViewModel extends ChangeNotifier {
 
   void moveToPreviousPage(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void setSearchQuery(String query) {
+    _searchQuery = query;
+    notifyListeners();
   }
 }

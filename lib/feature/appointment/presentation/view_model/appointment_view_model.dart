@@ -100,6 +100,7 @@ class AppointmentViewModel extends ChangeNotifier {
     required String date,
     required String time,
     required Map<String, dynamic> patientDetails,
+    String? paymentIntentId, // ADD THIS: Pass the Stripe payment ID if your backend requires it
     // required BuildContext context,
   }) async {
     _isBooking = true;
@@ -111,6 +112,7 @@ class AppointmentViewModel extends ChangeNotifier {
         'appointmentDate': date,
         'appointmentTime': time,
         'patientDetails': patientDetails,
+        if (paymentIntentId != null) 'paymentIntentId': paymentIntentId, // ADD THIS
       };
 
       final response = await apiServices.bookAppointment(data);

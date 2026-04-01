@@ -15,26 +15,34 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  List<Widget> pages = [
-    HomePage(),
-    ChatScreen(doctorName: "Sudais"),
-    ProfileScreen(),
-    // ScheduleScreen(),
-    AllAppointmentsScreen(),
-  ];
+  late final List<Widget> _pages;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = [
+      const HomePage(),
+      ChatScreen(doctorName: "Sudais", onBack: () => _onItemTapped(0)),
+      const ProfileScreen(),
+      // ScheduleScreen(),
+      const AllAppointmentsScreen(),
+    ];
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavBar(
         currentIndex: _selectedIndex,
-        onTap: (int value) {
-          setState(() {
-            _selectedIndex = value;
-          });
-        },
+        onTap: _onItemTapped,
       ),
-      body: SafeArea(child: pages[_selectedIndex]),
+      body: SafeArea(child: _pages[_selectedIndex]),
     );
   }
 }

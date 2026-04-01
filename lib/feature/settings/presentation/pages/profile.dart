@@ -5,6 +5,7 @@ import 'package:hive_ce/hive.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/edit_profile.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/help_center.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
@@ -25,6 +26,10 @@ class ProfileScreen extends StatelessWidget {
     //   statusBarIconBrightness: Brightness.dark, // Dark icons (for light backgrounds)
     // ));
     final appColor = context.appColors;
+    final sessionBox = Hive.box('current_session');
+    final userName = sessionBox.get('userName', defaultValue: 'User Khan');
+    final profilePic = sessionBox.get('profilePic') as String?;
+
     return Scaffold(
       // Ensure a white background for the screen
       // bottomNavigationBar: BottomNavigationbar1(),
@@ -41,12 +46,13 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Profile Picture with Edit Icon
-            ProfilePic(),
+            ProfilePic(networkImageUrl: profilePic),
             const SizedBox(height: 15),
 
             // User Name
-            const Text(
-              'John Doe',
+            Text(
+              userName,
+              // 'John Doe',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -67,21 +73,25 @@ class ProfileScreen extends StatelessWidget {
                 // Navigate to Profile screen
               },
             ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/favorite_icon.svg",
-              text: 'Favorite',
-              onTap: () {
-                print('Favorite tapped');
-                // Navigate to Favorite screen
-              },
-            ),
+            // _buildProfileMenuItem(
+            //   context,
+            //   icon: "assets/icons/settings/favorite_icon.svg",
+            //   text: 'Favorite',
+            //   onTap: () {
+            //     print('Favorite tapped');
+            //     // Navigate to Favorite screen
+            //   },
+            // ),
             _buildProfileMenuItem(
               context,
               icon: "assets/icons/settings/wallet_icon.svg",
               text: 'Payment Method',
               onTap: () {
                 print('Payment Method tapped');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PaymentMethod()),
+                );
                 // Navigate to Payment Method screen
               },
             ),

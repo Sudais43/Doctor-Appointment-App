@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skin_firts/feature/appointment/presentation/pages/cancel.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/appointment/entity/appointment.dart';
 
@@ -197,7 +198,20 @@ class _AppointmentCard extends StatelessWidget {
             children: [
               _buildIcon(Icons.check, const Color(0xFF2D63E2)),
               const SizedBox(width: 6),
-              _buildIcon(Icons.close, const Color(0xFF2D63E2)),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (context) => CancelAppointmentScreen(
+                            appointmentId: appointment.id,
+                          ),
+                    ),
+                  );
+                },
+                child: _buildIcon(Icons.close, const Color(0xFF2D63E2)),
+              ),
             ],
           ),
         ],

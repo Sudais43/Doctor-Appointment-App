@@ -14,8 +14,9 @@ import '../widgets/chat_bubble.dart';
 
 class ChatScreen extends StatefulWidget {
   final String doctorName;
+  final VoidCallback? onBack;
 
-  const ChatScreen({super.key, required this.doctorName});
+  const ChatScreen({super.key, required this.doctorName, this.onBack});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -169,7 +170,13 @@ class _ChatScreenState extends State<ChatScreen> {
       // bottomNavigationBar: BottomNavigationbar1(),
       appBar: ChatAppBar(
         title: widget.doctorName,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () {
+          if (widget.onBack != null) {
+            widget.onBack!();
+          } else if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
         actions: [
           IconButton(
             icon: const Icon(Icons.call, color: LightColorPalette.white),

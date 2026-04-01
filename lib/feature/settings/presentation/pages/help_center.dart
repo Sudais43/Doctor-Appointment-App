@@ -14,7 +14,6 @@ enum HelpCenterTab { faq, contactUs }
 // --- 1. UNIFIED DATA MODEL ---
 // This class will represent BOTH an FAQ and a Contact item
 
-
 // --- 2. RENAMED WIDGET ---
 class HelpCenterScreen extends StatefulWidget {
   const HelpCenterScreen({super.key});
@@ -27,7 +26,8 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
   // --- STATE VARIABLES ---
 
   // Tracks which main tab is selected
-  HelpCenterTab _selectedTab = HelpCenterTab.contactUs; // Defaulting to ContactUs
+  HelpCenterTab _selectedTab =
+      HelpCenterTab.contactUs; // Defaulting to ContactUs
 
   // Tracks which FAQ category is selected
   String _selectedFaqCategory = 'General';
@@ -63,23 +63,26 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
 
     // --- FILTERING LOGIC ---
     // This single logic block filters the list for all states
-    List<HelpItem> currentList = allHelpItems.where((item) {
-      bool categoryMatch = false;
-      if (isFaqSelected) {
-        // If FAQ tab, match against the selected FAQ category
-        categoryMatch = item.category == _selectedFaqCategory;
-      } else {
-        // If ContactUs tab, match against the 'Contact' category
-        categoryMatch = item.category == 'Contact';
-      }
+    List<HelpItem> currentList =
+        allHelpItems.where((item) {
+          bool categoryMatch = false;
+          if (isFaqSelected) {
+            // If FAQ tab, match against the selected FAQ category
+            categoryMatch = item.category == _selectedFaqCategory;
+          } else {
+            // If ContactUs tab, match against the 'Contact' category
+            categoryMatch = item.category == 'Contact';
+          }
 
-      if (!categoryMatch) return false;
+          if (!categoryMatch) return false;
 
-      // Search logic (runs only if category matches)
-      if (_currentQuery.isEmpty) return true;
-      return item.question.toLowerCase().contains(_currentQuery.toLowerCase()) ||
-          item.answer.toLowerCase().contains(_currentQuery.toLowerCase());
-    }).toList();
+          // Search logic (runs only if category matches)
+          if (_currentQuery.isEmpty) return true;
+          return item.question.toLowerCase().contains(
+                _currentQuery.toLowerCase(),
+              ) ||
+              item.answer.toLowerCase().contains(_currentQuery.toLowerCase());
+        }).toList();
     // --- END FILTERING ---
 
     return Scaffold(
@@ -131,8 +134,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   ),
                   SizedBox(height: 10),
                   CustomSearchBar(
-                      controller: searchController,
-                      onSearchChanged: _handleSearch),
+                    controller: searchController,
+                    onSearchChanged: _handleSearch,
+                  ),
                 ],
               ),
             ),
@@ -143,46 +147,52 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CustomButton(
-                    height: 41,
-                    width: 155,
-                    textStyle: TextStyle(
-                      color: isFaqSelected
-                          ? LightColorPalette.white
-                          : LightColorPalette.primary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    BackgroundColor: isFaqSelected
-                        ? LightColorPalette.primary
-                        : LightColorPalette.secondary,
-                    text: "FAQ",
-                    onPressed: () {
-                      setState(() {
-                        _selectedTab = HelpCenterTab.faq;
-                        expandedIndex = null; // Reset list
-                      });
-                    }),
+                  height: 41,
+                  width: 155,
+                  textStyle: TextStyle(
+                    color:
+                        isFaqSelected
+                            ? LightColorPalette.white
+                            : LightColorPalette.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  BackgroundColor:
+                      isFaqSelected
+                          ? LightColorPalette.primary
+                          : LightColorPalette.secondary,
+                  text: "FAQ",
+                  onPressed: () {
+                    setState(() {
+                      _selectedTab = HelpCenterTab.faq;
+                      expandedIndex = null; // Reset list
+                    });
+                  },
+                ),
                 SizedBox(width: 30),
                 CustomButton(
-                    height: 41,
-                    width: 155,
-                    textStyle: TextStyle(
-                      color: !isFaqSelected
-                          ? LightColorPalette.white
-                          : LightColorPalette.primary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    BackgroundColor: !isFaqSelected
-                        ? LightColorPalette.primary
-                        : LightColorPalette.secondary,
-                    text: "Contact Us",
-                    onPressed: () {
-                      setState(() {
-                        _selectedTab = HelpCenterTab.contactUs;
-                        expandedIndex = null; // Reset list
-                      });
-                    }),
+                  height: 41,
+                  width: 155,
+                  textStyle: TextStyle(
+                    color:
+                        !isFaqSelected
+                            ? LightColorPalette.white
+                            : LightColorPalette.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  BackgroundColor:
+                      !isFaqSelected
+                          ? LightColorPalette.primary
+                          : LightColorPalette.secondary,
+                  text: "Contact Us",
+                  onPressed: () {
+                    setState(() {
+                      _selectedTab = HelpCenterTab.contactUs;
+                      expandedIndex = null; // Reset list
+                    });
+                  },
+                ),
               ],
             ),
             SizedBox(height: 10),
@@ -192,18 +202,23 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
             AnimatedOpacity(
               opacity: isFaqSelected ? 1.0 : 0.0,
               duration: Duration(milliseconds: 300),
-              child: isFaqSelected
-                  ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildFaqFilterButton("Popular Topic"), // Added 'Popular' as per mockup
-                  SizedBox(width: 10),
-                  _buildFaqFilterButton("General"),
-                  SizedBox(width: 10),
-                  _buildFaqFilterButton("Services"),
-                ],
-              )
-                  : SizedBox(height: 28), // Placeholder to prevent layout jump
+              child:
+                  isFaqSelected
+                      ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildFaqFilterButton(
+                            "Popular ",
+                          ), // Added 'Popular' as per mockup
+                          SizedBox(width: 10),
+                          _buildFaqFilterButton("General"),
+                          SizedBox(width: 10),
+                          _buildFaqFilterButton("Services"),
+                        ],
+                      )
+                      : SizedBox(
+                        height: 28,
+                      ), // Placeholder to prevent layout jump
             ),
             SizedBox(height: 20),
 
@@ -236,7 +251,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         fontWeight: FontWeight.w500,
       ),
       BackgroundColor:
-      isSelected ? LightColorPalette.primary : LightColorPalette.secondary,
+          isSelected ? LightColorPalette.primary : LightColorPalette.secondary,
       text: categoryName,
       onPressed: () {
         setState(() {
@@ -271,10 +286,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
         final bool isExpanded = expandedIndex == index;
 
         return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18.0,
-            vertical: 8,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
           child: Theme(
             data: Theme.of(context).copyWith(
               dividerColor: Colors.transparent, // Hides default divider
@@ -282,22 +294,26 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
             child: Container(
               decoration: BoxDecoration(
                 // Using tileColor from your previous code
-                color: LightColorPalette.tileColor ?? LightColorPalette.secondary.withOpacity(0.5),
+                color:
+                    LightColorPalette.tileColor ??
+                    LightColorPalette.secondary.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(30),
               ),
               child: ExpansionTile(
                 key: PageStorageKey(item.question), // Remembers expansion state
-
                 // Conditionally add the icon
-                leading: item.icon != null
-                    ? SvgPicture.asset(
-                  item.icon!,
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(
-                      LightColorPalette.primary, BlendMode.srcIn),
-                )
-                    : null, // No icon for FAQs
+                leading:
+                    item.icon != null
+                        ? SvgPicture.asset(
+                          item.icon!,
+                          width: 24,
+                          height: 24,
+                          colorFilter: ColorFilter.mode(
+                            LightColorPalette.primary,
+                            BlendMode.srcIn,
+                          ),
+                        )
+                        : null, // No icon for FAQs
 
                 title: Text(
                   item.question,
@@ -305,15 +321,17 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                     fontSize: 16, // Slightly larger for readability
                     fontFamily: "LeagueSpartan",
                     fontWeight: FontWeight.w500,
-                    color: isExpanded
-                        ? Colors.black
-                        : LightColorPalette.primary,
+                    color:
+                        isExpanded ? Colors.black : LightColorPalette.primary,
                   ),
                 ),
 
                 // This trailing icon matches your 'ContactUs' file's implementation
                 trailing: Transform.rotate(
-                  angle: isExpanded ? (90 * math.pi / 180) : (-90 * math.pi / 180), // Rotates up when expanded
+                  angle:
+                      isExpanded
+                          ? (90 * math.pi / 180)
+                          : (-90 * math.pi / 180), // Rotates up when expanded
                   child: SvgPicture.asset(
                     "assets/icons/settings/down_arrow_icon.svg",
                     colorFilter: ColorFilter.mode(
@@ -356,5 +374,4 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
       },
     );
   }
-
 }

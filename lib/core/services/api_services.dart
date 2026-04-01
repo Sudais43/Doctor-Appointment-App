@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
@@ -53,8 +55,49 @@ class ApiServices {
     );
   }
 
+  Future<Response?> getProfile() async {
+    try {
+      return await _dio.get('/users/profile');
+    } on DioException catch (e) {
+      debugPrint("Error fetching profile: ${e.message}");
+      return e.response;
+    }
+  }
+
+  Future<Response?> updateProfile(Map<String, dynamic> data) async {
+    try {
+      return await _dio.put('/users/profile', data: data);
+    } on DioException catch (e) {
+      debugPrint("Error updating profile: ${e.message}");
+      return e.response;
+    }
+  }
+
+  Future<Response?> uploadProfilePic(File imageFile) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+      
+      // Create FormData
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(imageFile.path, filename: fileName),
+      });
+
+      return await _dio.post(
+        '/users/upload-profile-pic',
+        data: formData,
+      );
+    } on DioException catch (e) {
+      debugPrint("Upload Profile Pic Error: ${e.message}");
+      return e.response;
+    }
+  }
+
   //getting all doctors
-  Future<Response?> getDoctor({String? sort, String? gender}) async {
+  Future<Response?> getDoctor({
+    String? sort,
+    String? gender,
+    String? specialization,
+  }) async {
     try {
       final queryParams = <String, dynamic>{};
 
@@ -64,6 +107,10 @@ class ApiServices {
 
       if (gender != null && gender.isNotEmpty) {
         queryParams['gender'] = gender;
+      }
+
+      if (specialization != null && specialization.isNotEmpty) {
+        queryParams['specialization'] = specialization;
       }
 
       final response = await _dio.get('/doctors', queryParameters: queryParams);
@@ -108,6 +155,18 @@ class ApiServices {
     }
   }
 
+  //-------------------------------------------------------------------For Appointment Booking---------------------------------------------------------------------------------
+
+  Future<Response?> bookAppointment(Map<String, dynamic> bookingData) async {
+    try {
+      final response = await _dio.post('/appointments', data: bookingData);
+      return response;
+    } on DioException catch (e) {
+      debugPrint("Error apiServices booking appointment: $e");
+      return e.response;
+    }
+  }
+
   Future<Response?> getAppointments(String status) async {
     try {
       final response = await _dio.get(
@@ -117,18 +176,6 @@ class ApiServices {
       return response;
     } on DioException catch (e) {
       debugPrint("Error fetching appointments: ${e.message}");
-      return e.response;
-    }
-  }
-
-  //-------------------------------------------------------------------For Appointment Booking---------------------------------------------------------------------------------
-
-  Future<Response?> bookAppointment(Map<String, dynamic> bookingData) async {
-    try {
-      final response = await _dio.post('/appointments', data: bookingData);
-      return response;
-    } on DioException catch (e) {
-      debugPrint("Error apiServices booking appointment: $e");
       return e.response;
     }
   }
@@ -147,6 +194,8 @@ class ApiServices {
       return e.response;
     }
   }
+
+  //---------------------------For Review-----------------------------------------------------
 
   Future<Response?> submitReview(Map<String, dynamic> reviewData) async {
     try {
