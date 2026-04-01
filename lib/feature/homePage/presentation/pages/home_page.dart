@@ -6,6 +6,7 @@ import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
+import 'package:skin_firts/feature/authentication/presentation/view_model/auth_view_model.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
@@ -26,6 +27,16 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
+  initState() {
+    super.initState();
+    context.read<AuthViewModel>().syncFcmToken();
+    Future.microtask(() {
+      context.read<DoctorViewModel>().fetchHomeDoctors();
+      context.read<AppointmentViewModel>().fetchUpcomingAppointments();
+    });
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -33,10 +44,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final sessionBox = Hive.box('current_session');
-    final userName = sessionBox.get('userName', defaultValue: 'User Khan');
-    final profilePic = sessionBox.get('profilePic') as String?;
     final appColor = context.appColors;
+
     return Scaffold(
       body: SafeArea(
         child: RefreshIndicator(
@@ -50,7 +59,14 @@ class _HomePageState extends State<HomePage> {
             ),
             child: Column(
               children: [
-                _homeTopBar(appColor, userName, profilePic),
+                ValueListenableBuilder(
+                  valueListenable: Hive.box('current_session').listenable(keys: ['userName', 'profilePic']),
+                  builder: (context, sessionBox, child) {
+                    final userName = sessionBox.get('userName', defaultValue: 'User Khan');
+                    final profilePic = sessionBox.get('profilePic') as String?;
+                    return _homeTopBar(appColor, userName, profilePic);
+                  },
+                ),
                 SizedBox(height: 10),
                 Container(
                   color: appColor.secondary,
@@ -339,7 +355,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _homeTopBar(AppColor appColor, String userName, String? profilePic) {
+  Widget _homeTopBar(AppColor appColor, String userName, String? rawProfilePic) {
+    final profilePic = rawProfilePic?.replaceAll('\\', '/');
+
     return Column(
       children: [
         SizedBox(height: 20),
@@ -361,7 +379,9 @@ class _HomePageState extends State<HomePage> {
                         backgroundImage:
                             profilePic != null && profilePic.isNotEmpty
                                 ? NetworkImage(
-                                  "http://10.0.2.2:3000$profilePic",
+                                  profilePic.startsWith('http')
+                                      ? profilePic
+                                      : "http://10.0.2.2:3000${profilePic.startsWith('/') ? '' : '/'}$profilePic",
                                 )
                                 : null,
                         child:

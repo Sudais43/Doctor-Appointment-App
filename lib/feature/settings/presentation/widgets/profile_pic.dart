@@ -121,7 +121,11 @@ class ProfilePic extends StatelessWidget {
     if (selectedImage != null) {
       imageProvider = FileImage(selectedImage!);
     } else if (networkImageUrl != null && networkImageUrl!.isNotEmpty) {
-      imageProvider = NetworkImage("http://10.0.2.2:3000$networkImageUrl");
+      final cleanUrl = networkImageUrl!.replaceAll('\\', '/');
+      final url = cleanUrl.startsWith('http') 
+          ? cleanUrl 
+          : "http://10.0.2.2:3000${cleanUrl.startsWith('/') ? '' : '/'}$cleanUrl";
+      imageProvider = NetworkImage(url);
     } else {
       imageProvider = const AssetImage("assets/icons/Doctors/images/doctor1.png");
     }

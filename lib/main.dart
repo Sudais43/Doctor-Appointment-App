@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:skin_firts/core/services/api_services.dart';
 import 'package:skin_firts/core/services/hive_auth_services.dart';
+import 'package:skin_firts/core/services/notification_services.dart';
 import 'package:skin_firts/core/theme/app_theme.dart';
 import 'package:skin_firts/core/theme/theme_provider.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
@@ -14,9 +17,16 @@ import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_v
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
 import 'package:skin_firts/feature/onboarding/presentation/pages/SplashScreen.dart';
 import 'package:skin_firts/feature/authentication/Application/auth_services.dart';
+import 'package:skin_firts/firebase_options.dart';
 import 'core/API/api_keys.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await NotificationService().init();
   await _setup();
   runApp(
     MultiProvider(
@@ -49,6 +59,7 @@ Future<void> _setup() async {
   await Hive.initFlutter();
   await Hive.openBox('auth_box');
   await Hive.openBox('current_session');
+  await Hive.openBox('settings_box');
 }
 
 class MyApp extends StatelessWidget {

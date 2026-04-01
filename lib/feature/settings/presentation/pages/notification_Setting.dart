@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:skin_firts/core/services/api_services.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import '../../data/notification_setting_data.dart';
@@ -14,6 +16,62 @@ class NotificationSettingsScreen extends StatefulWidget {
 
 class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
+  late Box _settingsBox;
+  bool _isLoading = true;
+
+  final ApiServices apiServices = ApiServices();
+
+  Future<void> _initHiveAndLoadSettings() async {
+    // Open the box (ensure you've initialized Hive in main.dart!)
+    _settingsBox = await Hive.openBox('settings_box');
+
+    setState(() {
+      // Loop through your hardcoded 'settings' list and update their 'value'
+      // based on what is saved in Hive. If nothing is saved, use the default.
+      for (var setting in settings) {
+        // The title (e.g., "Sound") is the key.
+        // We remove spaces so "App Update" becomes "AppUpdate" to match the Node.js schema
+        String dbKey = setting.title.replaceAll(' ', '');
+
+        setting.value = _settingsBox.get(dbKey, defaultValue: setting.value);
+      }
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _toggleSetting(
+    NotificationSetting setting,
+    bool newValue,
+  ) async {
+    // 1. Instantly update the UI so it feels fast
+    setState(() {
+      setting.value = newValue;
+    });
+
+    String dbKey = setting.title.replaceAll(' ', '');
+
+    // 2. Save locally to Hive so it remembers on next app launch
+    await _settingsBox.put(dbKey, newValue);
+
+    // 3. Sync to your Node.js backend in the background
+    final response = await apiServices.updateNotificationSetting(
+      dbKey,
+      newValue,
+    );
+
+    if (response == null || response.statusCode != 200) {
+      // If the server failed, you could optionally revert the toggle here
+      debugPrint("Failed to sync setting to server: $dbKey");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _initHiveAndLoadSettings();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
@@ -32,7 +90,9 @@ class _NotificationSettingsScreenState
         ),
         centerTitle: true,
       ),
-      body: Column(
+      body: _isLoading
+      ? const Center(child: CircularProgressIndicator()) 
+      :Column(
         children: [
           Expanded(
             child: ListView.builder(
@@ -68,7 +128,6 @@ class _NotificationSettingsScreenState
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              // color: appColor?.black,
             ),
           ),
 
@@ -76,10 +135,7 @@ class _NotificationSettingsScreenState
           Switch(
             value: setting.value,
             onChanged: (newValue) {
-              // When tapped, update the state for this specific setting
-              setState(() {
-                setting.value = newValue;
-              });
+              _toggleSetting(setting, newValue);
               // You could also add a function here to save the setting
               // e.g., _saveSetting(setting.title, newValue);
             },

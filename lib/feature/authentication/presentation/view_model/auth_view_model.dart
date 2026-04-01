@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:skin_firts/core/services/api_services.dart';
 import 'package:skin_firts/feature/authentication/domain/model/user_entity.dart';
 import 'package:skin_firts/main_screen.dart';
 import 'package:skin_firts/feature/authentication/Application/auth_services.dart';
@@ -8,6 +10,7 @@ import 'dart:convert';
 class AuthViewModel extends ChangeNotifier {
   // final AuthRepository _authRepository;
   final AuthServices _authServices;
+  final ApiServices _apiServices = ApiServices();
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -52,7 +55,12 @@ class AuthViewModel extends ChangeNotifier {
         final sessionBox = Hive.box('current_session');
         await sessionBox.put('isLoggedIn', true);
         await sessionBox.put('userName', userData['fullName']);
+        if (userData['profilePic'] != null) {
+          await sessionBox.put('profilePic', userData['profilePic']);
+        }
         await sessionBox.put('token', token);
+
+        await syncFcmToken();
 
         if (!context.mounted) return;
 
@@ -127,10 +135,12 @@ class AuthViewModel extends ChangeNotifier {
         final sessionBox = Hive.box('current_session');
         await sessionBox.put('isLoggedIn', true);
         await sessionBox.put('userName', newUser.fullName);
-        
+
         if (response.data != null && response.data['token'] != null) {
-           await sessionBox.put('token', response.data['token']);
+          await sessionBox.put('token', response.data['token']);
         }
+
+        await syncFcmToken();
 
         if (!context.mounted) return;
 
@@ -172,6 +182,24 @@ class AuthViewModel extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> syncFcmToken() async {
+    try {
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        final response = await _apiServices.updateFcmToken(fcmToken);
+
+        if (response != null &&
+            (response.statusCode == 200 || response.statusCode == 201)) {
+          debugPrint("FCM Token synced successfully");
+        } else {
+          debugPrint("Failed to sync FCM token with server");
+        }
+      }
+    } catch (e) {
+      debugPrint("Error syncing FCM token: $e");
     }
   }
 }

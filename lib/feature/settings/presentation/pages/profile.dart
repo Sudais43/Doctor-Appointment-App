@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
@@ -26,9 +27,6 @@ class ProfileScreen extends StatelessWidget {
     //   statusBarIconBrightness: Brightness.dark, // Dark icons (for light backgrounds)
     // ));
     final appColor = context.appColors;
-    final sessionBox = Hive.box('current_session');
-    final userName = sessionBox.get('userName', defaultValue: 'User Khan');
-    final profilePic = sessionBox.get('profilePic') as String?;
 
     return Scaffold(
       // Ensure a white background for the screen
@@ -39,113 +37,120 @@ class ProfileScreen extends StatelessWidget {
           Navigator.pop(context);
         },
       ),
-      body: SingleChildScrollView(
-        // Use SingleChildScrollView to prevent overflow if content is too tall
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-
-            // Profile Picture with Edit Icon
-            ProfilePic(networkImageUrl: profilePic),
-            const SizedBox(height: 15),
-
-            // User Name
-            Text(
-              userName,
-              // 'John Doe',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: LightColorPalette.textColor,
-              ),
-            ),
-            const SizedBox(height: 30), // Space before the menu items
-            // --- Menu Items ---
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/profile_icon.svg",
-              text: 'Profile',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EditProfile()),
-                );
-                // Navigate to Profile screen
-              },
-            ),
-            // _buildProfileMenuItem(
-            //   context,
-            //   icon: "assets/icons/settings/favorite_icon.svg",
-            //   text: 'Favorite',
-            //   onTap: () {
-            //     print('Favorite tapped');
-            //     // Navigate to Favorite screen
-            //   },
-            // ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/wallet_icon.svg",
-              text: 'Payment Method',
-              onTap: () {
-                print('Payment Method tapped');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaymentMethod()),
-                );
-                // Navigate to Payment Method screen
-              },
-            ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/privacy_icon.svg",
-              text: 'Privacy Policy',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PrivacyPolicyScreen(),
+      body: ValueListenableBuilder(
+        valueListenable: Hive.box('current_session').listenable(keys: ['userName', 'profilePic']),
+        builder: (context, sessionBox, child) {
+          final userName = sessionBox.get('userName', defaultValue: 'User Khan');
+          final profilePic = sessionBox.get('profilePic') as String?;
+          return SingleChildScrollView(
+            // Use SingleChildScrollView to prevent overflow if content is too tall
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+    
+                // Profile Picture with Edit Icon
+                ProfilePic(networkImageUrl: profilePic),
+                const SizedBox(height: 15),
+    
+                // User Name
+                Text(
+                  userName,
+                  // 'John Doe',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: LightColorPalette.textColor,
                   ),
-                );
-                // Navigate to Privacy Policy screen
-              },
-            ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/setting_icon.svg",
-              text: 'Settings',
-              onTap: () {
-                Navigator.push(
+                ),
+                const SizedBox(height: 30), // Space before the menu items
+                // --- Menu Items ---
+                _buildProfileMenuItem(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-                // Navigate to Settings screen
-              },
-            ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/help_icon.svg",
-              text: 'Help',
-              onTap: () {
-                Navigator.push(
+                  icon: "assets/icons/settings/profile_icon.svg",
+                  text: 'Profile',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EditProfile()),
+                    );
+                    // Navigate to Profile screen
+                  },
+                ),
+                // _buildProfileMenuItem(
+                //   context,
+                //   icon: "assets/icons/settings/favorite_icon.svg",
+                //   text: 'Favorite',
+                //   onTap: () {
+                //     print('Favorite tapped');
+                //     // Navigate to Favorite screen
+                //   },
+                // ),
+                _buildProfileMenuItem(
                   context,
-                  MaterialPageRoute(builder: (context) => HelpCenterScreen()),
-                );
-              },
+                  icon: "assets/icons/settings/wallet_icon.svg",
+                  text: 'Payment Method',
+                  onTap: () {
+                    print('Payment Method tapped');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PaymentMethod()),
+                    );
+                    // Navigate to Payment Method screen
+                  },
+                ),
+                _buildProfileMenuItem(
+                  context,
+                  icon: "assets/icons/settings/privacy_icon.svg",
+                  text: 'Privacy Policy',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrivacyPolicyScreen(),
+                      ),
+                    );
+                    // Navigate to Privacy Policy screen
+                  },
+                ),
+                _buildProfileMenuItem(
+                  context,
+                  icon: "assets/icons/settings/setting_icon.svg",
+                  text: 'Settings',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingPage()),
+                    );
+                    // Navigate to Settings screen
+                  },
+                ),
+                _buildProfileMenuItem(
+                  context,
+                  icon: "assets/icons/settings/help_icon.svg",
+                  text: 'Help',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HelpCenterScreen()),
+                    );
+                  },
+                ),
+                _buildProfileMenuItem(
+                  context,
+                  icon: "assets/icons/settings/log_out_icon.svg",
+                  text: 'Logout',
+                  onTap: () {
+                    print('Logout tapped');
+                    _showLogoutDialog(context);
+                    // Implement logout logic
+                  },
+                  isLogout: true, // Special styling for Logout
+                ),
+                const SizedBox(height: 70), // Bottom padding
+              ],
             ),
-            _buildProfileMenuItem(
-              context,
-              icon: "assets/icons/settings/log_out_icon.svg",
-              text: 'Logout',
-              onTap: () {
-                print('Logout tapped');
-                _showLogoutDialog(context);
-                // Implement logout logic
-              },
-              isLogout: true, // Special styling for Logout
-            ),
-            const SizedBox(height: 70), // Bottom padding
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "227008614071",
+    "project_id": "car-help-21c53",
+    "storage_bucket": "car-help-21c53.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227008614071:android:98be8bc8fbe9e401bbc732",
+        "android_client_info": {
+          "package_name": "com.example.skin_firts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6ypJP-YvXrnsWhfss5Mq-bY5_FY0cKtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

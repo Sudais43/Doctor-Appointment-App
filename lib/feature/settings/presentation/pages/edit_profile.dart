@@ -55,10 +55,16 @@ class _EditProfileState extends State<EditProfile> {
         _isUploadingImage = false;
       });
 
+      if (!mounted) return;
+
       if (response != null && response.statusCode == 200) {
         final sessionBox = Hive.box('current_session');
         // Save the new image URL to Hive so the Home Page can use it too!
-        sessionBox.put('profilePic', response.data['user']['profilePic']);
+        final newUrl = response.data['profilePic'] ?? (response.data['user'] != null ? response.data['user']['profilePic'] : null);
+        
+        if (newUrl != null) {
+          sessionBox.put('profilePic', newUrl);
+        }
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -92,6 +98,11 @@ class _EditProfileState extends State<EditProfile> {
         _networkImageUrl = data['profilePic'] ?? '';
         _isLoading = false;
       });
+
+      // Sync with Hive so home/profile screens immediately get the DB image
+      if (data['profilePic'] != null) {
+        Hive.box('current_session').put('profilePic', data['profilePic']);
+      }
     } else {
       setState(() => _isLoading = false);
       if (mounted) {

@@ -212,4 +212,37 @@ class ApiServices {
       return e.response;
     }
   }
+
+  // --- UPDATE NOTIFICATION SETTINGS ---
+  Future<Response?> updateNotificationSetting(String settingName, bool value) async {
+    try {
+      return await _dio.put(
+        '/users/notification-settings',
+        data: {
+          "settingName": settingName,
+          "value": value,
+        },
+      );
+    } on DioException catch (e) {
+      debugPrint("Update Setting Error: ${e.message}");
+      return e.response;
+    }
+  }
+
+  // --- UPLOAD FCM TOKEN ---
+  Future<Response?> updateFcmToken(String token) async {
+    try {
+      return await _dio.put(
+        '/users/fcm-token',
+        data: {
+          "fcmToken": token,
+        },
+      );
+    } on DioException catch (e) {
+      debugPrint("Update FCM Token Error: ${e.message}");
+      return e.response;
+    }
+  }
 }
+
+
