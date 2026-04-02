@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:skin_firts/feature/homePage/domain/entities/app_notification.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
@@ -38,6 +39,23 @@ class NotificationScreen extends StatelessWidget {
           // 2. Build the UI list from the grouped data
           List<Widget> listItems = [];
           
+          // groupedNotifications.forEach((header, notifList) {
+          //   // Add the Date Separator (Today, Yesterday, etc.)
+          //   listItems.add(_buildDateSeparator(header, viewModel));
+          //   listItems.add(const SizedBox(height: 16));
+
+          //   // Add the actual notification items for that date
+          //   for (var notif in notifList) {
+          //     listItems.add(NotificationTile( // 👈 Use the new widget!
+          //       iconPath: 'assets/icons/BottomNaveBar/calender_icon.svg', 
+          //       title: notif.title,
+          //       body: notif.body, 
+          //       time: _formatTimeDifference(notif.timestamp), 
+          //       isRead: notif.isRead, 
+          //     ));
+          //   }
+          //   listItems.add(const SizedBox(height: 16));
+          // });
           groupedNotifications.forEach((header, notifList) {
             // Add the Date Separator (Today, Yesterday, etc.)
             listItems.add(_buildDateSeparator(header, viewModel));
@@ -45,13 +63,45 @@ class NotificationScreen extends StatelessWidget {
 
             // Add the actual notification items for that date
             for (var notif in notifList) {
-              listItems.add(NotificationTile( // 👈 Use the new widget!
-                iconPath: 'assets/icons/BottomNaveBar/calender_icon.svg', 
-                title: notif.title,
-                body: notif.body, 
-                time: _formatTimeDifference(notif.timestamp), 
-                isRead: notif.isRead, 
-              ));
+              listItems.add(
+                // 👇 Wrap the tile in a Slidable widget 👇
+                Slidable(
+                  // A unique key is required so Flutter animates the correct tile away
+                  key: ValueKey(notif.timestamp.toString()), 
+                  
+                  // The endActionPane means the user swipes from Right to Left
+                  endActionPane: ActionPane(
+                    motion: const ScrollMotion(), // Smooth sliding animation
+                    extentRatio: 0.25, // How much space the button takes up
+                    dismissible: DismissiblePane(
+                        onDismissed: () {
+                          // Call the exact same delete function!
+                          viewModel.removeNotification(notif); 
+                        },
+                      ),
+                    children: [
+                      SlidableAction(
+                        onPressed: (context) {
+                          // 👇 Call the ViewModel to delete it!
+                          viewModel.removeNotification(notif);
+                        },
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete_outline,
+                        label: 'Delete',
+                        borderRadius: BorderRadius.circular(12), // Matches your tile's border radius
+                      ),
+                    ],
+                  ),
+                  child: NotificationTile( 
+                    iconPath: 'assets/icons/BottomNaveBar/calender_icon.svg', 
+                    title: notif.title,
+                    body: notif.body, 
+                    time: _formatTimeDifference(notif.timestamp), 
+                    isRead: notif.isRead, 
+                  ),
+                ),
+              );
             }
             listItems.add(const SizedBox(height: 16));
           });

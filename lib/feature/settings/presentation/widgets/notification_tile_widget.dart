@@ -36,15 +36,16 @@ class _NotificationTileState extends State<NotificationTile> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(12.0),
-        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 2.0),
         decoration: BoxDecoration(
-          color: widget.isRead ? Colors.transparent : LightColorPalette.secondary,
+          color:
+              widget.isRead ? Colors.transparent : LightColorPalette.secondary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           // Align items to the top so the icon doesn't sink when expanded
-          crossAxisAlignment: CrossAxisAlignment.start, 
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               padding: const EdgeInsets.all(12),
@@ -64,9 +65,15 @@ class _NotificationTileState extends State<NotificationTile> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                   const SizedBox(height: 4),
-                  
+
                   // 👇 Smoothly animates the size change 👇
                   AnimatedSize(
                     duration: const Duration(milliseconds: 300),
@@ -76,8 +83,11 @@ class _NotificationTileState extends State<NotificationTile> {
                       widget.body,
                       style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       // If expanded, maxLines is null (infinite). If not, it's 2.
-                      maxLines: _isExpanded ? null : 2, 
-                      overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                      maxLines: _isExpanded ? null : 2,
+                      overflow:
+                          _isExpanded
+                              ? TextOverflow.visible
+                              : TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -87,7 +97,10 @@ class _NotificationTileState extends State<NotificationTile> {
             // Push the time down slightly so it aligns nicely with the title
             Padding(
               padding: const EdgeInsets.only(top: 2.0),
-              child: Text(widget.time, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
+              child: Text(
+                widget.time,
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              ),
             ),
           ],
         ),

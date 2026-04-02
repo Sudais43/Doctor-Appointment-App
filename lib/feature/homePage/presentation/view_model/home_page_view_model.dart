@@ -61,6 +61,17 @@ class HomePageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeNotification(AppNotification notification) {
+    // 1. Remove from the local list
+    _notifications.remove(notification);
+    notifyListeners(); // Updates the UI instantly
+
+    // 2. Save the updated list back to Hive
+    final box = Hive.box('notifications_box');
+    final mappedList = _notifications.map((n) => n.toMap()).toList();
+    box.put('history', mappedList);
+  }
+
   void moveToProfileSetting(BuildContext context) {
     Navigator.push(context, SlideRoute(page: ProfileScreen()));
   }
