@@ -3,13 +3,13 @@ import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
-import 'package:skin_firts/core/widget/custom_snackbar.dart';
 
 class ReviewScreen extends StatefulWidget {
   final String doctorId;
   final String doctorName;
   final String doctorSpeciality;
   final String image;
+
   const ReviewScreen({
     super.key,
     required this.doctorId,
@@ -23,15 +23,35 @@ class ReviewScreen extends StatefulWidget {
 }
 
 class _ReviewScreenState extends State<ReviewScreen> {
-  int _rating = 3;
-  bool _isSubmitting = false;
+  // Only UI-specific controllers remain here
   final TextEditingController _commentController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Reset state in case it was left dirty from a previous visit
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<DoctorViewModel>().resetReviewState();
+    });
+  }
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Watch the ViewModel for changes (rating, loading state)
+    final viewModel = context.watch<DoctorViewModel>();
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(title: "Add Review", onPressed: () {}),
+      appBar: CustomAppBar(
+        title: "Add Review",
+        onPressed: () => Navigator.of(context).pop(),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -42,30 +62,29 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   children: [
                     const SizedBox(height: 10),
                     // Top Description
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: const Text(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Your feedback helps us improve our services and helps other patients choose the right doctor.",
                         textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 14,
                           color: LightColorPalette.black,
                           fontFamily: "LeagueSpartan",
-                          height: 1.4, // Line height for readability
+                          height: 1.4,
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 30),
 
                     // Doctor Image
                     CircleAvatar(
-                      radius: 60, // Large size (120px diameter)
+                      radius: 60,
                       backgroundImage: AssetImage(widget.image),
                     ),
-
                     const SizedBox(height: 20),
 
+                    // Doctor Details
                     Text(
                       widget.doctorName,
                       style: const TextStyle(
@@ -84,9 +103,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         fontFamily: "LeagueSpartan",
                       ),
                     ),
-
                     const SizedBox(height: 15),
 
+                    // Rating Row
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -96,14 +115,15 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             color: LightColorPalette.secondary,
                             borderRadius: BorderRadius.circular(30),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.favorite,
                             color: LightColorPalette.primary,
                             size: 20,
                           ),
                         ),
                         const SizedBox(width: 15),
-                        // Rating Stars
+
+                        // Rating Stars (Controlled by ViewModel)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
@@ -116,17 +136,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
                           child: Row(
                             children: List.generate(5, (index) {
                               return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _rating = index + 1;
-                                  });
-                                },
+                                onTap:
+                                    () => viewModel.setRating(
+                                      index + 1,
+                                    ), // 👇 Delegate to ViewModel
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 2.0,
                                   ),
                                   child: Icon(
-                                    index < _rating
+                                    index < viewModel.currentRating
                                         ? Icons.star
                                         : Icons.star_border,
                                     color: LightColorPalette.primary,
@@ -139,12 +158,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
                         ),
                       ],
                     ),
-
                     const SizedBox(height: 30),
 
-                    // Comment
+                    // Comment Input
                     Container(
-                      height: 180, // Fixed height for large box
+                      height: 180,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: LightColorPalette.inputField,
@@ -152,14 +170,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       ),
                       child: TextField(
                         controller: _commentController,
-                        maxLines: null, // Allow multiline
+                        maxLines: null,
                         expands: true,
                         decoration: const InputDecoration(
                           hintText: "Enter Your Comment Here...",
                           hintStyle: TextStyle(
-                            color: Color(
-                              0xFF8FA1D0,
-                            ), // Specific placeholder color
+                            color: Color(0xFF8FA1D0),
                             fontSize: 14,
                             fontFamily: "LeagueSpartan",
                           ),
@@ -177,14 +193,22 @@ class _ReviewScreenState extends State<ReviewScreen> {
               ),
             ),
 
-            // --- 6. Bottom Button ---
+            // --- Bottom Button ---
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(
                 width: 300,
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: _isSubmitting ? null : _submitReview,
+                  // 👇 Delegate submission to ViewModel
+                  onPressed:
+                      viewModel.isSubmittingReview
+                          ? null
+                          : () => viewModel.submitDoctorReview(
+                            context: context,
+                            doctorId: widget.doctorId,
+                            comment: _commentController.text,
+                          ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: LightColorPalette.primary,
                     elevation: 0,
@@ -193,7 +217,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     ),
                   ),
                   child:
-                      _isSubmitting
+                      viewModel.isSubmittingReview
                           ? const SizedBox(
                             height: 24,
                             width: 24,
@@ -218,53 +242,5 @@ class _ReviewScreenState extends State<ReviewScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _submitReview() async {
-    if (_commentController.text.trim().isEmpty) {
-      CustomSnackBar.show(
-        context,
-        message: "Please write a comment before submitting",
-        isError: true,
-      );
-      return;
-    }
-
-    setState(() {
-      _isSubmitting = true;
-    });
-
-    bool isSuccess = await context.read<DoctorViewModel>().submitReviews(
-      widget.doctorId,
-      _rating.toDouble(),
-      _commentController.text.trim(),
-    );
-
-    if (!mounted) return;
-
-    if (isSuccess) {
-      CustomSnackBar.show(
-        context,
-        message: "Thank you for your review!",
-        isError: false,
-      );
-
-      Navigator.pop(context, true); // Return true on success
-    } else {
-      CustomSnackBar.show(
-        context,
-        message: "Failed to submit review, please try again",
-        isError: true,
-      );
-      setState(() {
-        _isSubmitting = false;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _commentController.dispose();
-    super.dispose();
   }
 }

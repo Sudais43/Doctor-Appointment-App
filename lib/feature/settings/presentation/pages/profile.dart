@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import 'package:skin_firts/feature/authentication/presentation/pages/login.dart';
@@ -12,8 +11,6 @@ import 'package:skin_firts/feature/settings/presentation/pages/help_center.dart'
 import 'package:skin_firts/feature/settings/presentation/pages/privacy_policy.dart';
 import 'package:skin_firts/feature/settings/presentation/pages/setting_page.dart';
 import 'package:skin_firts/feature/settings/presentation/widgets/profile_pic.dart';
-
-import '../../../../core/theme/color_palette.dart';
 import '../../../../core/widget/CustomButton.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -21,16 +18,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Set system UI overlay style for the status bar (icons will be dark on a light background)
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
-    //   statusBarColor: Colors.transparent, // Transparent status bar background
-    //   statusBarIconBrightness: Brightness.dark, // Dark icons (for light backgrounds)
-    // ));
+    
     final appColor = context.appColors;
 
     return Scaffold(
-      // Ensure a white background for the screen
-      // bottomNavigationBar: BottomNavigationbar1(),
       appBar: CustomAppBar(
         title: "My Profile",
         onPressed: () {
@@ -38,20 +29,25 @@ class ProfileScreen extends StatelessWidget {
         },
       ),
       body: ValueListenableBuilder(
-        valueListenable: Hive.box('current_session').listenable(keys: ['userName', 'profilePic']),
+        valueListenable: Hive.box(
+          'current_session',
+        ).listenable(keys: ['userName', 'profilePic']),
         builder: (context, sessionBox, child) {
-          final userName = sessionBox.get('userName', defaultValue: 'User Khan');
+          final userName = sessionBox.get(
+            'userName',
+            defaultValue: 'User Khan',
+          );
           final profilePic = sessionBox.get('profilePic') as String?;
           return SingleChildScrollView(
             // Use SingleChildScrollView to prevent overflow if content is too tall
             child: Column(
               children: [
                 const SizedBox(height: 20),
-    
+
                 // Profile Picture with Edit Icon
                 ProfilePic(networkImageUrl: profilePic),
                 const SizedBox(height: 15),
-    
+
                 // User Name
                 Text(
                   userName,
@@ -59,7 +55,7 @@ class ProfileScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: LightColorPalette.textColor,
+                    color: appColor.textColor,
                   ),
                 ),
                 const SizedBox(height: 30), // Space before the menu items
@@ -76,15 +72,7 @@ class ProfileScreen extends StatelessWidget {
                     // Navigate to Profile screen
                   },
                 ),
-                // _buildProfileMenuItem(
-                //   context,
-                //   icon: "assets/icons/settings/favorite_icon.svg",
-                //   text: 'Favorite',
-                //   onTap: () {
-                //     print('Favorite tapped');
-                //     // Navigate to Favorite screen
-                //   },
-                // ),
+                
                 _buildProfileMenuItem(
                   context,
                   icon: "assets/icons/settings/wallet_icon.svg",
@@ -131,7 +119,9 @@ class ProfileScreen extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HelpCenterScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => HelpCenterScreen(),
+                      ),
                     );
                   },
                 ),
@@ -141,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                   text: 'Logout',
                   onTap: () {
                     print('Logout tapped');
-                    _showLogoutDialog(context);
+                    _showLogoutDialog(context, appColor);
                     // Implement logout logic
                   },
                   isLogout: true, // Special styling for Logout
@@ -169,7 +159,7 @@ class ProfileScreen extends StatelessWidget {
         ListTile(
           leading: CircleAvatar(
             radius: 22, // Size of the icon background circle
-            backgroundColor: LightColorPalette.primary.withOpacity(
+            backgroundColor: appColor.Primary.withOpacity(
               0.1,
             ), // Light blue background
             child: SvgPicture.asset(icon, color: appColor.Primary),
@@ -196,18 +186,12 @@ class ProfileScreen extends StatelessWidget {
             vertical: 5.0,
           ),
         ),
-        // You can add a Divider here if you want lines between items
-        // if (!isLogout)
-        //   Padding(
-        //     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        //     child: Divider(color: LightColorPalette.dividerColor.withOpacity(0.3), height: 1),
-        //   ),
       ],
     );
   }
 
   // --- 7. HELPER FUNCTION FOR THE LOGOUT DIALOG ---
-  void _showLogoutDialog(BuildContext context) {
+  void _showLogoutDialog(BuildContext context, AppColor appColor) {
     // showModalBottomSheet is the widget that slides up from the bottom
     showModalBottomSheet(
       context: context,
@@ -232,7 +216,7 @@ class ProfileScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: LightColorPalette.primary,
+                  color: appColor.Primary,
                   fontFamily: "LeagueSpartan",
                 ),
               ),
@@ -253,9 +237,9 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: CustomButton(
                       text: "Cancel",
-                      BackgroundColor: LightColorPalette.secondary,
+                      BackgroundColor: appColor.secondary,
                       textStyle: TextStyle(
-                        color: LightColorPalette.primary,
+                        color: appColor.Primary,
                         fontWeight: FontWeight.bold,
                       ),
                       onPressed: () {
@@ -267,7 +251,7 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: CustomButton(
                       text: "Yes, Logout",
-                      BackgroundColor: LightColorPalette.primary,
+                      BackgroundColor: appColor.Primary,
                       textStyle: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

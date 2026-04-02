@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:skin_firts/core/services/api_services.dart';
 import 'package:skin_firts/feature/appointment/entity/appointment.dart';
+import 'package:skin_firts/feature/appointment/entity/calender_day.dart';
 
 class AppointmentViewModel extends ChangeNotifier {
   final ApiServices apiServices;
@@ -20,6 +22,8 @@ class AppointmentViewModel extends ChangeNotifier {
   bool get isLoadingCompleted => _isLoadingCompleted;
   bool get isLoadingCancelled => _isLoadingCancelled;
   bool get isLoading => _isLoading;
+  AppointmentStatus _selectedStatus = AppointmentStatus.upcoming;
+  AppointmentStatus get selectedStatus => _selectedStatus;
 
   AppointmentViewModel({required this.apiServices}) {
     fetchUpcomingAppointments();
@@ -100,7 +104,8 @@ class AppointmentViewModel extends ChangeNotifier {
     required String date,
     required String time,
     required Map<String, dynamic> patientDetails,
-    String? paymentIntentId, // ADD THIS: Pass the Stripe payment ID if your backend requires it
+    String?
+    paymentIntentId, // ADD THIS: Pass the Stripe payment ID if your backend requires it
     // required BuildContext context,
   }) async {
     _isBooking = true;
@@ -112,7 +117,8 @@ class AppointmentViewModel extends ChangeNotifier {
         'appointmentDate': date,
         'appointmentTime': time,
         'patientDetails': patientDetails,
-        if (paymentIntentId != null) 'paymentIntentId': paymentIntentId, // ADD THIS
+        if (paymentIntentId != null)
+          'paymentIntentId': paymentIntentId, // ADD THIS
       };
 
       final response = await apiServices.bookAppointment(data);
@@ -208,7 +214,8 @@ class AppointmentViewModel extends ChangeNotifier {
         reason,
       );
 
-      if (response != null && (response.statusCode == 200 || response.statusCode == 201)) {
+      if (response != null &&
+          (response.statusCode == 200 || response.statusCode == 201)) {
         final index = _upcomingAppointments.indexWhere(
           (appt) => appt.id == appointmentId,
         );
@@ -233,4 +240,164 @@ class AppointmentViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  List<CalendarDay> getCalendarDays() {
+    final now = DateTime.now();
+
+    // 1. Get formatted appointment dates
+    final appointmentDates =
+        upcomingAppointments
+            .map((app) {
+              if (app.date.isNotEmpty) {
+                final parsedDate = DateTime.tryParse(app.date);
+                if (parsedDate != null) {
+                  return DateFormat('yyyy-MM-dd').format(parsedDate.toLocal());
+                }
+                final match = RegExp(r'\d+').firstMatch(app.date);
+                if (match != null) return match.group(0);
+              }
+              return null;
+            })
+            .where((day) => day != null)
+            .toSet();
+
+    // 2. Generate the next 6 days and check for matches
+    return List.generate(6, (index) {
+      final date = now.add(Duration(days: index));
+      final fullDate = DateFormat('yyyy-MM-dd').format(date);
+      final dayStr = date.day.toString();
+
+      final hasAppt =
+          appointmentDates.contains(fullDate) ||
+          appointmentDates.contains(dayStr);
+
+      return CalendarDay(
+        day: dayStr,
+        label: DateFormat('E').format(date).toUpperCase(),
+        fullDate: fullDate,
+        hasAppointment: hasAppt,
+      );
+    });
+  }
+
+ 
+
+  // 1. Hold the state of the active tab
+
+
+  // 2. Automatically give the UI the correct list based on the active tab
+  List<Appointment> get currentDisplayedList {
+    switch (_selectedStatus) {
+      case AppointmentStatus.upcoming: return upcomingAppointments;
+      case AppointmentStatus.completed: return completedAppointments;
+      case AppointmentStatus.cancelled: return cancelledAppointments;
+    }
+  }
+
+  // 3. Automatically give the UI the correct loading state
+  bool get isCurrentListLoading {
+    switch (_selectedStatus) {
+      case AppointmentStatus.upcoming: return isLoadingUpcoming;
+      case AppointmentStatus.completed: return isLoadingCompleted;
+      case AppointmentStatus.cancelled: return isLoadingCancelled;
+    }
+  }
+
+  // 4. Handle the tab change AND the data fetching logic
+  void changeTab(AppointmentStatus newStatus) {
+    if (_selectedStatus == newStatus) return; // Do nothing if it's the same tab
+
+    _selectedStatus = newStatus;
+    notifyListeners(); // Update the UI tab colors instantly
+
+    // Decide if we need to fetch data
+    if (newStatus == AppointmentStatus.completed && completedAppointments.isEmpty) {
+      fetchAppointmentsByStatus('completed');
+    } else if (newStatus == AppointmentStatus.cancelled && cancelledAppointments.isEmpty) {
+      fetchAppointmentsByStatus('cancelled');
+    } else if (newStatus == AppointmentStatus.upcoming && upcomingAppointments.isEmpty) {
+      fetchAppointmentsByStatus('upcoming');
+    }
+  }
+
+  // 5. Keep navigation in the ViewModel
+  void goBack(BuildContext context) {
+    Navigator.of(context).pop();
+  }
+
+  // 1. The list of reasons belongs in the ViewModel (it's business data)
+  final List<String> cancellationReasons = [
+    "Rescheduling",
+    "Weather Conditions",
+    "Unexpected Work",
+    "Others",
+  ];
+
+  // 2. State for the screen
+  int _selectedCancelReasonIndex = 1;
+  int get selectedCancelReasonIndex => _selectedCancelReasonIndex;
+
+  bool _isCancellingAppointment = false;
+  bool get isCancellingAppointment => _isCancellingAppointment;
+
+  // 3. Action to update the radio button
+  void setCancelReasonIndex(int index) {
+    _selectedCancelReasonIndex = index;
+    notifyListeners();
+  }
+
+  // 4. Action to handle the whole cancellation process
+  Future<void> processCancellation({
+    required BuildContext context,
+    required String appointmentId,
+    required String customReasonText,
+  }) async {
+    
+    // Validate the input
+    String finalReason = cancellationReasons[_selectedCancelReasonIndex];
+    if (_selectedCancelReasonIndex == 3) { // "Others"
+      if (customReasonText.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Please enter a reason when selecting 'Others'."),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return; // Stop processing
+      }
+      finalReason = customReasonText.trim();
+    }
+
+    // Start loading
+    _isCancellingAppointment = true;
+    notifyListeners();
+
+    // Call the actual API (assuming you already have this method)
+    final success = await cancelAppointment(appointmentId: appointmentId, reason: finalReason);
+
+    // Stop loading
+    _isCancellingAppointment = false;
+    notifyListeners();
+
+    if (!context.mounted) return;
+
+    // Handle the result
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Appointment cancelled successfully."), backgroundColor: Colors.green),
+      );
+      Navigator.of(context).pop();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Failed to cancel appointment. Please try again."), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  // Reset state when entering the screen
+  void resetCancelState() {
+    _selectedCancelReasonIndex = 1;
+    _isCancellingAppointment = false;
+  }
+
 }

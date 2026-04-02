@@ -67,7 +67,6 @@ class _NotificationSettingsScreenState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initHiveAndLoadSettings();
   }
@@ -140,10 +139,10 @@ class _NotificationSettingsScreenState
               // e.g., _saveSetting(setting.title, newValue);
             },
             // Style the switch to match your image
-            activeColor: appColor.Primary,
+            activeThumbColor: appColor.Primary,
             inactiveTrackColor: appColor.secondary,
             inactiveThumbColor: appColor.white,
-            trackOutlineColor: MaterialStateProperty.all(Colors.transparent),
+            trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
           ),
         ],
       ),

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
+import 'package:skin_firts/feature/appointment/entity/calender_day.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/authentication/presentation/view_model/auth_view_model.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
@@ -31,20 +32,20 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     context.read<AuthViewModel>().syncFcmToken();
     Future.microtask(() {
+      if(!mounted) return;
       context.read<DoctorViewModel>().fetchHomeDoctors();
       context.read<AppointmentViewModel>().fetchUpcomingAppointments();
+      Provider.of<HomePageViewModel>(
+        context,
+        listen: false,
+      ).initNotifications();
     });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final appColor = context.appColors;
+    final homePageVM = context.read<HomePageViewModel>();
 
     return Scaffold(
       body: SafeArea(
@@ -60,9 +61,14 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 ValueListenableBuilder(
-                  valueListenable: Hive.box('current_session').listenable(keys: ['userName', 'profilePic']),
+                  valueListenable: Hive.box(
+                    'current_session',
+                  ).listenable(keys: ['userName', 'profilePic']),
                   builder: (context, sessionBox, child) {
-                    final userName = sessionBox.get('userName', defaultValue: 'User Khan');
+                    final userName = sessionBox.get(
+                      'userName',
+                      defaultValue: 'User Khan',
+                    );
                     final profilePic = sessionBox.get('profilePic') as String?;
                     return _homeTopBar(appColor, userName, profilePic);
                   },
@@ -73,44 +79,10 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       SizedBox(height: 20),
-                      Consumer<AppointmentViewModel>(
-                        builder: (context, appointmentViewModel, child) {
-                          final now = DateTime.now();
-                          final List<Map<String, String>>
-                          nextSixDays = List.generate(6, (index) {
-                            final date = now.add(Duration(days: index));
-                            return {
-                              "day": date.day.toString(),
-                              "label":
-                                  DateFormat('E').format(date).toUpperCase(),
-                              "fullDate": DateFormat('yyyy-MM-dd').format(date),
-                            };
-                          });
 
-                          final appointmentDays =
-                              appointmentViewModel.upcomingAppointments
-                                  .map((app) {
-                                    if (app.date.isNotEmpty) {
-                                      final parsedDate = DateTime.tryParse(
-                                        app.date,
-                                      );
-                                      if (parsedDate != null) {
-                                        return DateFormat(
-                                          'yyyy-MM-dd',
-                                        ).format(parsedDate.toLocal());
-                                      }
-                                      final match = RegExp(
-                                        r'\d+',
-                                      ).firstMatch(app.date);
-                                      if (match != null) {
-                                        return match.group(0);
-                                      }
-                                    }
-                                    return null;
-                                  })
-                                  .where((day) => day != null)
-                                  .toSet()
-                                  .toList();
+                      Consumer<AppointmentViewModel>(
+                        builder: (context, appointmentVM, child) {
+                          final calendarDays = appointmentVM.getCalendarDays();
 
                           return Padding(
                             padding: const EdgeInsets.symmetric(
@@ -118,62 +90,19 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                ...List.generate(nextSixDays.length, (index) {
-                                  final item = nextSixDays[index];
-                                  final hasAppointment =
-                                      appointmentDays.contains(
-                                        item["fullDate"],
-                                      ) ||
-                                      appointmentDays.contains(item["day"]);
-                                  return Container(
-                                    height: 64,
-                                    width: 42,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(18),
-                                      color:
-                                          hasAppointment
-                                              ? appColor.Primary
-                                              : appColor.white,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          item["day"]!,
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w500,
-                                            color:
-                                                hasAppointment
-                                                    ? LightColorPalette.white
-                                                    : LightColorPalette.black,
-                                            fontFamily: "League Spartan",
-                                          ),
+                              children:
+                                  calendarDays
+                                      .map(
+                                        (dayData) => _buildCalendarDay(
+                                          dayData,
+                                          appColor,
                                         ),
-                                        Text(
-                                          item["label"]!,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w300,
-                                            color:
-                                                hasAppointment
-                                                    ? LightColorPalette.white
-                                                    : LightColorPalette.black,
-                                            fontFamily: "League Spartan",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ],
+                                      )
+                                      .toList(),
                             ),
                           );
                         },
                       ),
-
                       SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -186,9 +115,12 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 SizedBox(height: 10),
+
                 GridView.count(
                   shrinkWrap: true,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  physics:
+                      const NeverScrollableScrollPhysics(), // Prevent scrolling conflict
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   crossAxisCount: 2,
                   childAspectRatio: 1.2,
                   mainAxisSpacing: 10,
@@ -197,117 +129,29 @@ class _HomePageState extends State<HomePage> {
                     _catButton(
                       appColor,
                       "Dermatology",
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    DoctorListPage(category: "Dermatology"),
-                          ),
-                        );
-                      },
                       "assets/icons/HomeScreen/png/dermatology.png",
+                      homePageVM,
                     ),
                     _catButton(
                       appColor,
                       "Cardiology",
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    DoctorListPage(category: "Cardiology"),
-                          ),
-                        );
-                      },
                       "assets/icons/HomeScreen/png/heart.png",
+                      homePageVM,
                     ),
                     _catButton(
                       appColor,
-                      "pediatrics",
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    DoctorListPage(category: "Pediatrics"),
-                          ),
-                        );
-                      },
+                      "Pediatrics",
                       "assets/icons/HomeScreen/png/pediatrics.png",
+                      homePageVM,
                     ),
                     _catButton(
                       appColor,
                       "Neurology",
-                      () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    DoctorListPage(category: "Neurology"),
-                          ),
-                        );
-                      },
                       "assets/icons/HomeScreen/png/brain.png",
+                      homePageVM,
                     ),
                   ],
                 ),
-                // Consumer<DoctorViewModel>(
-                //   builder: (context, doctorViewModel, child) {
-                //     if (doctorViewModel.isHomeLoading) {
-                //       return Center(child: CircularProgressIndicator());
-                //     }
-                //     if (doctorViewModel.homeDoctors.isEmpty) {
-                //       return Center(child: Text("No Doctors Found"));
-                //     }
-                //     return ListView.builder(
-                //       padding: const EdgeInsets.symmetric(horizontal: 32),
-                //       shrinkWrap: true,
-                //       physics: const NeverScrollableScrollPhysics(),
-                //       itemCount: doctorViewModel.homeDoctors.length,
-                //       itemBuilder: (context, index) {
-                //         final docData = doctorViewModel.homeDoctors[index];
-                //         final doc = DoctorInfo(
-                //           id: docData['_id'] ?? docData['id'] ?? '',
-                //           name: docData['name'] ?? 'No Name',
-                //           speciality: docData['specialization'] ?? 'Specialist',
-                //           rating: (docData['rating'] as num? ?? 0.0).toDouble(),
-                //           reviews:
-                //               (docData['reviews'] as num? ?? 0).toInt(),
-                //           isFavorite: docData['isFavorite'] ?? false,
-                //           imageUrl: docData['imageUrl'] ?? '',
-                //           gender: docData['gender'] ?? '',
-                //           availability: docData['availability'] ?? [],
-                //         );
-                //         return Padding(
-                //           padding: const EdgeInsets.only(bottom: 8.0),
-                //           child: GestureDetector(
-                //             onTap:
-                //                 () => doctorViewModel.moveToDoctorDetail(
-                //                   context,
-                //                   doc,
-                //                 ),
-                //             child: DoctorTile1(
-                //               doctorName: doc.name,
-                //               specialization: doc.speciality,
-                //               reviews: doc.reviews,
-                //               rating: doc.rating,
-                //               imageUrl: doc.imageUrl,
-                //               isFavorite: doc.isFavorite,
-                //               onFavoriteTap: () {
-                //                 doctorViewModel.toggleFavoriteStatus(doc.id);
-                //               },
-                //             ),
-                //           ),
-                //         );
-                //       },
-                //     );
-                //   },
-                // ),
               ],
             ),
           ),
@@ -316,46 +160,87 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildCalendarDay(CalendarDay dayData, AppColor appColor) {
+    return Container(
+      height: 64,
+      width: 42,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: dayData.hasAppointment ? appColor.Primary : appColor.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            dayData.day,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w500,
+              color:
+                  dayData.hasAppointment
+                      ? LightColorPalette.white
+                      : LightColorPalette.black,
+              fontFamily: "League Spartan",
+            ),
+          ),
+          Text(
+            dayData.label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w300,
+              color:
+                  dayData.hasAppointment
+                      ? LightColorPalette.white
+                      : LightColorPalette.black,
+              fontFamily: "League Spartan",
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _catButton(
     AppColor appColor,
     String text,
-    VoidCallback onTap,
     String image,
+    HomePageViewModel vm,
   ) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => vm.moveToCategory(context, text),
       child: Container(
-        height: 80,
-        width: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: appColor.secondary,
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 80,
-                width: 80,
-                child: Image.asset(image, fit: BoxFit.scaleDown),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 50, // Adjusted for better fit
+              width: 50,
+              child: Image.asset(image, fit: BoxFit.scaleDown),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: appColor.fontColor,
               ),
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: appColor.fontColor,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _homeTopBar(AppColor appColor, String userName, String? rawProfilePic) {
+  Widget _homeTopBar(
+    AppColor appColor,
+    String userName,
+    String? rawProfilePic,
+  ) {
     final profilePic = rawProfilePic?.replaceAll('\\', '/');
 
     return Column(
@@ -525,7 +410,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
 
-                  _searchBar(appColor),
+                  _searchBar(appColor, homePageVM),
                 ],
               ),
             );
@@ -535,7 +420,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _searchBar(AppColor appColor) {
+  Widget _searchBar(AppColor appColor, HomePageViewModel vm) {
     return SizedBox(
       height: 33,
       width: 190,
@@ -584,17 +469,14 @@ class _HomePageState extends State<HomePage> {
             borderSide: BorderSide.none,
           ),
         ),
-        onSubmitted: (value) {
-          if (value.isNotEmpty) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DoctorListPage(searchQuery: value),
-              ),
-            );
-          }
-        },
+        onSubmitted: (value) => vm.performSearch(context, value),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }

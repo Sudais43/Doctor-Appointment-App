@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:skin_firts/core/navigation/page_transition.dart';
 import 'package:skin_firts/core/services/api_services.dart';
+import 'package:skin_firts/core/widget/custom_snackbar.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 import 'package:skin_firts/feature/appointment/entity/review.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctor_detail.dart';
 import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
@@ -351,8 +353,9 @@ class DoctorViewModel extends ChangeNotifier {
       final response = await apiServices.toggleFavorite(doctorId);
       if (response == null || response.statusCode != 200) {
         if (index != -1) _doctors[index]['isFavorite'] = currentStatuss;
-        if (homeIndex != -1)
+        if (homeIndex != -1) {
           _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
+        }
         _localFavoriteStates[doctorId] = currentStatuss;
         _saveLocalFavorites();
         notifyListeners();
@@ -360,8 +363,9 @@ class DoctorViewModel extends ChangeNotifier {
       }
     } catch (e) {
       if (index != -1) _doctors[index]['isFavorite'] = currentStatuss;
-      if (homeIndex != -1)
+      if (homeIndex != -1) {
         _homeDoctors[homeIndex]['isFavorite'] = currentStatuss;
+      }
       _localFavoriteStates[doctorId] = currentStatuss;
       _saveLocalFavorites();
       notifyListeners();
@@ -375,5 +379,80 @@ class DoctorViewModel extends ChangeNotifier {
   void setSearchQuery(String query) {
     _searchQuery = query;
     notifyListeners();
+  }
+
+  // Add this to DoctorViewModel
+  void moveToScheduleScreen(BuildContext context, DoctorInfo doc) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScheduleScreen(
+          doctorId: doc.id,
+          doctorName: doc.name,
+          availability: doc.availability,
+          image: doc.imageUrl,
+          speciality: doc.speciality,
+          isFavorite: doc.isFavorite,
+          rating: doc.rating,
+          review: doc.reviews,
+        ),
+      ),
+    );
+  }
+
+  // --- ADD THIS TO DOCTOR VIEW MODEL ---
+
+  // 1. State for the Review Screen
+  
+  int _currentRating = 3;
+  int get currentRating => _currentRating;
+
+  bool _isSubmittingReview = false;
+  bool get isSubmittingReview => _isSubmittingReview;
+
+  // 2. Action to update rating
+  void setRating(int newRating) {
+    _currentRating = newRating;
+    notifyListeners();
+  }
+
+  // 3. Action to submit the review (handles validation and routing)
+  Future<void> submitDoctorReview({
+    required BuildContext context,
+    required String doctorId,
+    required String comment,
+  }) async {
+    if (comment.trim().isEmpty) {
+      CustomSnackBar.show(
+        context,
+        message: "Please write a comment before submitting",
+        isError: true,
+      );
+      return;
+    }
+
+    _isSubmittingReview = true;
+    notifyListeners();
+
+    // Call your repository/API here
+    bool isSuccess = await submitReviews(doctorId, _currentRating.toDouble(), comment.trim());
+
+    _isSubmittingReview = false;
+    notifyListeners();
+
+    if (!context.mounted) return;
+
+    if (isSuccess) {
+      CustomSnackBar.show(context, message: "Thank you for your review!", isError: false);
+      Navigator.pop(context, true); // Go back and indicate success
+    } else {
+      CustomSnackBar.show(context, message: "Failed to submit review, please try again", isError: true);
+    }
+  }
+
+  // Optional: Reset state when leaving the screen
+  void resetReviewState() {
+    _currentRating = 3;
+    _isSubmittingReview = false;
   }
 }

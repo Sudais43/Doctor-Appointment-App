@@ -299,4 +299,14 @@ class _LogInState extends State<SignUp> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    userNameController.dispose();
+    emailController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    dateOfBirthController.dispose();
+  }
 }

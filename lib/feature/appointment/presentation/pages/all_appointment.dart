@@ -8,24 +8,17 @@ import '../../entity/appointment.dart';
 import '../widgets/appointment_card.dart';
 
 // --- 3. MAIN SCREEN ---
-class AllAppointmentsScreen extends StatefulWidget {
+class AllAppointmentsScreen extends StatelessWidget {
   const AllAppointmentsScreen({super.key});
 
   @override
-  State<AllAppointmentsScreen> createState() => _AllAppointmentsScreenState();
-}
-
-class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
-  // Track selected tab
-  AppointmentStatus _selectedStatus = AppointmentStatus.upcoming;
-
-  @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<AppointmentViewModel>();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar(
         title: "All Appointments",
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => viewModel.goBack(context),
       ),
       body: Column(
         children: [
@@ -41,66 +34,19 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildTabButton("Completed", AppointmentStatus.completed),
-                  _buildTabButton("Upcoming", AppointmentStatus.upcoming),
-                  _buildTabButton("Cancelled", AppointmentStatus.cancelled),
+                  _buildTabButton("Completed", AppointmentStatus.completed, viewModel),
+                  _buildTabButton("Upcoming", AppointmentStatus.upcoming, viewModel),
+                  _buildTabButton("Cancelled", AppointmentStatus.cancelled, viewModel),
                 ],
               ),
             ),
           ),
-
           const SizedBox(height: 20),
 
           // --- LIST VIEW ---
           Expanded(
-            child: Consumer<AppointmentViewModel>(
-              builder: (context, appointmentVM, child) {
-                List<Appointment> currentList;
-                bool isLoading;
-
-                switch (_selectedStatus) {
-                  case AppointmentStatus.upcoming:
-                    currentList = appointmentVM.upcomingAppointments;
-                    isLoading = appointmentVM.isLoadingUpcoming;
-                    break;
-                  case AppointmentStatus.completed:
-                    currentList = appointmentVM.completedAppointments;
-                    isLoading = appointmentVM.isLoadingCompleted;
-                    break;
-                  case AppointmentStatus.cancelled:
-                    currentList = appointmentVM.cancelledAppointments;
-                    isLoading = appointmentVM.isLoadingCancelled;
-                    break;
-                }
-
-                if (isLoading && currentList.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (currentList.isEmpty) {
-                  return const Center(child: Text("No appointments found"));
-                }
-
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await appointmentVM.fetchAppointmentsByStatus(
-                      _selectedStatus.name,
-                    );
-                  },
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    itemCount: currentList.length,
-                    itemBuilder: (context, index) {
-                      final item = currentList[index];
-                      return AppointmentCard(
-                        key: ValueKey(item.hashCode),
-                        appointment: item,
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
+            child: 
+            _buildAppointmentList(viewModel),
           ),
         ],
       ),
@@ -108,36 +54,51 @@ class _AllAppointmentsScreenState extends State<AllAppointmentsScreen> {
   }
 
   // Helper for Tabs
-  Widget _buildTabButton(String text, AppointmentStatus status) {
-    final bool isSelected = _selectedStatus == status;
+  Widget _buildAppointmentList(AppointmentViewModel viewModel) {
+    final currentList = viewModel.currentDisplayedList;
+    final isLoading = viewModel.isCurrentListLoading;
+
+    if (isLoading && currentList.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    
+    if (currentList.isEmpty) {
+      return const Center(child: Text("No appointments found"));
+    }
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        await viewModel.fetchAppointmentsByStatus(viewModel.selectedStatus.name);
+      },
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: currentList.length,
+        itemBuilder: (context, index) {
+          final item = currentList[index];
+          return AppointmentCard(
+            key: ValueKey(item.hashCode),
+            appointment: item,
+          );
+        },
+      ),
+    );
+  }
+
+  // Helper for Tabs
+  Widget _buildTabButton(String text, AppointmentStatus status, AppointmentViewModel viewModel) {
+    final bool isSelected = viewModel.selectedStatus == status; // Let the ViewModel tell us if it's selected
+
     return Expanded(
       child: GestureDetector(
-        onTap: () {
-          if (_selectedStatus == status) return;
-
-          setState(() => _selectedStatus = status);
-
-          final vm = context.read<AppointmentViewModel>();
-          if (status == AppointmentStatus.completed &&
-              vm.completedAppointments.isEmpty) {
-            vm.fetchAppointmentsByStatus('completed');
-          } else if (status == AppointmentStatus.cancelled &&
-              vm.cancelledAppointments.isEmpty) {
-            vm.fetchAppointmentsByStatus('cancelled');
-          } else if (status == AppointmentStatus.upcoming &&
-              vm.upcomingAppointments.isEmpty) {
-            vm.fetchAppointmentsByStatus('upcoming');
-          }
-        },
+        onTap: () => viewModel.changeTab(status), // 👇 Delegate all logic to ViewModel!
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Container(
+          child: AnimatedContainer( // Added a subtle animation for tab switching
+            duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color:
-                  isSelected
-                      ? LightColorPalette.primary
-                      : LightColorPalette.inputField,
+              color: isSelected ? LightColorPalette.primary : LightColorPalette.inputField,
               borderRadius: BorderRadius.circular(30),
             ),
             child: Text(
