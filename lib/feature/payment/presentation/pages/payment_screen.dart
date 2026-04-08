@@ -6,6 +6,7 @@ import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/payment/presentation/pages/payment_method.dart';
 import 'package:skin_firts/core/widget/custom_snackbar.dart';
+import 'package:skin_firts/feature/payment/presentation/pages/payment_successful.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String doctorId;
@@ -42,7 +43,9 @@ class PaymentScreen extends StatefulWidget {
     required this.fullName,
     required this.age,
     required this.gender,
-    required this.problem, required this.reviews, required this.rating,
+    required this.problem,
+    required this.reviews,
+    required this.rating,
   });
 
   @override
@@ -333,19 +336,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
   // --- THE CORE LOGIC FOR PAYMENT AND BOOKING ---
   Future<void> _processPaymentAndBooking() async {
     if (!mounted) return;
-    
+
     setState(() => _isProcessing = true);
 
     try {
-      bool paymentSuccessful = true; 
-      
+      bool paymentSuccessful = true;
+
       // 1. Process Stripe Payment
       if (_paymentMethod == "Card") {
         // Convert your string amount to an integer for Stripe (e.g. "100.00" -> 100)
         int stripeAmount = double.tryParse(widget.amount)?.toInt() ?? 100;
-        
+
         // Await the new boolean method. If it fails, it will throw an error to the catch block.
-        paymentSuccessful = await StripeServices.instance.makePayment(stripeAmount, "usd");
+        paymentSuccessful = await StripeServices.instance.makePayment(
+          stripeAmount,
+          "usd",
+        );
       }
 
       // 2. If payment succeeded, proceed to booking
@@ -374,7 +380,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
         if (!mounted) return;
 
         if (bookingSuccess) {
-          _showSuccessDialog(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => PaymentSuccessScreen(
+                    doctorName: widget.doctorName,
+                    appointmentDate: widget.date,
+                    appointmentTime: widget.timeSlot,
+                  ),
+            ),
+          );
         } else {
           throw Exception("Booking failed on our end. Please contact support.");
         }
@@ -485,7 +501,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   _buildChip(Icons.star, rating.toString(), appColor),
                   const SizedBox(width: 10),
-                  _buildChip(Icons.chat_bubble_outline, reviews.toString(), appColor),
+                  _buildChip(
+                    Icons.chat_bubble_outline,
+                    reviews.toString(),
+                    appColor,
+                  ),
                 ],
               ),
             ],

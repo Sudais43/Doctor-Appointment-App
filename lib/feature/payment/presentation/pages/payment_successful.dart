@@ -8,7 +8,15 @@ class AppColors {
 }
 
 class PaymentSuccessScreen extends StatelessWidget {
-  const PaymentSuccessScreen({super.key});
+  final String doctorName;
+  final String appointmentDate;
+  final String appointmentTime;
+  const PaymentSuccessScreen({
+    super.key,
+    required this.doctorName,
+    required this.appointmentDate,
+    required this.appointmentTime,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +27,9 @@ class PaymentSuccessScreen extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
-          onPressed: () => Navigator.pop(context),
+          onPressed:
+              () => // Close dialog
+                  Navigator.of(context).popUntil((route) => route.isFirst), //
         ),
       ),
       body: SafeArea(
@@ -29,14 +39,16 @@ class PaymentSuccessScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(flex: 1), // Pushes content down slightly
-
               // --- 1. SUCCESS CHECKMARK ---
               Container(
                 width: 150,
                 height: 150,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 8), // Thick white ring
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 8,
+                  ), // Thick white ring
                 ),
                 child: const Center(
                   child: Icon(
@@ -77,9 +89,14 @@ class PaymentSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1), // Subtle transparent fill
+                  color: Colors.white.withOpacity(
+                    0.1,
+                  ), // Subtle transparent fill
                   borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.5),
+                    width: 1,
+                  ),
                 ),
                 child: Column(
                   children: [
@@ -96,8 +113,9 @@ class PaymentSuccessScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Doctor Name
-                    const Text(
-                      "Dr. Olivia Turner, M.D.",
+                     Text(
+                      doctorName,
+                      // "Dr. Olivia Turner, M.D.",
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -112,12 +130,15 @@ class PaymentSuccessScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Date
-                        _buildIconText(Icons.calendar_today_outlined, "Month 24, Year"),
+                        _buildIconText(
+                          Icons.calendar_today_outlined,
+                          appointmentDate,
+                          // "Month 24, Year",
+                        ),
 
                         const SizedBox(width: 25), // Spacing between items
-
                         // Time
-                        _buildIconText(Icons.access_time, "10:00 AM"),
+                        _buildIconText(Icons.access_time, appointmentTime),
                       ],
                     ),
                   ],

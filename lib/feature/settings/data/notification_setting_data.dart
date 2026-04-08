@@ -14,5 +14,4 @@ final List<NotificationSetting> settings = [
   NotificationSetting(title: 'Payments', value: true),
   NotificationSetting(title: 'Promo And Discount', value: false),
   NotificationSetting(title: 'Cashback', value: true),
-  NotificationSetting(title: 'Dark Mode', value: true )
 ];

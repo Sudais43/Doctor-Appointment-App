@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:provider/provider.dart';
+import 'package:skin_firts/core/di/locator.dart';
 import 'package:skin_firts/core/theme/app_color.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/theme/theme_extension.dart';
@@ -30,16 +31,20 @@ class _HomePageState extends State<HomePage> {
   @override
   initState() {
     super.initState();
-    context.read<AuthViewModel>().syncFcmToken();
-    Future.microtask(() {
-      if(!mounted) return;
-      context.read<DoctorViewModel>().fetchHomeDoctors();
-      context.read<AppointmentViewModel>().fetchUpcomingAppointments();
-      Provider.of<HomePageViewModel>(
-        context,
-        listen: false,
-      ).initNotifications();
-    });
+    locator<AuthViewModel>().syncFcmToken();
+    locator<DoctorViewModel>().fetchHomeDoctors();
+    locator<AppointmentViewModel>().fetchUpcomingAppointments();
+    locator<HomePageViewModel>().initNotifications();
+    // context.read<AuthViewModel>().syncFcmToken();
+    // Future.microtask(() {
+    //   if (!mounted) return;
+    //   context.read<DoctorViewModel>().fetchHomeDoctors();
+    //   context.read<AppointmentViewModel>().fetchUpcomingAppointments();
+    //   Provider.of<HomePageViewModel>(
+    //     context,
+    //     listen: false,
+    //   ).initNotifications();
+    // });
   }
 
   @override
@@ -51,8 +56,8 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
-            context.read<DoctorViewModel>().fetchHomeDoctors();
-            context.read<AppointmentViewModel>().fetchUpcomingAppointments();
+            locator<DoctorViewModel>().fetchHomeDoctors();
+            locator<AppointmentViewModel>().fetchUpcomingAppointments();
           },
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(
@@ -308,6 +313,10 @@ class _HomePageState extends State<HomePage> {
 
               Consumer<HomePageViewModel>(
                 builder: (context, homePageViewModel, child) {
+                  final unreadCount =
+                      homePageViewModel.notifications
+                          .where((n) => !n.isRead)
+                          .length;
                   return SizedBox(
                     child: Row(
                       children: [
@@ -321,16 +330,23 @@ class _HomePageState extends State<HomePage> {
                             // );
                             homePageViewModel.moveToNotificationPage(context);
                           },
-                          child: Container(
-                            height: 27,
-                            width: 27,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: appColor.secondary,
+                          child: Badge(
+                            backgroundColor: appColor.Primary,
+                            isLabelVisible: unreadCount > 0,
+                            label: Text(
+                              unreadCount > 9 ? '9+' : '$unreadCount',
                             ),
-                            child: SvgPicture.asset(
-                              "assets/icons/HomeScreen/notification_icon.svg",
-                              fit: BoxFit.scaleDown,
+                            child: Container(
+                              height: 27,
+                              width: 27,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: appColor.secondary,
+                              ),
+                              child: SvgPicture.asset(
+                                "assets/icons/HomeScreen/notification_icon.svg",
+                                fit: BoxFit.scaleDown,
+                              ),
                             ),
                           ),
                         ),
@@ -449,14 +465,15 @@ class _HomePageState extends State<HomePage> {
           suffixIcon: GestureDetector(
             onTap: () {
               if (_searchController.text.isNotEmpty) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) =>
-                            DoctorListPage(searchQuery: _searchController.text),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder:
+                //         (context) =>
+                //             DoctorListPage(searchQuery: _searchController.text),
+                //   ),
+                // );
+                vm.performSearch(context, _searchController.text);
               }
             },
             child: SvgPicture.asset(

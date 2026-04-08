@@ -1,31 +1,110 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hive_ce_flutter/adapters.dart';
 import 'package:skin_firts/core/theme/color_palette.dart';
 import 'package:skin_firts/core/widget/custom_app_bar.dart';
 import '../../../../core/widget/CustomButton.dart';
 import '../../../authentication/presentation/widgets/custom_input_field.dart';
 
 class PasswordManager extends StatefulWidget {
-
   const PasswordManager({super.key});
 
   @override
-  State<PasswordManager> createState() => _LogInState();
+  State<PasswordManager> createState() => _PasswordManagerState();
 }
 
-class _LogInState extends State<PasswordManager> {
+class _PasswordManagerState extends State<PasswordManager> {
+  final TextEditingController currentPasswordController =
+      TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController currentPasswordController = TextEditingController();
+  bool _obscureCurrent = true;
+  bool _obscureNew = true;
+  bool _obscureConfirm = true;
+  bool _isLoading = false;
 
-  final TextEditingController confirmPasswordController = TextEditingController();
+  @override
+  void dispose() {
+    currentPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
 
+  Future<void> _updatePassword() async {
+    final currentPass = currentPasswordController.text.trim();
+    final newPass = newPasswordController.text.trim();
+    final confirmPass = confirmPasswordController.text.trim();
 
+    if (currentPass.isEmpty || newPass.isEmpty || confirmPass.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please fill all fields."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (newPass != confirmPass) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("New passwords do not match."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      // To update the API, uncomment and use your AuthViewModel here.
+      // Ensure you have a changePassword method implemented in AuthViewModel.
+      /*
+      final authVM = context.read<AuthViewModel>();
+      final success = await authVM.changePassword(currentPass, newPass);
+      */
+
+      // Simulating API call for demonstration:
+      await Future.delayed(const Duration(seconds: 2));
+      bool success = true; // Replace with actual API response status
+
+        // Store the new password in local storage (Hive)
+        final authBox = Hive.box('auth_box');
+        await authBox.put('password', newPass); // Save to local storage
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Password updated successfully!"),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context); // Go back after successful update
+        }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e"), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: "Password Manager", onPressed: () {  },),
+      appBar: CustomAppBar(
+        title: "Password Manager",
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
       backgroundColor: LightColorPalette.white,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -35,9 +114,7 @@ class _LogInState extends State<PasswordManager> {
               Column(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
+                    decoration: BoxDecoration(color: Colors.white),
                     child: Column(
                       children: [
                         SizedBox(height: 20),
@@ -55,9 +132,18 @@ class _LogInState extends State<PasswordManager> {
                         SizedBox(height: 7),
                         CustomInputField(
                           label: "**********",
-                          controller: passwordController,
-                          obscureText: true,
-                          suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
+                          controller: currentPasswordController,
+                          obscureText: _obscureCurrent,
+                          suffixIcon: GestureDetector(
+                            onTap:
+                                () => setState(
+                                  () => _obscureCurrent = !_obscureCurrent,
+                                ),
+                            child: SvgPicture.asset(
+                              "assets/icons/Authentication/show_pass_icon.svg",
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 10),
                         SizedBox(
@@ -76,48 +162,71 @@ class _LogInState extends State<PasswordManager> {
 
                         SizedBox(height: 20),
 
-                        SizedBox(width: 300, child: Text(
-                          "New Password",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "LeagueSpartan",
-                            fontWeight: FontWeight.w500,
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            "New Password",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "LeagueSpartan",
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        )),
+                        ),
                         SizedBox(height: 7),
                         CustomInputField(
-                          obscureText: true,
+                          obscureText: _obscureNew,
                           label: "**********",
-                          controller: confirmPasswordController,
-                          suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
-                        ),
-                        SizedBox(height:20 ,),
-
-                        SizedBox(width: 300, child: Text(
-                          "Confirm Password",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "LeagueSpartan",
-                            fontWeight: FontWeight.w500,
+                          controller: newPasswordController,
+                          suffixIcon: GestureDetector(
+                            onTap:
+                                () =>
+                                    setState(() => _obscureNew = !_obscureNew),
+                            child: SvgPicture.asset(
+                              "assets/icons/Authentication/show_pass_icon.svg",
+                              fit: BoxFit.scaleDown,
+                            ),
                           ),
-                        )),
+                        ),
+                        SizedBox(height: 20),
+
+                        SizedBox(
+                          width: 300,
+                          child: Text(
+                            "Confirm Password",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "LeagueSpartan",
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 7),
                         CustomInputField(
-                          obscureText: true,
+                          obscureText: _obscureConfirm,
                           label: "**********",
                           controller: confirmPasswordController,
-                          suffixIcon: SvgPicture.asset("assets/icons/Authentication/show_pass_icon.svg", fit: BoxFit.scaleDown),
+                          suffixIcon: GestureDetector(
+                            onTap:
+                                () => setState(
+                                  () => _obscureConfirm = !_obscureConfirm,
+                                ),
+                            child: SvgPicture.asset(
+                              "assets/icons/Authentication/show_pass_icon.svg",
+                              fit: BoxFit.scaleDown,
+                            ),
+                          ),
                         ),
 
-                        SizedBox(height: 40,),
+                        SizedBox(height: 40),
 
-                        CustomButton(
-                          text: "Log In",
-                          BackgroundColor: LightColorPalette.primary,
-                          onPressed: () {
-                          },
-                        ),
-
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : CustomButton(
+                              text: "Update Password",
+                              BackgroundColor: LightColorPalette.primary,
+                              onPressed: _updatePassword,
+                            ),
                       ],
                     ),
                   ),

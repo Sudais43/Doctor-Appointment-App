@@ -305,7 +305,7 @@ class AppointmentViewModel extends ChangeNotifier {
 
   // 4. Handle the tab change AND the data fetching logic
   void changeTab(AppointmentStatus newStatus) {
-    if (_selectedStatus == newStatus) return; // Do nothing if it's the same tab
+    if (_selectedStatus == newStatus) return; 
 
     _selectedStatus = newStatus;
     notifyListeners(); // Update the UI tab colors instantly

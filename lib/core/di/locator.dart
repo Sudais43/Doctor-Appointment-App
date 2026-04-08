@@ -48,8 +48,6 @@ Future<void> setupLocator() async {
     () => DoctorViewModel(apiServices: locator<ApiServices>()),
   );
 
-  // ⚠️ Architecture Tip: ViewModels should usually take a Repository, not a Service directly.
-  // Assuming you update AuthViewModel to take AuthRepository later, it would look like this:
   locator.registerLazySingleton<AuthViewModel>(
     () => AuthViewModel(locator<AuthServices>()), 
   );

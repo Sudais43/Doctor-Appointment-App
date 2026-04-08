@@ -26,32 +26,6 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
-        // Provider<ApiServices>(create: (context) => ApiServices()),
-        // ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        // ChangeNotifierProvider(create: (context) => HomePageViewModel()),
-        // ChangeNotifierProvider(
-        //   create:
-        //       (context) => AppointmentViewModel(
-        //         apiServices: context.read<ApiServices>(),
-        //       ),
-        // ),
-        // ChangeNotifierProvider(
-        //   create:
-        //       (context) =>
-        //           DoctorViewModel(apiServices: context.read<ApiServices>()),
-        // ),
-        // Provider<AuthServices>(create: (context) => AuthServices()),
-        // Provider<AuthRepository>(
-        //   create:
-        //       (context) => AuthRepositoryImpl(
-        //         localAuthServices: HiveAuthServices(),
-        //         apiServices: context.read<AuthServices>(),
-        //       ),
-        // ),
-        // ChangeNotifierProvider<AuthViewModel>(
-        //   create: (context) => AuthViewModel(context.read<AuthServices>()),
-        // ),
-
         ChangeNotifierProvider(create: (_) => locator<ThemeProvider>()),
         ChangeNotifierProvider(create: (_) => locator<HomePageViewModel>()),
         ChangeNotifierProvider(create: (_) => locator<AppointmentViewModel>()),

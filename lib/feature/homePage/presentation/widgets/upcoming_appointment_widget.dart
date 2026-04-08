@@ -196,7 +196,7 @@ class _AppointmentCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildIcon(Icons.check, const Color(0xFF2D63E2)),
+              // _buildIcon(Icons.check, const Color(0xFF2D63E2)),
               const SizedBox(width: 6),
               GestureDetector(
                 onTap: () {

@@ -54,17 +54,24 @@ class HomePageViewModel extends ChangeNotifier {
     box.put('history', mappedList);
   }
 
-  // 5. Optional: A method to clear all notifications
-  void clearNotifications() {
-    _notifications.clear();
-    Hive.box('notifications_box').delete('history');
-    notifyListeners();
-  }
-
   void removeNotification(AppNotification notification) {
     // 1. Remove from the local list
     _notifications.remove(notification);
     notifyListeners(); // Updates the UI instantly
+
+    // 2. Save the updated list back to Hive
+    final box = Hive.box('notifications_box');
+    final mappedList = _notifications.map((n) => n.toMap()).toList();
+    box.put('history', mappedList);
+  }
+
+  void markAllAsRead() {
+    // 1. Update the local list
+    for (var notif in _notifications) {
+      notif.isRead =
+          true; // Make sure 'isRead' is a mutable property in AppNotification
+    }
+    notifyListeners();
 
     // 2. Save the updated list back to Hive
     final box = Hive.box('notifications_box');

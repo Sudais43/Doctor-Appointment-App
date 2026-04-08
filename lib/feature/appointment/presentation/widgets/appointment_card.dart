@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skin_firts/feature/appointment/presentation/pages/add_review.dart';
 import 'package:skin_firts/feature/appointment/presentation/pages/cancel.dart';
+import 'package:skin_firts/feature/appointment/presentation/pages/appointment_details_screen.dart';
+import 'package:skin_firts/feature/Schedule/presentation/pages/schedule_screen.dart';
 
 import '../../../../feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
 import '../../../../core/theme/color_palette.dart';
@@ -105,12 +107,23 @@ class AppointmentCard extends StatelessWidget {
         const SizedBox(height: 15),
         Row(
           children: [
-            Expanded(child: _buildButton("Details", true, () {})),
+            Expanded(
+              child: _buildButton("Details", true, () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            AppointmentDetailsScreen(appointment: appointment),
+                  ),
+                );
+              }),
+            ),
             const SizedBox(width: 10),
-            _buildCircleButton(
-              Icons.check,
-              LightColorPalette.primary,
-            ), // Reschedule/Confirm
+            // _buildCircleButton(
+            //   Icons.check,
+            //   LightColorPalette.primary,
+            // ), // Reschedule/Confirm
             const SizedBox(width: 10),
             GestureDetector(
               onTap: () {
@@ -137,7 +150,49 @@ class AppointmentCard extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: _buildButton("Re-Book", false, () {}), // Outlined
+          child: _buildButton("Re-Book", false, () {
+            final doctorViewModel = context.read<DoctorViewModel>();
+            final allDocs = [
+              ...doctorViewModel.doctors,
+              ...doctorViewModel.homeDoctors,
+            ];
+
+            dynamic foundDoctor;
+            for (var doc in allDocs) {
+              if ((doc['_id'] ?? doc['id']) == appointment.doctorId) {
+                foundDoctor = doc;
+                break;
+              }
+            }
+
+            final List<dynamic> doctorAvailability =
+                (foundDoctor != null && foundDoctor['availability'] != null)
+                    ? foundDoctor['availability']
+                    : [];
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => ScheduleScreen(
+                      doctorId: appointment.doctorId,
+                      doctorName: appointment.name,
+                      availability: doctorAvailability,
+                      image: appointment.image,
+                      speciality: appointment.specialty,
+                      isFavorite:
+                          foundDoctor != null
+                              ? (foundDoctor['isFavorite'] ?? false)
+                              : false,
+                      rating: appointment.rating,
+                      review:
+                          foundDoctor != null
+                              ? (foundDoctor['reviews'] ?? 0)
+                              : 0,
+                    ),
+              ),
+            );
+          }), // Outlined
         ),
         const SizedBox(width: 15),
         Expanded(
