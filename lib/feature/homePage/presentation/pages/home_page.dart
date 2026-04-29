@@ -9,14 +9,10 @@ import 'package:skin_firts/core/theme/theme_extension.dart';
 import 'package:skin_firts/feature/appointment/entity/calender_day.dart';
 import 'package:skin_firts/feature/appointment/presentation/view_model/appointment_view_model.dart';
 import 'package:skin_firts/feature/authentication/presentation/view_model/auth_view_model.dart';
-import 'package:skin_firts/feature/doctor_pages/presentation/pages/doctors.dart';
 import 'package:skin_firts/feature/doctor_pages/presentation/view_model/doctor_view_model.dart';
-import 'package:skin_firts/feature/homePage/domain/entities/doctor_info.dart';
 import 'package:skin_firts/feature/homePage/presentation/view_model/home_page_view_model.dart';
-import 'package:skin_firts/feature/homePage/presentation/widgets/doctor_tile.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/label_button.dart';
 import 'package:skin_firts/feature/homePage/presentation/widgets/upcoming_appointment_widget.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -448,7 +444,7 @@ class _HomePageState extends State<HomePage> {
           hintText: "Search...",
           hintStyle: TextStyle(
             fontSize: 14,
-            color: appColor.fontColor?.withOpacity(0.7),
+            color: appColor.fontColor.withOpacity(0.7),
           ),
           filled: true,
           fillColor: appColor.secondary,

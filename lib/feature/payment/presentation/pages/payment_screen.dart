@@ -412,44 +412,44 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   // --- Success Dialog ---
-  void _showSuccessDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:
-          (context) => AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.check_circle, color: Colors.green, size: 80),
-                const SizedBox(height: 20),
-                const Text(
-                  "Success!",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Your appointment has been booked successfully.",
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
-                    Navigator.of(
-                      context,
-                    ).popUntil((route) => route.isFirst); // Go to Home
-                  },
-                  child: const Text("Done"),
-                ),
-              ],
-            ),
-          ),
-    );
-  }
+  // void _showSuccessDialog(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder:
+  //         (context) => AlertDialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(20),
+  //           ),
+  //           content: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               const Icon(Icons.check_circle, color: Colors.green, size: 80),
+  //               const SizedBox(height: 20),
+  //               const Text(
+  //                 "Success!",
+  //                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+  //               ),
+  //               const SizedBox(height: 10),
+  //               const Text(
+  //                 "Your appointment has been booked successfully.",
+  //                 textAlign: TextAlign.center,
+  //               ),
+  //               const SizedBox(height: 20),
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop(); // Close dialog
+  //                   Navigator.of(
+  //                     context,
+  //                   ).popUntil((route) => route.isFirst); // Go to Home
+  //                 },
+  //                 child: const Text("Done"),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //   );
+  // }
 
   // --- Helper Widgets ---
   Widget _buildDoctorProfile(

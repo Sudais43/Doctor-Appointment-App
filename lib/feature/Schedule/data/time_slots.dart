@@ -1,4 +1,3 @@
-import '../domain/time_data_model.dart';
 
 // final List<TimeSlot> timeSlots = [
 //   TimeSlot("9:00 AM"),

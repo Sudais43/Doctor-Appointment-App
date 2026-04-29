@@ -24,7 +24,6 @@ class _MainScreenState extends State<MainScreen> {
       const HomePage(),
       ChatScreen(doctorName: "Sudais", onBack: () => _onItemTapped(0)),
       const ProfileScreen(),
-      // ScheduleScreen(),
       const AllAppointmentsScreen(),
     ];
   }

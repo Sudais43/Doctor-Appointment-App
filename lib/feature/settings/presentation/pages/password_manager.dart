@@ -70,7 +70,7 @@ class _PasswordManagerState extends State<PasswordManager> {
 
       // Simulating API call for demonstration:
       await Future.delayed(const Duration(seconds: 2));
-      bool success = true; // Replace with actual API response status
+      // bool success = true; // Replace with actual API response status
 
         // Store the new password in local storage (Hive)
         final authBox = Hive.box('auth_box');

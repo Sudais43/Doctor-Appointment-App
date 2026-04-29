@@ -295,8 +295,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               decoration: BoxDecoration(
                 // Using tileColor from your previous code
                 color:
-                    LightColorPalette.tileColor ??
-                    LightColorPalette.secondary.withOpacity(0.5),
+                    LightColorPalette.tileColor,
                 borderRadius: BorderRadius.circular(30),
               ),
               child: ExpansionTile(

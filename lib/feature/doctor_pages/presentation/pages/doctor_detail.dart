@@ -37,20 +37,20 @@ class DoctorDetail extends StatefulWidget {
 
 class _DoctorDetailState extends State<DoctorDetail> {
   late final List<DoctorInfo> allDoctors;
-  String _selectedSort = "az";
+  // String _selectedSort = "az";
   late List<DoctorInfo> doctor;
   late bool _isFavorite;
 
-  final List<Map<String, String>> _sortOptions = [
-    {"id": "az", "icon": "assets/icons/Doctors/sorting_icon.svg"},
-    {"id": "rating", "icon": "assets/icons/Doctors/star_icon.svg"},
-    {
-      "id": "favorite",
-      "icon": "assets/icons/Doctors/favorite_outline_icon.svg",
-    },
-    {"id": "male", "icon": "assets/icons/Doctors/male_icon.svg"},
-    {"id": "female", "icon": "assets/icons/Doctors/female_icon.svg"},
-  ];
+  // final List<Map<String, String>> _sortOptions = [
+  //   {"id": "az", "icon": "assets/icons/Doctors/sorting_icon.svg"},
+  //   {"id": "rating", "icon": "assets/icons/Doctors/star_icon.svg"},
+  //   {
+  //     "id": "favorite",
+  //     "icon": "assets/icons/Doctors/favorite_outline_icon.svg",
+  //   },
+  //   {"id": "male", "icon": "assets/icons/Doctors/male_icon.svg"},
+  //   {"id": "female", "icon": "assets/icons/Doctors/female_icon.svg"},
+  // ];
 
   @override
   void initState() {

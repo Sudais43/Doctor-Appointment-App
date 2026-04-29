@@ -40,7 +40,7 @@ class DoctorInfo {
     isFavorite: isFavorite ?? this.isFavorite,
     rating: rating ?? this.rating,
     reviews: reviews ?? this.reviews,
-    imageUrl: imageUrl ?? this.imageUrl,
+    imageUrl: imageUrl,
     gender: gender ?? this.gender,
     availability: availability ?? this.availability,
   );
