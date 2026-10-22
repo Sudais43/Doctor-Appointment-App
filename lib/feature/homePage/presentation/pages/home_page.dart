@@ -31,16 +31,7 @@ class _HomePageState extends State<HomePage> {
     locator<DoctorViewModel>().fetchHomeDoctors();
     locator<AppointmentViewModel>().fetchUpcomingAppointments();
     locator<HomePageViewModel>().initNotifications();
-    // context.read<AuthViewModel>().syncFcmToken();
-    // Future.microtask(() {
-    //   if (!mounted) return;
-    //   context.read<DoctorViewModel>().fetchHomeDoctors();
-    //   context.read<AppointmentViewModel>().fetchUpcomingAppointments();
-    //   Provider.of<HomePageViewModel>(
-    //     context,
-    //     listen: false,
-    //   ).initNotifications();
-    // });
+    
   }
 
   @override
